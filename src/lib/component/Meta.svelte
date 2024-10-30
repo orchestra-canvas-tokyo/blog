@@ -3,7 +3,7 @@
 
   /** ページのタイトル。ルートは空文字列を指定 */
   export let title: string;
-  /** 正規URL。絶対URLを指定 */
+  /** 正規URL。相対URLを指定。e.g. '/tag/example' */
   export let canonical: string;
 
   $: fullTitle =
