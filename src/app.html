@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.png" />
+
+    %sveltekit.head%
+  </head>
+  <body>
+    <div style="display: contents">%sveltekit.body%</div>
+    <script>
+      // Easter Egg
+      //   三角点◬よりロゴに近い文字ないかしら
+      console.log(
+        '%c◬ Orchestra Canvas Tokyo',
+        [
+          // styles
+          'padding: 5px 10px;',
+          'color: #000;',
+          'background-color: #fff;',
+          'font: normal large "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "BIZ UDPGothic", Meiryo, sans-serif;'
+        ].join(' ')
+      );
+    </script>
+  </body>
+</html>
