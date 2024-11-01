@@ -1,3 +1,7 @@
 # ref. https://developers.cloudflare.com/pages/configuration/redirects/
 
-/post/20230226-beethoven-and-orchestra /post/20230708-beethoven-and-orchestra
+/post/20230226-beethoven-and-orchestra /post/20230708-beethoven-and-orchestra 31
+
+# old pagination to new pagination
+/page/:number /?p=:number 301
+/tag/:tag/page/:number /tag/:tag?p=:number 301
