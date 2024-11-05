@@ -7,9 +7,9 @@ import type { PageLoad } from './$types';
 
 export const load: PageLoad = ({ params, url }) => {
   // URLからpageNumberを取得
-  console.log({ url });
   const rawPageNumber = url.searchParams.get('p');
   let pageNumber: number;
+
   if (rawPageNumber === null) {
     pageNumber = 1; // パラメータがない場合は1ページ目想定
   } else {
@@ -18,8 +18,8 @@ export const load: PageLoad = ({ params, url }) => {
     if (isNaN(pageNumber) || pageNumber !== parseFloat(rawPageNumber) || pageNumber <= 0)
       error(404);
     if (pageNumber === 1) {
+      // ?p=1の場合、クエリパラメータがないURLへリダイレクト
       url.searchParams.delete('p');
-      console.log({ url });
       redirect(301, url.href);
     }
   }
