@@ -3,22 +3,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.png" />
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FEL3WFK0YW"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag('js', new Date());
-      gtag('config', 'G-FEL3WFK0YW');
-    </script>
-
     %sveltekit.head%
   </head>
   <body>
     <div style="display: contents">%sveltekit.body%</div>
+    <!-- Cloudflare Web Analytics -->
+    <script
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon='{"token": "8e430284c5e94ef491ba76c2e90509c2"}'
+    ></script>
+    <!-- End Cloudflare Web Analytics -->
     <script>
       // Easter Egg
       //   三角点◬よりロゴに近い文字ないかしら
