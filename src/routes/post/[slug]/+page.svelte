@@ -64,6 +64,18 @@
   {/if}
 </main>
 
+<section class="upcoming-concerts">
+  <h3>次回演奏会のご案内</h3>
+  <p>
+    Orchestra Canvas Tokyo<br />第13回定期演奏会
+  </p>
+  <p>
+    2025年2月24日(月祝)<br />
+    ブルックナー / 交響曲第8番 ほか
+  </p>
+  <p>詳細は<a href="https://www.orch-canvas.tokyo/concerts/regular-13">当団ホームページ</a>にて</p>
+</section>
+
 <div class="adjacent-posts">
   {#if data.adjacentPostListItems.prev !== null}
     <a href={getUrl(data.adjacentPostListItems.prev.slug)} class="prev">
@@ -246,5 +258,19 @@
   main :global(figure:has(blockquote) > figcaption) {
     text-align: right;
     font-size: 0.85em;
+  }
+
+  /* 次回演奏会に対するスタイル */
+  .upcoming-concerts {
+    margin: calc(var(--spacing-unit) * 20) auto 0;
+    max-width: 500px;
+    text-align: center;
+
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+
+    a {
+      text-decoration: underline;
+    }
   }
 </style>
