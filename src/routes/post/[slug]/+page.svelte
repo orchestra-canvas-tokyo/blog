@@ -22,7 +22,7 @@
 <Meta title={getFullTitle(data.post)} canonical={`/post/${data.slug}`} />
 
 <div class="meta meta-container for-small-screen">
-  <div />
+  <div></div>
   <div class="date">{formatDate2JpStyle(metadata.publicatedAt)}</div>
 </div>
 
@@ -59,7 +59,7 @@
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen
-      />
+      ></iframe>
     </div>
   {/if}
 </main>
