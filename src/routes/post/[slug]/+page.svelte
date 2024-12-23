@@ -198,6 +198,7 @@
     align-items: center;
     margin: calc(var(--spacing-unit) * 20) 0;
     text-align: center;
+    font-family: var(--serif);
   }
   .concert a {
     padding: calc(var(--spacing-unit) * 4);
