@@ -7,6 +7,7 @@
   import type { PageData } from './$types';
   import type { Composer } from '$lib/posts/composers';
   import Meta from '$lib/component/Meta.svelte';
+  import regular13Flyer from './regular-13.png?enhanced';
 
   export let data: PageData;
   $: metadata = data.post.metadata;
@@ -71,9 +72,12 @@
   </p>
   <p>
     2025年2月24日(月祝)<br />
-    ブルックナー / 交響曲第8番 ほか
+    横浜みなとみらいホール
   </p>
+  <p>ブルックナー / 交響曲第8番 ほか</p>
   <p>詳細は<a href="https://www.orch-canvas.tokyo/concerts/regular-13">当団ホームページ</a>にて</p>
+
+  <enhanced:img src={regular13Flyer} alt="第13回定期演奏会のフライヤー" class="flyer" />
 </section>
 
 <div class="adjacent-posts">
@@ -89,19 +93,12 @@
       {getFullTitle(data.adjacentPostListItems.prev)}
     </a>
   {/if}
-  {#if data.adjacentPostListItems.next !== null}
-    <a href={getUrl(data.adjacentPostListItems.next.slug)} class="next">
-      次の投稿<br />
-      {getFullTitle(data.adjacentPostListItems.next)}
-    </a>
-  {/if}
 </div>
 
 <div class="concert">
   <a href={concert.url}>
     <p>{concert.title}演奏会<br />{formatDate2JpStyle(concert.date)}</p>
-    <enhanced:img src={concert.flyer} alt={`${concert.title}のフライヤー`} class="flyer"
-    ></enhanced:img>
+    <enhanced:img src={concert.flyer} alt={`${concert.title}のフライヤー`} class="flyer" />
   </a>
 </div>
 
@@ -268,12 +265,27 @@
 
   /* 次回演奏会に対するスタイル */
   .upcoming-concerts {
-    margin: calc(var(--spacing-unit) * 20) auto 0;
-    max-width: 500px;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: calc(var(--spacing-unit) * 2);
 
+    margin: calc(var(--spacing-unit) * 20) auto 0;
     border-top: 1px solid #000;
     border-bottom: 1px solid #000;
+    padding: calc(var(--spacing-unit) * 6) 0;
+    max-width: 500px;
+
+    text-align: center;
+
+    > * {
+      margin: 0;
+    }
+
+    > h3,
+    > :global(picture) {
+      margin: calc(var(--spacing-unit) * 2) 0;
+    }
 
     a {
       text-decoration: underline;
