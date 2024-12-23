@@ -81,16 +81,16 @@
 </section>
 
 <div class="adjacent-posts">
-  {#if data.adjacentPostListItems.next !== null}
-    <a href={getUrl(data.adjacentPostListItems.next.slug)} class="next">
-      次の投稿<br />
-      {getFullTitle(data.adjacentPostListItems.next)}
-    </a>
-  {/if}
   {#if data.adjacentPostListItems.prev !== null}
     <a href={getUrl(data.adjacentPostListItems.prev.slug)} class="prev">
       前の投稿<br />
       {getFullTitle(data.adjacentPostListItems.prev)}
+    </a>
+  {/if}
+  {#if data.adjacentPostListItems.next !== null}
+    <a href={getUrl(data.adjacentPostListItems.next.slug)} class="next">
+      次の投稿<br />
+      {getFullTitle(data.adjacentPostListItems.next)}
     </a>
   {/if}
 </div>
