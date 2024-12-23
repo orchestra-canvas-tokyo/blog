@@ -137,6 +137,7 @@
 
   :global(p) {
     text-indent: 1rem;
+    line-height: 1.75em;
   }
 
   :global(li:not(li:last-child)) {
