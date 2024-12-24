@@ -232,8 +232,10 @@
     margin-bottom: calc(var(--spacing-unit) * 4);
   }
   .flyer {
+    height: auto;
     max-height: 400px;
     width: auto;
+    max-width: 100%;
   }
 
   main {
@@ -287,7 +289,7 @@
     display: flex;
     justify-content: center;
     margin: calc(var(--spacing-unit) * 20) calc(-1 * var(--spacing-unit) * 8) 0;
-    padding: calc(var(--spacing-unit) * 6) calc(var(--spacing-unit) * 6);
+    padding: calc(var(--spacing-unit) * 6) 0;
     background-color: var(--color-background-secondary);
   }
 
@@ -297,8 +299,10 @@
     justify-content: center;
     gap: calc(var(--spacing-unit) * 2);
 
+    position: relative;
+
     border-radius: 10px;
-    padding: calc(var(--spacing-unit) * 6);
+    padding: calc(var(--spacing-unit) * 6) calc(var(--spacing-unit) * 18);
     max-width: 500px;
 
     background-color: #fff;
@@ -307,11 +311,16 @@
 
     > * {
       margin: 0;
+      z-index: 1;
     }
 
     .megaphone {
       position: absolute;
-      transform: translate(229px, -290px) rotate(-30deg) scale(5.9);
+      top: 60px;
+      right: 60px;
+      z-index: 2;
+
+      transform: rotate(-30deg) scale(5.9);
       fill: var(--color-background-secondary);
     }
 
