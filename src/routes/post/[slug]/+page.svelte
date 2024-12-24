@@ -302,23 +302,25 @@
     position: relative;
 
     border-radius: 10px;
-    padding: calc(var(--spacing-unit) * 6) calc(var(--spacing-unit) * 18);
+    padding: calc(var(--spacing-unit) * 6) calc(var(--spacing-unit) * 12);
     max-width: 500px;
 
+    overflow: hidden;
+
     background-color: #fff;
-    font-size: 0.85em;
+    font-size: 85%;
     text-align: center;
 
     > * {
       margin: 0;
-      z-index: 1;
+      z-index: 2;
     }
 
     .megaphone {
       position: absolute;
       top: 60px;
-      right: 60px;
-      z-index: 2;
+      right: 65px;
+      z-index: 1;
 
       transform: rotate(-30deg) scale(5.9);
       fill: var(--color-background-secondary);
@@ -335,6 +337,10 @@
 
     a {
       text-decoration: underline;
+    }
+
+    .flyer {
+      max-height: 320px;
     }
   }
 </style>
