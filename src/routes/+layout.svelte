@@ -42,15 +42,6 @@
   });
 </script>
 
-<svelte:head>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap"
-    rel="stylesheet"
-  />
-</svelte:head>
-
 <header>
   <!-- header -->
   <a href="/" id="page_top">
@@ -102,7 +93,7 @@
     --color-background-secondary: #eee;
     --color-text-primary: #000;
     --color-text-secondary: #5a5a5a;
-    --sans-serif: 'Zen Kaku Gothic New', sans-serif;
+    --sans-serif: sans-serif;
     --serif: 'Noto Serif JP', serif;
   }
 
@@ -146,6 +137,7 @@
 
   :global(p) {
     text-indent: 1rem;
+    line-height: 1.75em;
   }
 
   :global(li:not(li:last-child)) {

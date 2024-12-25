@@ -1,6 +1,6 @@
-<p>
+<section>
   <slot></slot>
-</p>
+</section>
 
 <!--
 @component
@@ -13,13 +13,13 @@
 -->
 
 <style>
-  p {
+  section {
     margin-top: calc(var(--spacing-unit) * 12);
     margin-bottom: calc(var(--spacing-unit) * 12);
     font-size: 0.85em;
     text-indent: 0;
   }
-  p :global(blockquote) {
+  section :global(blockquote) {
     margin: calc(var(--spacing-unit) * 6) 1em !important;
   }
 </style>
