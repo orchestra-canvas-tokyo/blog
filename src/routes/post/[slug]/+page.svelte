@@ -288,9 +288,13 @@
   .fullwidth-gray-background {
     display: flex;
     justify-content: center;
-    margin: calc(var(--spacing-unit) * 20) calc(-1 * var(--spacing-unit) * 6) 0;
+    margin: calc(var(--spacing-unit) * 20) calc(-1 * var(--spacing-unit) * 8) 0;
     padding: calc(var(--spacing-unit) * 6) 0;
     background-color: var(--color-background-secondary);
+
+    @media (max-width: 567px) {
+      margin: calc(var(--spacing-unit) * 20) calc(-1 * var(--spacing-unit) * 6) 0;
+    }
   }
 
   .upcoming-concerts {
