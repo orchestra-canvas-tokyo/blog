@@ -288,7 +288,7 @@
   .fullwidth-gray-background {
     display: flex;
     justify-content: center;
-    margin: calc(var(--spacing-unit) * 20) calc(-1 * var(--spacing-unit) * 8) 0;
+    margin: calc(var(--spacing-unit) * 20) calc(-1 * var(--spacing-unit) * 6) 0;
     padding: calc(var(--spacing-unit) * 6) 0;
     background-color: var(--color-background-secondary);
   }
@@ -303,7 +303,7 @@
 
     border-radius: 10px;
     padding: calc(var(--spacing-unit) * 6) calc(var(--spacing-unit) * 12);
-    max-width: 500px;
+    width: min(300px, 50dvw);
 
     overflow: hidden;
 
