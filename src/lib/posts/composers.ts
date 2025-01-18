@@ -151,6 +151,18 @@ export const composers = {
     shortName: 'ジョン・ウィリアムズ',
     fullName: 'ジョン・ウィリアムズ',
     yearOfBirth: 1932
+  },
+  wagner: {
+    shortName: 'ワーグナー',
+    fullName: 'リヒャルト・ワーグナー',
+    yearOfBirth: 1813,
+    yearOfDeath: 1883
+  },
+  bruckner: {
+    shortName: 'ブルックナー',
+    fullName: 'アントン・ブルックナー',
+    yearOfBirth: 1824,
+    yearOfDeath: 1896
   }
 } as const satisfies {
   [slug: string]: Composer;
