@@ -160,7 +160,7 @@ export const composers = {
   },
   bruckner: {
     shortName: 'ブルックナー',
-    fullName: 'アントン・ブルックナー',
+    fullName: 'ヨーゼフ・アントン・ブルックナー',
     yearOfBirth: 1824,
     yearOfDeath: 1896
   }
