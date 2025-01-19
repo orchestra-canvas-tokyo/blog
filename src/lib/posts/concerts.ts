@@ -10,7 +10,6 @@ import regular9 from './regular-9/flyer.webp?enhanced';
 import regular10 from './regular-10/flyer.webp?enhanced';
 import regular11 from './regular-11/flyer.png?enhanced';
 import regular12 from './regular-12/flyer.png?enhanced';
-import regular13 from './regular-13/flyer.png?enhanced';
 
 import type { Picture } from 'vite-imagetools';
 
@@ -95,12 +94,6 @@ export const concerts = {
     date: '2024-09-22',
     url: 'https://www.orch-canvas.tokyo/concerts/regular-12',
     flyer: regular12
-  },
-  'regular-13': {
-    title: '第13回定期',
-    date: '2025-02-24',
-    url: 'https://www.orch-canvas.tokyo/concerts/regular-13',
-    flyer: regular13
   }
 } as const satisfies {
   [slug: string]: Concert;

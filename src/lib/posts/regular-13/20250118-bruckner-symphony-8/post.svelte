@@ -8,8 +8,8 @@
     publicatedAt: '2025-01-18T20:00:01+0900',
     title: '交響曲第8番 ハ短調 WAB108',
     composerSlug: 'bruckner',
-    concertSlug: 'regular-13',
-    tags: ['曲目解説', '第13回定期', 'ブルックナー']
+    concertSlug: 'regular-12',
+    tags: ['曲目解説', '第12回定期', 'ブルックナー']
   };
 </script>
 
