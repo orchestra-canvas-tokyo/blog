@@ -3,12 +3,6 @@
   import Author from '$lib/component/post/Author.svelte';
   import Reference from '$lib/component/post/Reference.svelte';
 
-  import figure1 from './譜例1.png?enhanced';
-  import figure2 from './譜例2.png?enhanced';
-  import figure3 from './譜例3.png?enhanced';
-  import figure4 from './譜例4.png?enhanced';
-  import figure5 from './譜例5.png?enhanced';
-  import Figure from '$lib/component/post/Figure.svelte';
   import UrlLink from '$lib/component/post/UrlLink.svelte';
 
   export const metadata: Metadata = {
@@ -39,11 +33,6 @@
   愛の魔酒を飲む場面から、前奏曲で登場した動機が再び集合する。魔酒を飲んだ2人は「愛の眼差しの動機」に乗って互いの名を呼ぶが、突如として興奮の渦に飲まれるように音楽は加速し、最後には水夫たちが『マルケ王万歳』と合唱する中、『私は生きねばならぬのか』（イゾルデ）、『欺瞞の生んだ幸せよ』（トリスタン）と叫ぶこととなる。前奏曲から第1幕が終わるまでの約70分間をかけて、現世では成就しない愛と本来絶望的なはずの死に憧れ続ける、異様な物語が始まることが、劇的に印象づけられる。
 </p>
 
-<Figure src={figure1} caption="譜例1" maxHeightPx={100} />
-<Figure src={figure2} caption="譜例2" maxHeightPx={70} />
-<Figure src={figure3} caption="譜例3" maxHeightPx={70} />
-<Figure src={figure4} caption="譜例4" maxHeightPx={100} />
-
 <h3>第2幕と第3幕、そして「愛の死」</h3>
 
 <p>
@@ -53,8 +42,6 @@
 <p>
   第3幕はトリスタンの居城に舞台を移し、運ばれたトリスタンはイゾルデの到来を夢見る。しかしイゾルデの腕に抱かれた直後、虫の息で『イゾルデ』と呼びかけると息絶え、イゾルデも気を失う。ブランゲーネから愛の魔酒の秘密を聞いたマルケ王は、2人を許すために共にイゾルデを追いかけて来るが、勘違いにより殺し合いとなり、トリスタンの部下とメロートは死ぬ。再び悲嘆するマルケ王をよそに、イゾルデが滔々と歌い出すのが「愛の死」である。『彼が微笑み、目を優しく開けているのがあなた方には見えないのですか』（イゾルデ）といった、あまりにも切ない歌詞で始まるが、官能的なうねりの音楽とともに、流れに身を任せるような達観した歌詞へと変化していく。そして第2幕の二重唱では迎えられなかった頂点を1人で迎えると、「至上の快楽よ」と呟きながら息絶える。最後に冒頭の「憧れの動機」がロ音上の長和音に解決し（譜例5）、2人が死によって愛の苦しみから解放されたことが表現される。第1幕への前奏曲から4時間近く興奮と酩酊を味わった観客に、ようやく永遠の愛の形が示されるのである。
 </p>
-
-<Figure src={figure5} caption="譜例5" maxHeightPx={70} />
 
 <h3>さいごに</h3>
 
