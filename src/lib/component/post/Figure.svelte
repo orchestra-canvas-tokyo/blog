@@ -1,8 +1,6 @@
 <script lang="ts">
-  import type { Picture } from 'vite-imagetools';
-
-  /** 表示する画像 */
-  export let src: Picture;
+  /** 表示する画像のソース */
+  export let src: string;
   /** キャプション */
   export let caption: string | undefined = undefined;
   /** 画像の最大高さ(px単位、オプション) */
@@ -24,7 +22,7 @@
 -->
 
 <figure style={maxHeightStyle}>
-  <enhanced:img {src} alt="" class="image"></enhanced:img>
+  <img {src} alt="" />
   {#if caption}
     <figcaption>{caption}</figcaption>
   {/if}
@@ -38,12 +36,14 @@
     gap: calc(var(--spacing-unit) * 2);
     margin: calc(var(--spacing-unit) * 12) 0;
   }
-  .image {
+
+  img {
     height: auto;
     max-height: var(--max-height-px);
     width: auto;
     max-width: 100%;
   }
+
   figcaption {
     font-size: 0.85em;
     text-align: center;

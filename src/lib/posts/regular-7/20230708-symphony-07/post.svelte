@@ -3,8 +3,8 @@
   import Author from '$lib/component/post/Author.svelte';
   import Figure from '$lib/component/post/Figure.svelte';
 
-  import figure1 from './譜例1.webp?enhanced';
-  import figure2 from './譜例2.webp?enhanced';
+  import figure1 from './譜例1.webp';
+  import figure2 from './譜例2.webp';
 
   export const metadata: Metadata = {
     published: true,

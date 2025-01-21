@@ -5,9 +5,9 @@
   import Reference from '$lib/component/post/Reference.svelte';
   import UrlLink from '$lib/component/post/UrlLink.svelte';
 
-  import figure1 from './howl005.jpg?enhanced';
-  import figure2 from './howl009.jpg?enhanced';
-  import figure3 from './howl019.jpg?enhanced';
+  import figure1 from './howl005.jpg';
+  import figure2 from './howl009.jpg';
+  import figure3 from './howl019.jpg';
 
   export const metadata: Metadata = {
     published: true,

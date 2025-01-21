@@ -2,11 +2,11 @@
   import Figure from '$lib/component/post/Figure.svelte';
   import type { Metadata } from '$lib/posts/index.ts';
 
-  import figureSchonbrunn from './schonbrunn.webp?enhanced';
-  import figureComposers from './composers.webp?enhanced';
-  import figure1 from './譜例1.webp?enhanced';
-  import figure2 from './譜例2.webp?enhanced';
-  import figure3 from './譜例3.webp?enhanced';
+  import figureSchonbrunn from './schonbrunn.webp';
+  import figureComposers from './composers.webp';
+  import figure1 from './譜例1.webp';
+  import figure2 from './譜例2.webp';
+  import figure3 from './譜例3.webp';
   import Author from '$lib/component/post/Author.svelte';
   import Reference from '$lib/component/post/Reference.svelte';
 

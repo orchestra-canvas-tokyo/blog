@@ -4,7 +4,7 @@
   import Figure from '$lib/component/post/Figure.svelte';
   import Reference from '$lib/component/post/Reference.svelte';
 
-  import figure from './01.webp?enhanced';
+  import figure from './01.webp';
 
   export const metadata: Metadata = {
     published: true,
