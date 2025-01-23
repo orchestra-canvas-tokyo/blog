@@ -4,8 +4,8 @@
   import Reference from '$lib/component/post/Reference.svelte';
   import UrlLink from '$lib/component/post/UrlLink.svelte';
   import type { Metadata } from '$lib/posts/index.ts';
-  import figure1 from './totoro029.jpg?enhanced';
-  import figure2 from './totoro036.jpg?enhanced';
+  import figure1 from './totoro029.jpg';
+  import figure2 from './totoro036.jpg';
 
   export const metadata: Metadata = {
     published: true,

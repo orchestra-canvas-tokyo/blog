@@ -5,7 +5,7 @@
   import Spacer from '$lib/component/post/Spacer.svelte';
   import UrlLink from '$lib/component/post/UrlLink.svelte';
 
-  import figure from './table.png?enhanced';
+  import figure from './table.png';
   import Figure from '$lib/component/post/Figure.svelte';
 
   export const metadata: Metadata = {

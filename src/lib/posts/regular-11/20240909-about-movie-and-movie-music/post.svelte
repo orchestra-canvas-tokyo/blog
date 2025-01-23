@@ -4,7 +4,7 @@
   import Figure from '$lib/component/post/Figure.svelte';
   import Reference from '$lib/component/post/Reference.svelte';
 
-  import figure from './参考画像1.png?enhanced';
+  import figure from './参考画像1.png';
 
   export const metadata: Metadata = {
     published: true,

@@ -3,10 +3,10 @@
   import Author from '$lib/component/post/Author.svelte';
   import Reference from '$lib/component/post/Reference.svelte';
 
-  import figure1 from './譜例1.jpg?enhanced';
-  import figure2 from './譜例2.jpg?enhanced';
-  import figure3 from './譜例3.jpg?enhanced';
-  import figure4 from './譜例4.jpg?enhanced';
+  import figure1 from './譜例1.jpg';
+  import figure2 from './譜例2.jpg';
+  import figure3 from './譜例3.jpg';
+  import figure4 from './譜例4.jpg';
   import Footnote from '$lib/component/post/Footnote.svelte';
   import Figure from '$lib/component/post/Figure.svelte';
   import UrlLink from '$lib/component/post/UrlLink.svelte';

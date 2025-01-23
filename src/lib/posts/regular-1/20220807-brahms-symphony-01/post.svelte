@@ -5,9 +5,9 @@
   import Reference from '$lib/component/post/Reference.svelte';
   import type { Metadata } from '$lib/posts/index.ts';
 
-  import figure1 from './譜例1.webp?enhanced';
-  import figure2 from './譜例2.webp?enhanced';
-  import figure3 from './譜例3.webp?enhanced';
+  import figure1 from './譜例1.webp';
+  import figure2 from './譜例2.webp';
+  import figure3 from './譜例3.webp';
 
   export const metadata: Metadata = {
     published: true,

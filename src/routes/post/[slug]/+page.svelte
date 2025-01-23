@@ -7,7 +7,7 @@
   import type { PageData } from './$types';
   import type { Composer } from '$lib/posts/composers';
   import Meta from '$lib/component/Meta.svelte';
-  import regular13Flyer from './regular-13.png?enhanced';
+  import regular13Flyer from './regular-13.png';
 
   export let data: PageData;
   $: metadata = data.post.metadata;
@@ -94,7 +94,7 @@
       詳細は<a href="https://www.orch-canvas.tokyo/concerts/regular-13">当団ホームページ</a>にて
     </p>
 
-    <enhanced:img src={regular13Flyer} alt="第13回定期演奏会のフライヤー" class="flyer" />
+    <img src={regular13Flyer} alt="第13回定期演奏会のフライヤー" class="flyer" />
   </section>
 </div>
 
@@ -116,7 +116,7 @@
 <div class="concert">
   <a href={concert.url}>
     <p>{concert.title}演奏会<br />{formatDate2JpStyle(concert.date)}</p>
-    <enhanced:img src={concert.flyer} alt={`${concert.title}のフライヤー`} class="flyer" />
+    <img src={concert.flyer} alt={`${concert.title}のフライヤー`} class="flyer" />
   </a>
 </div>
 
