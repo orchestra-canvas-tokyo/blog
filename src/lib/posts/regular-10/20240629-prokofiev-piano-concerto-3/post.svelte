@@ -5,11 +5,11 @@
   import Reference from '$lib/component/post/Reference.svelte';
   import UrlLink from '$lib/component/post/UrlLink.svelte';
 
-  import figure1 from './譜例1.png?enhanced';
-  import figure2 from './譜例2.png?enhanced';
-  import figure3 from './譜例3.png?enhanced';
-  import figure4 from './譜例4.png?enhanced';
-  import figure5 from './譜例5.png?enhanced';
+  import figure1 from './譜例1.png';
+  import figure2 from './譜例2.png';
+  import figure3 from './譜例3.png';
+  import figure4 from './譜例4.png';
+  import figure5 from './譜例5.png';
   import Footnote from '$lib/component/post/Footnote.svelte';
 
   export const metadata: Metadata = {
