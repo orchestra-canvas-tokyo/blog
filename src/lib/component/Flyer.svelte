@@ -13,7 +13,8 @@
   ];
   const optionsString = options.map(([key, value]) => `${key}=${value}`).join(',');
 
-  $: cloudflareSrc = `https://blog.orch-canvas.tokyo/cdn-cgi/image/${optionsString}/${src}`;
+  // '/' 始まりの場合は除去
+  $: cloudflareSrc = `https://blog.orch-canvas.tokyo/cdn-cgi/image/${optionsString}/${src.startsWith('/') ? src.slice(1) : src}`;
 </script>
 
 {#if useCloudflareImages}
