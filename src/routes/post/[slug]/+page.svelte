@@ -8,6 +8,7 @@
   import type { Composer } from '$lib/posts/composers';
   import Meta from '$lib/component/Meta.svelte';
   import regular13Flyer from './regular-13.png';
+  import Flyer from '$lib/component/Flyer.svelte';
 
   export let data: PageData;
   $: metadata = data.post.metadata;
@@ -94,7 +95,11 @@
       詳細は<a href="https://www.orch-canvas.tokyo/concerts/regular-13">当団ホームページ</a>にて
     </p>
 
-    <img src={regular13Flyer} alt="第13回定期演奏会のフライヤー" class="flyer" />
+    <Flyer
+      useCloudflareImages={data.useCloudflareImages}
+      src={regular13Flyer}
+      alt="第13回定期演奏会のフライヤー"
+    />
   </section>
 </div>
 
@@ -116,7 +121,11 @@
 <div class="concert">
   <a href={concert.url}>
     <p>{concert.title}演奏会<br />{formatDate2JpStyle(concert.date)}</p>
-    <img src={concert.flyer} alt={`${concert.title}のフライヤー`} class="flyer" />
+    <Flyer
+      useCloudflareImages={data.useCloudflareImages}
+      src={concert.flyer}
+      alt={`${concert.title}のフライヤー`}
+    />
   </a>
 </div>
 
@@ -231,12 +240,6 @@
     margin: 0;
     margin-bottom: calc(var(--spacing-unit) * 4);
   }
-  .flyer {
-    height: auto;
-    max-height: 400px;
-    width: auto;
-    max-width: 100%;
-  }
 
   main {
     margin: calc(var(--spacing-unit) * 12) 0;
@@ -341,10 +344,6 @@
 
     a {
       text-decoration: underline;
-    }
-
-    .flyer {
-      max-height: 320px;
     }
   }
 </style>
