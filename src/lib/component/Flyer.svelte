@@ -3,9 +3,6 @@
   export let src: string;
   export let alt: string;
 
-  let className: string = '';
-  export { className as class };
-
   const options = [
     ['format', 'auto'],
     ['fit', 'scale-down'],
@@ -18,7 +15,13 @@
 </script>
 
 {#if useCloudflareImages}
-  <img src={cloudflareSrc} {alt} class={className} />
+  <img src={cloudflareSrc} {alt} />
 {:else}
-  <img {src} {alt} class={className} />
+  <img {src} {alt} />
 {/if}
+
+<style>
+  img {
+    max-height: 400px;
+  }
+</style>

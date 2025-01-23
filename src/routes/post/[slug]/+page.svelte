@@ -99,7 +99,6 @@
       useCloudflareImages={data.useCloudflareImages}
       src={regular13Flyer}
       alt="第13回定期演奏会のフライヤー"
-      class="flyer"
     />
   </section>
 </div>
@@ -126,7 +125,6 @@
       useCloudflareImages={data.useCloudflareImages}
       src={concert.flyer}
       alt={`${concert.title}のフライヤー`}
-      class="flyer"
     />
   </a>
 </div>
