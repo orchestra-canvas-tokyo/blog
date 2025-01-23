@@ -13,7 +13,7 @@
   ];
   const optionsString = options.map(([key, value]) => `${key}=${value}`).join(',');
 
-  $: cloudflareSrc = `/cdn-cgi/image/${optionsString}/${src}`;
+  $: cloudflareSrc = `https://blog.orch-canvas.tokyo/cdn-cgi/image/${optionsString}/${src}`;
 </script>
 
 {#if useCloudflareImages}
