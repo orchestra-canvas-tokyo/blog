@@ -95,11 +95,13 @@
       詳細は<a href="https://www.orch-canvas.tokyo/concerts/regular-13">当団ホームページ</a>にて
     </p>
 
-    <Flyer
-      useCloudflareImages={data.useCloudflareImages}
-      src={regular13Flyer}
-      alt="第13回定期演奏会のフライヤー"
-    />
+    <a href="https://www.orch-canvas.tokyo/concerts/regular-13">
+      <Flyer
+        useCloudflareImages={data.useCloudflareImages}
+        src={regular13Flyer}
+        alt="第13回定期演奏会のフライヤー"
+      />
+    </a>
   </section>
 </div>
 
