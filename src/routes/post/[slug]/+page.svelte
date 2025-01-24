@@ -304,6 +304,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     gap: calc(var(--spacing-unit) * 2);
 
     position: relative;
