@@ -16,6 +16,7 @@
 <style>
   p {
     margin-bottom: calc(var(--spacing-unit) * 8);
-    text-align: right;
+    text-align: right !important;
+    font-size: 0.85em;
   }
 </style>
