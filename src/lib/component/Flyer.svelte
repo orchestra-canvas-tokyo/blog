@@ -1,11 +1,12 @@
 <script lang="ts">
-  export let useCloudflareImages: boolean;
   export let src: string;
   export let alt: string;
   const commonOptions = [
     ['format', 'auto'],
     ['fit', 'scale-down']
   ] satisfies [string, string][];
+
+  const useCloudflareImages = new URL(window.location.href).hostname === 'blog.orch-canvas.tokyo';
 
   function getCloudflareSrc(src: string, options: [string, string][]): string {
     const optionsString = options.map(([key, value]) => `${key}=${value}`).join(',');
