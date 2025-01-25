@@ -7,6 +7,7 @@
   import figure2 from './譜例2.png';
   import figure3 from './譜例3.png';
   import figure4 from './譜例4.png';
+  import danubeRiver from './danube-river.png';
   import Figure from '$lib/component/post/Figure.svelte';
   import UrlLink from '$lib/component/post/UrlLink.svelte';
 
@@ -97,6 +98,8 @@
 <p>
   自然や生活の中にふと美しい響きを感じ、耳を傾ける。そんな他愛もない営みこそが人生を一段と魅力的なものにしてくれる。然ればこそブルックナーの音楽はふとした瞬間、ありのままの心に温もりや高揚をもたらしてくれるのである。
 </p>
+
+<Figure src={danubeRiver} caption="リンツに流れる大河、ドナウ河（筆者撮影）" maxHeightPx={300} />
 
 <Author>Vn. 田畑 佑宜</Author>
 
