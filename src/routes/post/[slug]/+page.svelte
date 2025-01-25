@@ -325,7 +325,7 @@
     overflow: hidden;
 
     background-color: #fff;
-    font-size: 85%;
+    font-size: 90%;
     text-align: center;
 
     > * {
