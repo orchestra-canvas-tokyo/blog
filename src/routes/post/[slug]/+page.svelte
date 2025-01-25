@@ -240,45 +240,60 @@
   }
 
   /* 本文に対するスタイル */
-  main :global(*) {
-    font-family: var(--serif);
-  }
-  main :global(h3) {
-    margin-top: calc(var(--spacing-unit) * 12);
-  }
-  main :global(h4) {
-    margin-top: calc(var(--spacing-unit) * 8);
-    margin-bottom: 0;
-  }
-  main :global(blockquote) {
-    margin-top: calc(var(--spacing-unit) * 12);
-    margin-bottom: calc(var(--spacing-unit) * 12);
-    font-style: italic;
-    text-indent: 1em;
-  }
-  main :global(blockquote h4) {
-    text-indent: 0;
-  }
-
-  @media (max-width: 576px) {
-    main :global(blockquote) {
-      margin-right: 1em;
-      margin-left: 1em;
+  main {
+    :global(*) {
+      font-family: var(--serif);
+      letter-spacing: 0.04em;
     }
-  }
 
-  /* 引用元が示されている引用に対するスタイル
+    :global(h3) {
+      margin-top: calc(var(--spacing-unit) * 12);
+    }
+    :global(h4) {
+      margin-top: calc(var(--spacing-unit) * 8);
+      margin-bottom: 0;
+    }
+
+    :global(p) {
+      text-indent: 1rem;
+      text-align: justify;
+      line-height: 1.75;
+    }
+
+    :global(blockquote) {
+      margin-top: calc(var(--spacing-unit) * 12);
+      margin-bottom: calc(var(--spacing-unit) * 12);
+      font-style: italic;
+      text-indent: 1em;
+    }
+    :global(blockquote h4) {
+      text-indent: 0;
+    }
+
+    @media (max-width: 576px) {
+      :global(blockquote) {
+        margin-right: 1em;
+        margin-left: 1em;
+      }
+    }
+
+    :global(li:not(li:last-child)) {
+      margin-bottom: calc(var(--spacing-unit) * 2);
+    }
+
+    /* 引用元が示されている引用に対するスタイル
 		figure	-> blockquote
 				-> figcaption */
-  main :global(figure:has(blockquote)) {
-    margin: calc(var(--spacing-unit) * 12) 1em;
-  }
-  main :global(figure blockquote) {
-    margin: initial;
-  }
-  main :global(figure:has(blockquote) > figcaption) {
-    text-align: right;
-    font-size: 0.85em;
+    :global(figure:has(blockquote)) {
+      margin: calc(var(--spacing-unit) * 12) 1em;
+    }
+    :global(figure blockquote) {
+      margin: initial;
+    }
+    :global(figure:has(blockquote) > figcaption) {
+      text-align: right;
+      font-size: 0.85em;
+    }
   }
 
   /* 次回演奏会に対するスタイル */
@@ -331,10 +346,6 @@
     > h3,
     > :global(picture) {
       margin: calc(var(--spacing-unit) * 2) 0;
-    }
-
-    > p {
-      text-indent: 0;
     }
 
     a {

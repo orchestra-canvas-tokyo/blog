@@ -8,7 +8,7 @@
 
 <Meta title={`#${data.tag}の記事一覧`} canonical={`/tag/${data.tag}`} />
 
-<p>#{data.tag}の記事：{data.totalNumberOfPosts}件</p>
+<p>#&thinsp;{data.tag}の記事：{data.totalNumberOfPosts}件</p>
 
 <PostList
   posts={data.posts}

@@ -66,8 +66,9 @@
   序奏は二部構成である。第1部では第1楽章を想起させる荘厳で重苦しい旋律が、弦楽器のピツィカート・木管の強奏を経て鎮まる。第2部ではアルペン・ホルンを思わせる朗々としたホルン独奏により一挙に視界が開ける（譜例3）。かねてからブラームスはこの旋律に歌詞をつけており、それは彼が想いを寄せたクララ・シューマンに宛てた手紙に記されたものである。
 </p>
 
-<blockquote>
-  "Hoch auf’m Berg, tief im Tal, grüß ich dich viel tausendmal!"<br />
+<blockquote class="no-indent">
+  "Hoch auf’m Berg, tief im Tal, grüß ich dich viel tausendmal!"
+  <br />
   （高い山から、深い谷から、君に何千回も挨拶しよう）
 </blockquote>
 
@@ -108,3 +109,10 @@
     『オーケストラの音楽史　大作曲家が追い求めた理想の音楽』, 東京都, 白水社
   </li>
 </Reference>
+
+<style>
+  .no-indent {
+    text-indent: 0;
+    padding-left: 1em;
+  }
+</style>

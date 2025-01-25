@@ -42,6 +42,20 @@
   });
 </script>
 
+<svelte:head>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400&family=Noto+Serif+JP:wght@700&display=swap"
+    rel="stylesheet"
+  />
+
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/yakuhanjp@4.1.1/dist/css/yakuhanmp_s.css"
+  />
+</svelte:head>
+
 <header>
   <!-- header -->
   <a href="/" id="page_top">
@@ -94,7 +108,7 @@
     --color-text-primary: #000;
     --color-text-secondary: #5a5a5a;
     --sans-serif: sans-serif;
-    --serif: 'Noto Serif JP', serif;
+    --serif: YakuHanMPs, 'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', YuMincho, serif;
   }
 
   :global(html) {
@@ -117,7 +131,6 @@
     overflow-wrap: anywhere; /* 収まらない場合に折りかえす */
     word-break: normal; /* 単語の分割はデフォルトに依存 */
     line-break: strict; /* 禁則処理を厳格に適用 */
-    font-feature-settings: 'palt' 1; /* プロポーショナルメトリクスを有効にする */
   }
 
   @media (max-width: 567px) {
@@ -133,15 +146,6 @@
 
   :global(a:hover) {
     text-decoration: underline;
-  }
-
-  :global(p) {
-    text-indent: 1rem;
-    line-height: 1.75em;
-  }
-
-  :global(li:not(li:last-child)) {
-    margin-bottom: calc(var(--spacing-unit) * 2);
   }
 
   @media (max-width: 567px) {

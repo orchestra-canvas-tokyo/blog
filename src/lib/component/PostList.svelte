@@ -127,6 +127,12 @@
     margin: calc(var(--spacing-unit) * 4);
     margin-top: 0;
     -webkit-box-orient: vertical;
+
+    font-size: 0.95em;
+    text-align: justify;
+    line-height: 1.75;
+    letter-spacing: 0.04em;
+
     line-clamp: 3;
     -webkit-line-clamp: 3;
     display: -webkit-box;
