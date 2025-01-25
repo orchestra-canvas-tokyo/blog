@@ -95,11 +95,9 @@
       詳細は<a href="https://www.orch-canvas.tokyo/concerts/regular-13">当団ホームページ</a>にて
     </p>
 
-    <Flyer
-      useCloudflareImages={data.useCloudflareImages}
-      src={regular13Flyer}
-      alt="第13回定期演奏会のフライヤー"
-    />
+    <a href="https://www.orch-canvas.tokyo/concerts/regular-13">
+      <Flyer src={regular13Flyer} alt="第13回定期演奏会のフライヤー" />
+    </a>
   </section>
 </div>
 
@@ -121,11 +119,7 @@
 <div class="concert">
   <a href={concert.url}>
     <p>{concert.title}演奏会<br />{formatDate2JpStyle(concert.date)}</p>
-    <Flyer
-      useCloudflareImages={data.useCloudflareImages}
-      src={concert.flyer}
-      alt={`${concert.title}のフライヤー`}
-    />
+    <Flyer src={concert.flyer} alt={`${concert.title}のフライヤー`} />
   </a>
 </div>
 
@@ -304,6 +298,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     gap: calc(var(--spacing-unit) * 2);
 
     position: relative;
