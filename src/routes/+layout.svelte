@@ -136,7 +136,7 @@
   @media (max-width: 567px) {
     :global(body) {
       padding: calc(var(--spacing-unit) * 6);
-      font-size: 90%;
+      font-size: 16px;
     }
   }
 
