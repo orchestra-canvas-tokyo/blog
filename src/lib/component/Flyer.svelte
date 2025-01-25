@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+
   export let src: string;
   export let alt: string;
   const commonOptions = [
@@ -6,7 +8,10 @@
     ['fit', 'scale-down']
   ] satisfies [string, string][];
 
-  const useCloudflareImages = new URL(window.location.href).hostname === 'blog.orch-canvas.tokyo';
+  $: useCloudflareImages = false;
+  onMount(() => {
+    useCloudflareImages = new URL(window.location.href).hostname === 'blog.orch-canvas.tokyo';
+  });
 
   function getCloudflareSrc(src: string, options: [string, string][]): string {
     const optionsString = options.map(([key, value]) => `${key}=${value}`).join(',');
@@ -16,18 +21,19 @@
   }
 </script>
 
-{#if useCloudflareImages}
+{#if useCloudflareImages === true}
   <img
     src={getCloudflareSrc(src, [...commonOptions, ['height', '400']])}
     srcset={`${getCloudflareSrc(src, [...commonOptions, ['height', '800']])} 2x`}
     {alt}
   />
-{:else}
+{:else if useCloudflareImages === false}
   <img {src} {alt} />
 {/if}
 
 <style>
   img {
     max-height: 400px;
+    width: 100%;
   }
 </style>
