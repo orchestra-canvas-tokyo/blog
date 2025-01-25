@@ -248,10 +248,12 @@
 
     :global(h3) {
       margin-top: calc(var(--spacing-unit) * 12);
+      font-size: 1.5em;
     }
     :global(h4) {
       margin-top: calc(var(--spacing-unit) * 8);
       margin-bottom: 0;
+      font-size: 1.1em;
     }
 
     :global(p) {
