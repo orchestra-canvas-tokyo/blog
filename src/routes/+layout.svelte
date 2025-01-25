@@ -43,7 +43,7 @@
 </script>
 
 <svelte:head>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <!-- <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" />
   <link
     href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400&family=Noto+Serif+JP:wght@700&display=swap"
@@ -53,7 +53,7 @@
   <link
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/yakuhanjp@4.1.1/dist/css/yakuhanmp_s.css"
-  />
+  /> -->
 </svelte:head>
 
 <header>
@@ -108,7 +108,8 @@
     --color-text-primary: #000;
     --color-text-secondary: #5a5a5a;
     --sans-serif: sans-serif;
-    --serif: YakuHanMPs, 'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', YuMincho, serif;
+    /* --serif: YakuHanMPs, 'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', YuMincho, serif; */
+    --serif: 'Hiragino Mincho ProN', 'Yu Mincho', YuMincho, serif;
   }
 
   :global(html) {
