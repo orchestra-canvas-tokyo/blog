@@ -4,13 +4,13 @@
   import Figure from '$lib/component/post/Figure.svelte';
   import Reference from '$lib/component/post/Reference.svelte';
 
-  import figureIdeefixe1 from './ideefixe1.webp?enhanced';
-  import figureIdeefixe2 from './ideefixe2.webp?enhanced';
-  import figureIdeefixe3 from './ideefixe3.webp?enhanced';
-  import figureIdeefixe4 from './ideefixe4.webp?enhanced';
-  import figureIdeefixe5 from './ideefixe5.webp?enhanced';
-  import figureDiesirae from './diesirae.webp?enhanced';
-  import figureRondo from './rondo.webp?enhanced';
+  import figureIdeefixe1 from './ideefixe1.webp';
+  import figureIdeefixe2 from './ideefixe2.webp';
+  import figureIdeefixe3 from './ideefixe3.webp';
+  import figureIdeefixe4 from './ideefixe4.webp';
+  import figureIdeefixe5 from './ideefixe5.webp';
+  import figureDiesirae from './diesirae.webp';
+  import figureRondo from './rondo.webp';
 
   export const metadata: Metadata = {
     published: true,

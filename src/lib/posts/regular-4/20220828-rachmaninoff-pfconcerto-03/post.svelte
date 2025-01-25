@@ -5,8 +5,8 @@
   import Reference from '$lib/component/post/Reference.svelte';
   import UrlLink from '$lib/component/post/UrlLink.svelte';
 
-  import figure1 from './01.webp?enhanced';
-  import figure2 from './02.webp?enhanced';
+  import figure1 from './01.webp';
+  import figure2 from './02.webp';
   import Spacer from '$lib/component/post/Spacer.svelte';
 
   export const metadata: Metadata = {

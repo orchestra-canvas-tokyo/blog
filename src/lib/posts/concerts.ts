@@ -1,25 +1,23 @@
-import regular1 from './regular-1/flyer.webp?enhanced';
-import regular2 from './regular-2/flyer.webp?enhanced';
-import regular3 from './regular-3/flyer.webp?enhanced';
-import regular4 from './regular-4/flyer.webp?enhanced';
-import regular5 from './regular-5/flyer.webp?enhanced';
-import regular6 from './regular-6/flyer.webp?enhanced';
-import regular7 from './regular-7/flyer.webp?enhanced';
-import regular8 from './regular-8/flyer.webp?enhanced';
-import regular9 from './regular-9/flyer.webp?enhanced';
-import regular10 from './regular-10/flyer.webp?enhanced';
-import regular11 from './regular-11/flyer.png?enhanced';
-import regular12 from './regular-12/flyer.png?enhanced';
-import regular13 from './regular-13/flyer.png?enhanced';
-
-import type { Picture } from 'vite-imagetools';
+import regular1 from './regular-1/flyer.webp';
+import regular2 from './regular-2/flyer.webp';
+import regular3 from './regular-3/flyer.webp';
+import regular4 from './regular-4/flyer.webp';
+import regular5 from './regular-5/flyer.webp';
+import regular6 from './regular-6/flyer.webp';
+import regular7 from './regular-7/flyer.webp';
+import regular8 from './regular-8/flyer.webp';
+import regular9 from './regular-9/flyer.webp';
+import regular10 from './regular-10/flyer.webp';
+import regular11 from './regular-11/flyer.png';
+import regular12 from './regular-12/flyer.png';
+import regular13 from './regular-13/flyer.png';
 
 /** 演奏会の基本情報をまとめた型 */
 type Concert = {
   title: string;
   date: string;
   url: string;
-  flyer: Picture;
+  flyer: string;
 };
 
 /** 演奏会の基本情報をまとめたオブジェクト */
