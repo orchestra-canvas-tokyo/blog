@@ -48,7 +48,7 @@
 {/if}
 
 <main>
-  <svelte:component this={data.post.default}></svelte:component>
+  <data.post.default />
 
   {#if metadata.youTubeVideoId}
     <div class="video">
