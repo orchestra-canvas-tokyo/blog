@@ -1,4 +1,4 @@
-import type { ComponentType } from 'svelte';
+import type { Component } from 'svelte';
 import { convertToDescription } from '$lib/util';
 import { composers, type composerSlug } from './composers';
 import type { concertSlug } from './concerts';
@@ -19,16 +19,17 @@ export type Metadata = {
 export type Post = {
   metadata: Metadata;
   slug: string;
-  default: ComponentType & { render: () => { html: string } };
+  default: Component;
   description: string;
 };
 
 // 動的に記事のSvelteファイルを取得する
 const modules = import.meta.glob('./**/post.svelte', { eager: true }) as Record<string, Post>;
 const rawModules = import.meta.glob('./**/post.svelte', {
+  import: 'default',
   query: '?raw',
   eager: true
-}) as Record<string, { default: string }>;
+}) as Record<string, string>;
 const posts: { [slug: string]: Post } = {};
 Object.keys(modules).forEach((path) => {
   const slug = /^.+\/(?<slug>[^/]+)\/post\.svelte$/.exec(path)?.groups?.slug;
@@ -38,7 +39,7 @@ Object.keys(modules).forEach((path) => {
     metadata: modules[path].metadata,
     slug: slug,
     default: modules[path].default,
-    description: convertToDescription(rawModules[path].default)
+    description: convertToDescription(rawModules[path])
   };
 });
 
