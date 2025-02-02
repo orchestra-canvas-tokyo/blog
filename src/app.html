@@ -7,6 +7,7 @@
   </head>
   <body>
     <div style="display: contents">%sveltekit.body%</div>
+
     <!-- Cloudflare Web Analytics -->
     <script
       defer
@@ -14,6 +15,22 @@
       data-cf-beacon='{"token": "8e430284c5e94ef491ba76c2e90509c2"}'
     ></script>
     <!-- End Cloudflare Web Analytics -->
+
+    <script type="text/javascript">
+      (function (c, l, a, r, i, t, y) {
+        c[a] =
+          c[a] ||
+          function () {
+            (c[a].q = c[a].q || []).push(arguments);
+          };
+        t = l.createElement(r);
+        t.async = 1;
+        t.src = 'https://www.clarity.ms/tag/' + i;
+        y = l.getElementsByTagName(r)[0];
+        y.parentNode.insertBefore(t, y);
+      })(window, document, 'clarity', 'script', 'q3jweqrwcn');
+    </script>
+
     <script>
       // Easter Egg
       //   三角点◬よりロゴに近い文字ないかしら
