@@ -3,18 +3,22 @@
   import { formatDate2JpStyle } from '$lib/util';
   import TagList from './TagList.svelte';
 
-  /** 表示するポストの配列 */
-  export let posts: Post[];
-  /**
-   * ページネーションの起点となる、このコンポーネントが配置されるURL
-   * スラッシュ始まり、スラッシュ終わりを想定。
-   * e.g. '/', '/tag/hoge/'
-   * */
-  export let baseUrl: string;
-  /** 現在のページ数（1始まり） */
-  export let currentPageNumber: number;
-  /** 総ページ数 */
-  export let totalNumberOfPages: number;
+  interface Props {
+    /** 表示するポストの配列 */
+    posts: Post[];
+    /**
+     * ページネーションの起点となる、このコンポーネントが配置されるURL
+     * スラッシュ始まり、スラッシュ終わりを想定。
+     * e.g. '/', '/tag/hoge/'
+     * */
+    baseUrl: string;
+    /** 現在のページ数（1始まり） */
+    currentPageNumber: number;
+    /** 総ページ数 */
+    totalNumberOfPages: number;
+  }
+
+  let { posts, baseUrl, currentPageNumber, totalNumberOfPages }: Props = $props();
 </script>
 
 <!--

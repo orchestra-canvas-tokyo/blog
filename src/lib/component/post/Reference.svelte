@@ -1,3 +1,11 @@
+<script lang="ts">
+  interface Props {
+    children?: import('svelte').Snippet;
+  }
+
+  let { children }: Props = $props();
+</script>
+
 <!--
 @component
 参考文献を描画するコンポーネント
@@ -15,7 +23,7 @@
 <h3>参考文献</h3>
 
 <ol>
-  <slot></slot>
+  {@render children?.()}
 </ol>
 
 <style>

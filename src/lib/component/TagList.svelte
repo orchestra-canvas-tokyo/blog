@@ -1,11 +1,15 @@
 <script lang="ts">
   import type { Tag } from '$lib/posts/tags';
 
-  /**
-   * タグ文字列の配列
-   * ハッシュタグを含まない。
-   */
-  export let tags: Tag[];
+  interface Props {
+    /**
+     * タグ文字列の配列
+     * ハッシュタグを含まない。
+     */
+    tags: Tag[];
+  }
+
+  let { tags }: Props = $props();
 </script>
 
 <!--

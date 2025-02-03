@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
   import type { Metadata } from '$lib/posts/index.ts';
   import Author from '$lib/component/post/Author.svelte';
   import MusicalNotation from '$lib/component/post/MusicalNotation.svelte';

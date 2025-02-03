@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
   import Figure from '$lib/component/post/Figure.svelte';
   import type { Metadata } from '$lib/posts/index.ts';
 

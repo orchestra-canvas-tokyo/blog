@@ -1,6 +1,10 @@
 <script lang="ts">
-  /** 描画する音楽記号 */
-  export let content: 'fortissimo' | 'fortissississimo' | 'pianissimo';
+  interface Props {
+    /** 描画する音楽記号 */
+    content: 'fortissimo' | 'fortissississimo' | 'pianissimo';
+  }
+
+  let { content }: Props = $props();
 </script>
 
 <!--

@@ -7,6 +7,11 @@
   import x from './sns-x.svg';
   import youtube from './sns-youtube.svg';
   import { onMount } from 'svelte';
+  interface Props {
+    children?: import('svelte').Snippet;
+  }
+
+  let { children }: Props = $props();
 
   /**
    * 頻繁に呼び出されうる関数を、300msごとの実行に制限する
@@ -70,7 +75,7 @@
   </a>
 </header>
 
-<slot />
+{@render children?.()}
 
 <footer>
   <div class="inline-logo-container">

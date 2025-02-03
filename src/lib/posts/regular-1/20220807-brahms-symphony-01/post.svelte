@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
   import Author from '$lib/component/post/Author.svelte';
   import Figure from '$lib/component/post/Figure.svelte';
   import Footnote from '$lib/component/post/Footnote.svelte';
