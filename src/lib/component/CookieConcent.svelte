@@ -86,11 +86,11 @@
 
 <svelte:head>
   <!-- Cloudflare Web Analytics -->
+  <!-- 3rd party Cookieを使用していないため、Cookie同意は不要 -->
   <script
     defer
     src="https://static.cloudflareinsights.com/beacon.min.js"
-    data-cf-beacon={'{"token": "8e430284c5e94ef491ba76c2e90509c2"}'}
-    type={contentType}
+    data-cf-beacon={'{"token": "8044631ab8984a1c90d8d1f3f8fb4d33"}'}
   ></script>
   <!-- End Cloudflare Web Analytics -->
 
