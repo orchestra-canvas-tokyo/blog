@@ -204,6 +204,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: calc(var(--spacing-unit) * 4);
   }
   .inline-logo-container {
     display: flex;
@@ -220,7 +221,6 @@
   .sns-icon-container {
     display: flex;
     align-items: center;
-    margin-top: calc(var(--spacing-unit) * 4);
     gap: calc(var(--spacing-unit) * 8);
   }
   .sns-icon {

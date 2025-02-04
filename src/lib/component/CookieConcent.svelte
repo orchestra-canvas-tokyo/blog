@@ -128,9 +128,13 @@
   </script>
 </svelte:head>
 
-{#if showToast}
-  <div>
-    <p>Cookieの利用に同意してください。</p>
+<div class="toast" class:show={showToast}>
+  <p>
+    このブログでは、サービスの品質向上と利用状況の把握のためにCookieを使用しています。<br />
+    Cookieの使用に同意いただける場合は、「同意する」をクリックしてください。
+  </p>
+
+  <div class="button-container">
     <button
       onclick={function () {
         CookieConcentStateController.updateConcentObtained(true);
@@ -151,20 +155,99 @@
       同意しない
     </button>
   </div>
-{/if}
+</div>
 
 <button
   onclick={function () {
     showToast = true;
   }}
+  class="text-link"
 >
   Cookieの設定を変更
-  {contentType}
 </button>
 
 <style>
   button {
     background: none;
     border: none;
+    cursor: pointer;
+  }
+
+  .text-link {
+    color: var(--color-text-secondary);
+    text-decoration: underline;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: calc(var(--spacing-unit) * 8);
+
+    border: 1px solid var(--color-text-primary);
+    padding: calc(var(--spacing-unit) * 4);
+
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
+    border-radius: var(--spacing-unit);
+
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(5px);
+
+    font-size: 1.2em;
+
+    animation: fadeOut 0.1s ease-in 0s forwards;
+    display: none;
+    opacity: 0;
+
+    button {
+      padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 4);
+      border: 1px solid var(--color-text-primary);
+      border-radius: var(--spacing-unit);
+    }
+  }
+
+  .show {
+    animation: fadeIn 0.1s ease-in 0s forwards;
+
+    display: block;
+    opacity: 1;
+  }
+
+  @keyframes fadeIn {
+    0% {
+      display: none;
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    1% {
+      display: block;
+      opacity: 0;
+    }
+    100% {
+      display: block;
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes fadeOut {
+    0% {
+      display: block;
+      opacity: 1;
+      transform: scale(1);
+    }
+    99% {
+      display: block;
+      opacity: 0;
+    }
+    100% {
+      display: none;
+      opacity: 0;
+      transform: scale(0.95);
+    }
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: calc(var(--spacing-unit) * 8);
   }
 </style>
