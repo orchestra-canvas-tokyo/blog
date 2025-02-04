@@ -7,6 +7,7 @@
   import x from './sns-x.svg';
   import youtube from './sns-youtube.svg';
   import { onMount } from 'svelte';
+  import CookieConcent from '$lib/component/CookieConcent.svelte';
   interface Props {
     children?: import('svelte').Snippet;
   }
@@ -103,6 +104,8 @@
       <img class="sns-icon" width="25.59" height="22.75" src={youtube} alt="YouTube" />
     </a>
   </div>
+
+  <CookieConcent />
 </footer>
 
 <style>
