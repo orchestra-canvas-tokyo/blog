@@ -141,7 +141,7 @@
     line-break: strict; /* 禁則処理を厳格に適用 */
   }
 
-  @media (max-width: 567px) {
+  @media (max-width: 576px) {
     :global(body) {
       padding: calc(var(--spacing-unit) * 6);
       font-size: 16px;
@@ -157,7 +157,7 @@
     text-decoration: underline;
   }
 
-  @media (max-width: 567px) {
+  @media (max-width: 576px) {
     :global(ul),
     :global(ol) {
       padding-inline-start: calc(var(--spacing-unit) * 5);
