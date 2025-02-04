@@ -182,20 +182,24 @@
     position: fixed;
     bottom: calc(var(--spacing-unit) * 8);
 
+    margin: 0 calc(var(--spacing-unit) * 8);
     border: 1px solid var(--color-text-primary);
-    padding: calc(var(--spacing-unit) * 4);
+    padding: calc(var(--spacing-unit) * 6);
 
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
     border-radius: var(--spacing-unit);
 
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.75);
     backdrop-filter: blur(5px);
-
-    font-size: 1.2em;
 
     animation: fadeOut 0.1s ease-in 0s forwards;
     display: none;
     opacity: 0;
+
+    p {
+      margin-top: 0;
+      margin-bottom: calc(var(--spacing-unit) * 4);
+    }
 
     button {
       padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 4);
@@ -248,6 +252,6 @@
   .button-container {
     display: flex;
     justify-content: flex-end;
-    gap: calc(var(--spacing-unit) * 8);
+    gap: calc(var(--spacing-unit) * 6);
   }
 </style>
