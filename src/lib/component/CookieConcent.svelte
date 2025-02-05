@@ -168,8 +168,12 @@
 
 <style>
   button {
-    background: none;
+    padding: 0;
     border: none;
+    outline: none;
+    font: inherit;
+    color: inherit;
+    background: none;
     cursor: pointer;
   }
 
