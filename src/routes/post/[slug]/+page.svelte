@@ -310,7 +310,7 @@
     padding: calc(var(--spacing-unit) * 6) 0;
     background-color: var(--color-background-secondary);
 
-    @media (max-width: 567px) {
+    @media (max-width: 576px) {
       margin: calc(var(--spacing-unit) * 20) calc(-1 * var(--spacing-unit) * 6) 0;
     }
   }
