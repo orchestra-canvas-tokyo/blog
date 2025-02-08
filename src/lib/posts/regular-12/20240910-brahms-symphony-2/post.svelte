@@ -17,6 +17,7 @@
     title: '交響曲第2番 ニ長調 作品73',
     composerSlug: 'brahms',
     concertSlug: 'regular-12',
+    youTubeVideoId: 'YgTbh0qAkUY',
     tags: ['曲目解説', '第12回定期', 'ブラームス']
   };
 </script>
