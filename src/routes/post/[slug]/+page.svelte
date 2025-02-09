@@ -10,11 +10,15 @@
   import regular13Flyer from './regular-13.png';
   import Flyer from '$lib/component/Flyer.svelte';
 
-  export let data: PageData;
-  $: metadata = data.post.metadata;
-  $: composer = metadata.composerSlug ? composers[metadata.composerSlug] : null;
-  $: arranger = metadata.arrangerSlug ? composers[metadata.arrangerSlug] : null;
-  $: concert = concerts[metadata.concertSlug];
+  interface Props {
+    data: PageData;
+  }
+
+  let { data }: Props = $props();
+  let metadata = $derived(data.post.metadata);
+  let composer = $derived(metadata.composerSlug ? composers[metadata.composerSlug] : null);
+  let arranger = $derived(metadata.arrangerSlug ? composers[metadata.arrangerSlug] : null);
+  let concert = $derived(concerts[metadata.concertSlug]);
 
   const hasYearOfDeath = (composer: Composer): composer is Composer & { yearOfDeath: number } => {
     return Object.keys(composer).includes('yearOfDeath');

@@ -1,14 +1,19 @@
 <script lang="ts">
   import { onMount } from 'svelte';
 
-  export let src: string;
-  export let alt: string;
+  interface Props {
+    src: string;
+    alt: string;
+  }
+
+  let { src, alt }: Props = $props();
   const commonOptions = [
     ['format', 'auto'],
     ['fit', 'scale-down']
   ] satisfies [string, string][];
 
-  $: useCloudflareImages = false;
+  let useCloudflareImages = $state(false);
+
   onMount(() => {
     useCloudflareImages = new URL(window.location.href).hostname === 'blog.orch-canvas.tokyo';
   });

@@ -3,7 +3,11 @@
   import PostList from '$lib/component/PostList.svelte';
   import Meta from '$lib/component/Meta.svelte';
 
-  export let data: PageData;
+  interface Props {
+    data: PageData;
+  }
+
+  let { data }: Props = $props();
 </script>
 
 <Meta title={`#${data.tag}の記事一覧`} canonical={`/tag/${data.tag}`} />

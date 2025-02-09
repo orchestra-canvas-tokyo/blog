@@ -1,6 +1,10 @@
 <script lang="ts">
-  /** リンク先URL */
-  export let url: string;
+  interface Props {
+    /** リンク先URL */
+    url: string;
+  }
+
+  let { url }: Props = $props();
 </script>
 
 <!--

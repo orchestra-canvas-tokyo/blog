@@ -1,10 +1,14 @@
 <script lang="ts">
-  /** 表示する画像 */
-  export let src: string;
-  /** キャプション */
-  export let caption: string | undefined = undefined;
-  /** 画像の最大高さ(px単位、オプション) */
-  export let maxHeightPx: number | undefined = undefined;
+  interface Props {
+    /** 表示する画像 */
+    src: string;
+    /** キャプション */
+    caption?: string | undefined;
+    /** 画像の最大高さ(px単位、オプション) */
+    maxHeightPx?: number | undefined;
+  }
+
+  let { src, caption = undefined, maxHeightPx = undefined }: Props = $props();
 
   let maxHeightStyle = maxHeightPx !== undefined ? `--max-height-px: ${maxHeightPx}px;` : '';
 </script>

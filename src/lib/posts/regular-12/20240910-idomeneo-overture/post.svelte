@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
   import type { Metadata } from '$lib/posts/index.ts';
   import Author from '$lib/component/post/Author.svelte';
   import Reference from '$lib/component/post/Reference.svelte';
@@ -9,6 +9,7 @@
     title: '歌劇『イドメネオ』序曲',
     composerSlug: 'mozart',
     concertSlug: 'regular-12',
+    youTubeVideoId: 'xwRn78M3usM',
     tags: ['曲目解説', '第12回定期', 'モーツァルト']
   };
 </script>

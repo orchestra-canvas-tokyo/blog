@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
   import type { Metadata } from '$lib/posts/index.ts';
   import Author from '$lib/component/post/Author.svelte';
   import Reference from '$lib/component/post/Reference.svelte';
@@ -17,6 +17,7 @@
     title: '交響曲第2番 ニ長調 作品73',
     composerSlug: 'brahms',
     concertSlug: 'regular-12',
+    youTubeVideoId: 'YgTbh0qAkUY',
     tags: ['曲目解説', '第12回定期', 'ブラームス']
   };
 </script>
