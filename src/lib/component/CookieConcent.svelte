@@ -131,8 +131,9 @@
 <div class="toast" class:show={showToast}>
   <p>
     このブログでは、サービスの品質向上と利用状況の把握のためにCookieを使用しています。<br />
-    Cookieの使用に同意いただける場合は、「同意する」をクリックしてください。
+    詳細は<a href="/cookie-policy">Cookieポリシー</a>をご確認ください。
   </p>
+  <p>Cookieの使用に同意いただける場合は、「同意する」をクリックしてください。</p>
 
   <div class="button-container">
     <button
@@ -257,5 +258,9 @@
     display: flex;
     justify-content: flex-end;
     gap: calc(var(--spacing-unit) * 6);
+  }
+
+  a {
+    text-decoration: underline;
   }
 </style>
