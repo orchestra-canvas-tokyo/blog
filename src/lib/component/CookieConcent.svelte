@@ -158,14 +158,18 @@
   </div>
 </div>
 
-<button
-  onclick={function () {
-    showToast = true;
-  }}
-  class="text-link"
->
-  Cookieの設定を変更
-</button>
+<div class="footer-section">
+  <button
+    onclick={function () {
+      showToast = true;
+    }}
+    class="text-link"
+  >
+    Cookieの設定を変更
+  </button>
+  ・
+  <a class="secondary-link" href="/cookie-policy">Cookieポリシー</a>
+</div>
 
 <style>
   button {
@@ -262,5 +266,9 @@
 
   a {
     text-decoration: underline;
+  }
+
+  .footer-section {
+    color: var(--color-text-secondary);
   }
 </style>
