@@ -13,23 +13,6 @@
 
   let { children }: Props = $props();
 
-  /**
-   * 頻繁に呼び出されうる関数を、300msごとの実行に制限する
-   * @param func 呼び出される関数
-   */
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-  function debounce(func: Function) {
-    let timer: NodeJS.Timeout;
-    const timeout = 300; // funcが呼び出されるまでの遅延時間
-    return function (this: Window) {
-      const args = arguments;
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        func.apply(this, args);
-      }, timeout);
-    };
-  }
-
   onMount(() => {
     // viewportが375px未満のとき、全体を縮小して表示する
     const adjustViewport = () => {
@@ -42,6 +25,19 @@
           : 'width=device-width, initial-scale=1';
       viewport.setAttribute('content', value);
     };
+
+    /**
+     * 頻繁に呼び出されうる関数を、300msごとの実行に制限する
+     * @param func 呼び出される関数
+     */
+    const debounce = (func: () => void) => {
+      let timer: number;
+      return () => {
+        clearTimeout(timer);
+        timer = setTimeout(func, 300);
+      };
+    };
+
     const debouncedFunction = debounce(adjustViewport);
     window.addEventListener('resize', debouncedFunction, false);
   });
