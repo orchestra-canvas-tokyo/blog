@@ -73,11 +73,6 @@ export default [
   {
     rules: {
       'no-irregular-whitespace': 'off'
-    },
-    languageOptions: {
-      globals: {
-        NodeJS: 'readonly'
-      }
     }
   }
 ];
