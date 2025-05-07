@@ -61,22 +61,59 @@
     <table>
       <thead>
         <tr>
+          <th>サービス名</th>
           <th>クッキー名</th>
           <th>送信先</th>
-          <th>目的</th>
+          <th>当団での利用目的</th>
+          <th>送信先での利用目的</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>_ga / _ga_xxxxxxxxxx</td>
           <td>Google Analytics</td>
-          <td rowspan="2">
-            これらのクッキーは、訪問者が当団のブログをどのように使用しているかに関する情報を収集します。当団は、匿名化された情報（ウェブサイトへの訪問者数など）を収集し、ブログを改善します。
+          <td>
+            <pre>_ga</pre>
+            /
+            <pre>_ga_xxxxxxxxxx</pre>
           </td>
+          <td>
+            Google LLC<br />
+            及びその関係会社
+          </td>
+          <td>
+            利用者による閲覧の傾向や履歴の分析のため。<br />
+            詳細は
+            <a href="https://policies.google.com/privacy?hl=ja#whycollect">Googleのウェブサイト</a> をご参照ください。
+          </td>
+          <td>同左</td>
         </tr>
         <tr>
-          <td>_clck / _clsk / CLID / ANONCHK / MR / MUID / SM</td>
           <td>Microsoft Clarity</td>
+          <td>
+            <pre>_clck</pre>
+            /
+            <pre>_clsk</pre>
+            /
+            <pre>CLID</pre>
+            /
+            <pre>ANONCHK</pre>
+            /
+            <pre>MR</pre>
+            /
+            <pre>MUID</pre>
+            /
+            <pre>SM</pre>
+          </td>
+          <td>
+            Microsoft Corporation<br />
+            及びその関連会社
+          </td>
+          <td>
+            利用者による閲覧の傾向や履歴の分析のため。<br />
+            詳細は
+            <a href="https://clarity.microsoft.com/terms">Microsoftのウェブサイト</a> をご参照ください。
+          </td>
+          <td>同左</td>
         </tr>
       </tbody>
     </table>
@@ -125,33 +162,34 @@
 
   table {
     border-collapse: collapse;
-    border: 2px solid;
+    border-top: 2px solid;
+    border-bottom: 2px solid;
     flex-shrink: 0;
   }
 
   thead {
     border-bottom: 2px solid;
   }
-  thead tr th:first-child {
-    border-right: 2px solid;
-  }
 
   th,
   td {
-    border: 1px solid;
+    border: 1px solid #ccc;
     padding: 5px 15px;
     text-align: center;
     vertical-align: middle;
     text-wrap: balance;
   }
 
-  td:nth-child(1) {
-    width: 160px;
-  }
   td:nth-child(2) {
     width: 80px;
   }
-  td:nth-child(3) {
-    width: 400px;
+
+  td pre {
+    display: inline;
+    margin: 0;
+  }
+
+  td a {
+    text-decoration: underline;
   }
 </style>
