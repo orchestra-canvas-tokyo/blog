@@ -18,15 +18,13 @@
    * 頻繁に呼び出されうる関数を、300msごとの実行に制限する
    * @param func 呼び出される関数
    */
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-  function debounce(func: Function) {
-    let timer: NodeJS.Timeout;
+  function debounce(func: () => void) {
+    let timer: ReturnType<typeof setTimeout>;
     const timeout = 300; // funcが呼び出されるまでの遅延時間
     return function (this: Window) {
-      const args = arguments;
       clearTimeout(timer);
       timer = setTimeout(() => {
-        func.apply(this, args);
+        func.apply(this);
       }, timeout);
     };
   }
