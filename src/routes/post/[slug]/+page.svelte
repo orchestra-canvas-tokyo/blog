@@ -7,7 +7,7 @@
   import type { PageData } from './$types';
   import type { Composer } from '$lib/posts/composers';
   import Meta from '$lib/component/Meta.svelte';
-  import regular13Flyer from './regular-13.png';
+  import regular14Flyer from './regular-14.png';
   import Flyer from '$lib/component/Flyer.svelte';
 
   interface Props {
@@ -88,19 +88,19 @@
     </svg>
 
     <p>
-      Orchestra Canvas Tokyo<br />第13回定期演奏会
+      Orchestra Canvas Tokyo<br />第14回定期演奏会
     </p>
     <p>
-      2025年2月24日(月祝)<br />
-      横浜みなとみらいホール
+      2025年7月12日(土)<br />
+      練馬区立練馬文化センター 大ホール
     </p>
-    <p>ブルックナー / 交響曲第8番 ほか</p>
+    <p>シューマン / 交響曲第2番 ほか</p>
     <p>
-      詳細は<a href="https://www.orch-canvas.tokyo/concerts/regular-13">当団ホームページ</a>にて
+      詳細は<a href="https://www.orch-canvas.tokyo/concerts/regular-14">当団ホームページ</a>にて
     </p>
 
-    <a href="https://www.orch-canvas.tokyo/concerts/regular-13">
-      <Flyer src={regular13Flyer} alt="第13回定期演奏会のフライヤー" />
+    <a href="https://www.orch-canvas.tokyo/concerts/regular-14">
+      <Flyer src={regular14Flyer} alt="第14回定期演奏会のフライヤー" />
     </a>
   </section>
 </div>

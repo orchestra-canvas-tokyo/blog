@@ -9,6 +9,7 @@
     title: '歌劇『イドメネオ』序曲',
     composerSlug: 'mozart',
     concertSlug: 'regular-12',
+    youTubeVideoId: 'xwRn78M3usM',
     tags: ['曲目解説', '第12回定期', 'モーツァルト']
   };
 </script>

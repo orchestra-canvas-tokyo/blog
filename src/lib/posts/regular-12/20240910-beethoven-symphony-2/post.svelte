@@ -11,6 +11,7 @@
     title: '交響曲第2番 ニ長調 作品36',
     composerSlug: 'beethoven',
     concertSlug: 'regular-12',
+    youTubeVideoId: 'imxAHYuzbMo',
     tags: ['曲目解説', '第12回定期', 'ベートーヴェン']
   };
 </script>
