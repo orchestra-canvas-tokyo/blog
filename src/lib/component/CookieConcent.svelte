@@ -270,5 +270,6 @@
 
   .footer-section {
     color: var(--color-text-secondary);
+    font-size: 0.8em;
   }
 </style>
