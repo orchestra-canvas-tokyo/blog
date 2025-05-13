@@ -144,7 +144,6 @@
     }
 
     p {
-      text-indent: 1rem;
       text-align: justify;
       line-height: 1.75;
     }
