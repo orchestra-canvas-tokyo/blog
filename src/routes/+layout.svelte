@@ -7,6 +7,7 @@
   import x from './sns-x.svg';
   import youtube from './sns-youtube.svg';
   import { onMount } from 'svelte';
+  import CookieConcent from '$lib/component/CookieConcent.svelte';
   interface Props {
     children?: import('svelte').Snippet;
   }
@@ -99,6 +100,8 @@
       <img class="sns-icon" width="25.59" height="22.75" src={youtube} alt="YouTube" />
     </a>
   </div>
+
+  <CookieConcent />
 </footer>
 
 <style>
@@ -134,7 +137,7 @@
     line-break: strict; /* 禁則処理を厳格に適用 */
   }
 
-  @media (max-width: 567px) {
+  @media (max-width: 576px) {
     :global(body) {
       padding: calc(var(--spacing-unit) * 6);
       font-size: 16px;
@@ -150,7 +153,7 @@
     text-decoration: underline;
   }
 
-  @media (max-width: 567px) {
+  @media (max-width: 576px) {
     :global(ul),
     :global(ol) {
       padding-inline-start: calc(var(--spacing-unit) * 5);
@@ -197,6 +200,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: calc(var(--spacing-unit) * 4);
   }
   .inline-logo-container {
     display: flex;
@@ -213,7 +217,6 @@
   .sns-icon-container {
     display: flex;
     align-items: center;
-    margin-top: calc(var(--spacing-unit) * 4);
     gap: calc(var(--spacing-unit) * 8);
   }
   .sns-icon {
