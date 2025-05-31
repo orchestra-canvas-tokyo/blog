@@ -3,9 +3,72 @@
 
   let showToast = $state(false);
   let concentObtained: boolean | null = $state(false);
-  let contentType = $derived.by(() =>
-    concentObtained === true ? 'text/javascript' : 'text/plain'
-  );
+
+  function injectScripts() {
+    // Google Tag Manager main script
+    if (!document.getElementById('gtag-script')) {
+      const gtagScript = document.createElement('script');
+      gtagScript.id = 'gtag-script';
+      gtagScript.async = true;
+      gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-FEL3WFK0YW';
+      document.head.appendChild(gtagScript);
+    }
+
+    // Google Tag Manager inline script
+    if (!document.getElementById('gtag-inline-script')) {
+      const gtagInlineScript = document.createElement('script');
+      gtagInlineScript.id = 'gtag-inline-script';
+      gtagInlineScript.textContent = `
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-FEL3WFK0YW');
+      `;
+      document.head.appendChild(gtagInlineScript);
+    }
+
+    // Clarity script
+    if (!document.getElementById('clarity-script')) {
+      const clarityScript = document.createElement('script');
+      clarityScript.id = 'clarity-script';
+      clarityScript.textContent = `
+        (function (c, l, a, r, i, t, y) {
+          c[a] =
+            c[a] ||
+            function () {
+              (c[a].q = c[a].q || []).push(arguments);
+            };
+          t = l.createElement(r);
+          t.async = 1;
+          t.src = 'https://www.clarity.ms/tag/' + i;
+          y = l.getElementsByTagName(r)[0];
+          y.parentNode.insertBefore(t, y);
+          // cspell: disable-next-line
+        })(window, document, 'clarity', 'script', 'q3jweqrwcn');
+      `;
+      document.head.appendChild(clarityScript);
+    }
+  }
+
+  function removeScripts() {
+    const gtagScript = document.getElementById('gtag-script');
+    if (gtagScript) gtagScript.remove();
+
+    const gtagInlineScript = document.getElementById('gtag-inline-script');
+    if (gtagInlineScript) gtagInlineScript.remove();
+
+    const clarityScript = document.getElementById('clarity-script');
+    if (clarityScript) clarityScript.remove();
+  }
+
+  $effect(() => {
+    if (concentObtained === true) {
+      injectScripts();
+    } else {
+      // Ensures scripts are removed if consent is not true (i.e., false or null)
+      removeScripts();
+    }
+  });
 
   onMount(() => {
     const cookieConcentStateController = new CookieConcentStateController();
@@ -93,39 +156,6 @@
     data-cf-beacon={'{"token": "8044631ab8984a1c90d8d1f3f8fb4d33"}'}
   ></script>
   <!-- End Cloudflare Web Analytics -->
-
-  <!-- Google tag (gtag.js) -->
-  <script
-    async
-    src="https://www.googletagmanager.com/gtag/js?id=G-FEL3WFK0YW"
-    type={contentType}
-  ></script>
-  <script type={contentType}>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-
-    gtag('config', 'G-FEL3WFK0YW');
-  </script>
-
-  <!-- Clarify -->
-  <script type={contentType}>
-    (function (c, l, a, r, i, t, y) {
-      c[a] =
-        c[a] ||
-        function () {
-          (c[a].q = c[a].q || []).push(arguments);
-        };
-      t = l.createElement(r);
-      t.async = 1;
-      t.src = 'https://www.clarity.ms/tag/' + i;
-      y = l.getElementsByTagName(r)[0];
-      y.parentNode.insertBefore(t, y);
-      // cspell: disable-next-line
-    })(window, document, 'clarity', 'script', 'q3jweqrwcn');
-  </script>
 </svelte:head>
 
 <div class="toast" class:show={showToast}>
