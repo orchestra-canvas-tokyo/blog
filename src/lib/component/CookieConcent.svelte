@@ -1,64 +1,43 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { scriptsToManage, type ThirdPartyScript } from '$lib/config/thirdPartyScripts';
 
   let showToast = $state(false);
   let concentObtained: boolean | null = $state(false);
 
   function injectScripts() {
-    // Google Tag Manager main script
-    if (!document.getElementById('gtag-script')) {
-      const gtagScript = document.createElement('script');
-      gtagScript.id = 'gtag-script';
-      gtagScript.async = true;
-      gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-FEL3WFK0YW';
-      document.head.appendChild(gtagScript);
-    }
+    for (const scriptConfig of scriptsToManage) {
+      if (document.getElementById(scriptConfig.id)) {
+        continue; // Script already exists
+      }
 
-    // Google Tag Manager inline script
-    if (!document.getElementById('gtag-inline-script')) {
-      const gtagInlineScript = document.createElement('script');
-      gtagInlineScript.id = 'gtag-inline-script';
-      gtagInlineScript.textContent = `
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-FEL3WFK0YW');
-      `;
-      document.head.appendChild(gtagInlineScript);
-    }
+      const scriptElement = document.createElement('script');
+      scriptElement.id = scriptConfig.id;
 
-    // Clarity script
-    if (!document.getElementById('clarity-script')) {
-      const clarityScript = document.createElement('script');
-      clarityScript.id = 'clarity-script';
-      clarityScript.textContent = `
-        (function (c, l, a, r, i, t, y) {
-          c[a] =
-            c[a] ||
-            function () {
-              (c[a].q = c[a].q || []).push(arguments);
-            };
-          t = l.createElement(r);
-          t.async = 1;
-          t.src = 'https://www.clarity.ms/tag/' + i;
-          y = l.getElementsByTagName(r)[0];
-          y.parentNode.insertBefore(t, y);
-          // cspell: disable-next-line
-        })(window, document, 'clarity', 'script', 'q3jweqrwcn');
-      `;
-      document.head.appendChild(clarityScript);
+      if (scriptConfig.src) {
+        scriptElement.src = scriptConfig.src;
+      }
+      if (scriptConfig.async) {
+        scriptElement.async = true;
+      }
+      if (scriptConfig.defer) {
+        scriptElement.defer = true;
+      }
+      if (scriptConfig.inlineContent) {
+        scriptElement.textContent = scriptConfig.inlineContent;
+      }
+
+      document.head.appendChild(scriptElement);
     }
   }
 
   function removeScripts() {
-    const gtagScript = document.getElementById('gtag-script');
-    if (gtagScript) gtagScript.remove();
-
-    const gtagInlineScript = document.getElementById('gtag-inline-script');
-    if (gtagInlineScript) gtagInlineScript.remove();
-
-    const clarityScript = document.getElementById('clarity-script');
-    if (clarityScript) clarityScript.remove();
+    for (const scriptConfig of scriptsToManage) {
+      const scriptElement = document.getElementById(scriptConfig.id);
+      if (scriptElement) {
+        scriptElement.remove();
+      }
+    }
   }
 
   $effect(() => {
