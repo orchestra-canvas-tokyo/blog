@@ -1,20 +1,16 @@
 export interface ThirdPartyScript {
-  id: string;
   src?: string;
   inlineContent?: string;
   async?: boolean;
   defer?: boolean;
-  // dataBeaconArgs?: string; // Example for data-cf-beacon, not used for current GTM/Clarity
 }
 
-export const scriptsToManage: ThirdPartyScript[] = [
-  {
-    id: 'gtag-script',
+export const scriptsToManage: Record<string, ThirdPartyScript> = {
+  gtag: {
     src: 'https://www.googletagmanager.com/gtag/js?id=G-FEL3WFK0YW',
     async: true
   },
-  {
-    id: 'gtag-inline-script',
+  'gtag-inline': {
     inlineContent: `
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
@@ -22,8 +18,7 @@ gtag('js', new Date());
 gtag('config', 'G-FEL3WFK0YW');
     `.trim() // Using trim() to remove leading/trailing whitespace from template literal
   },
-  {
-    id: 'clarity-script',
+  clarity: {
     inlineContent: `
 (function (c, l, a, r, i, t, y) {
   c[a] =
@@ -40,4 +35,4 @@ gtag('config', 'G-FEL3WFK0YW');
 })(window, document, 'clarity', 'script', 'q3jweqrwcn');
     `.trim() // Using trim() to remove leading/trailing whitespace
   }
-];
+};

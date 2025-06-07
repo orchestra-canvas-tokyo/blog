@@ -1,18 +1,18 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { scriptsToManage, type ThirdPartyScript } from '$lib/config/thirdPartyScripts';
+  import { scriptsToManage } from '$lib/config/thirdPartyScripts';
 
   let showToast = $state(false);
   let concentObtained: boolean | null = $state(false);
 
   function injectScripts() {
-    for (const scriptConfig of scriptsToManage) {
-      if (document.getElementById(scriptConfig.id)) {
+    for (const [scriptID, scriptConfig] of Object.entries(scriptsToManage)) {
+      if (document.getElementById(scriptID)) {
         continue; // Script already exists
       }
 
       const scriptElement = document.createElement('script');
-      scriptElement.id = scriptConfig.id;
+      scriptElement.id = scriptID;
 
       if (scriptConfig.src) {
         scriptElement.src = scriptConfig.src;
@@ -32,8 +32,8 @@
   }
 
   function removeScripts() {
-    for (const scriptConfig of scriptsToManage) {
-      const scriptElement = document.getElementById(scriptConfig.id);
+    for (const scriptID of Object.keys(scriptsToManage)) {
+      const scriptElement = document.getElementById(scriptID);
       if (scriptElement) {
         scriptElement.remove();
       }
