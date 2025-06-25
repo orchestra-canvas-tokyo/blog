@@ -103,7 +103,7 @@ export const concerts = {
   },
   'regular-14': {
     title: '第14回定期',
-    date: '2025-06-21',
+    date: '2025-07-12',
     url: 'https://www.orch-canvas.tokyo/concerts/regular-14',
     flyer: regular14
   }
