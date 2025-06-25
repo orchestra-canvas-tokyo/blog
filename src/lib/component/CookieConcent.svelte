@@ -199,6 +199,7 @@
   .toast {
     position: fixed;
     bottom: calc(var(--spacing-unit) * 8);
+    z-index: 2;
 
     margin: 0 calc(var(--spacing-unit) * 8);
     border: 1px solid var(--color-text-primary);
