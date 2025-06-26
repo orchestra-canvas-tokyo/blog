@@ -16,7 +16,7 @@
   export const metadata: Metadata = {
     published: true,
     publicatedAt: '2025-06-27T19:00:00+0900',
-    title: '劇付随音楽『真夏の夜の夢』',
+    title: '真夏の夜の夢',
     composerSlug: 'mendelssohn',
     concertSlug: 'regular-14',
     tags: ['曲目解説', '第14回定期', 'メンデルスゾーン']
