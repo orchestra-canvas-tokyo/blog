@@ -1,11 +1,53 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { scriptsToManage } from '$lib/config/thirdPartyScripts';
 
   let showToast = $state(false);
   let concentObtained: boolean | null = $state(false);
-  let contentType = $derived.by(() =>
-    concentObtained === true ? 'text/javascript' : 'text/plain'
-  );
+
+  function injectScripts() {
+    for (const [scriptID, scriptConfig] of Object.entries(scriptsToManage)) {
+      if (document.getElementById(scriptID)) {
+        continue; // Script already exists
+      }
+
+      const scriptElement = document.createElement('script');
+      scriptElement.id = scriptID;
+
+      if (scriptConfig.src) {
+        scriptElement.src = scriptConfig.src;
+      }
+      if (scriptConfig.async) {
+        scriptElement.async = true;
+      }
+      if (scriptConfig.defer) {
+        scriptElement.defer = true;
+      }
+      if (scriptConfig.inlineContent) {
+        scriptElement.textContent = scriptConfig.inlineContent;
+      }
+
+      document.head.appendChild(scriptElement);
+    }
+  }
+
+  function removeScripts() {
+    for (const scriptID of Object.keys(scriptsToManage)) {
+      const scriptElement = document.getElementById(scriptID);
+      if (scriptElement) {
+        scriptElement.remove();
+      }
+    }
+  }
+
+  $effect(() => {
+    if (concentObtained === true) {
+      injectScripts();
+    } else {
+      // Ensures scripts are removed if consent is not true (i.e., false or null)
+      removeScripts();
+    }
+  });
 
   onMount(() => {
     const cookieConcentStateController = new CookieConcentStateController();
@@ -93,39 +135,6 @@
     data-cf-beacon={'{"token": "8044631ab8984a1c90d8d1f3f8fb4d33"}'}
   ></script>
   <!-- End Cloudflare Web Analytics -->
-
-  <!-- Google tag (gtag.js) -->
-  <script
-    async
-    src="https://www.googletagmanager.com/gtag/js?id=G-FEL3WFK0YW"
-    type={contentType}
-  ></script>
-  <script type={contentType}>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-
-    gtag('config', 'G-FEL3WFK0YW');
-  </script>
-
-  <!-- Clarify -->
-  <script type={contentType}>
-    (function (c, l, a, r, i, t, y) {
-      c[a] =
-        c[a] ||
-        function () {
-          (c[a].q = c[a].q || []).push(arguments);
-        };
-      t = l.createElement(r);
-      t.async = 1;
-      t.src = 'https://www.clarity.ms/tag/' + i;
-      y = l.getElementsByTagName(r)[0];
-      y.parentNode.insertBefore(t, y);
-      // cspell: disable-next-line
-    })(window, document, 'clarity', 'script', 'q3jweqrwcn');
-  </script>
 </svelte:head>
 
 <div class="toast" class:show={showToast}>
@@ -190,6 +199,7 @@
   .toast {
     position: fixed;
     bottom: calc(var(--spacing-unit) * 8);
+    z-index: 2;
 
     margin: 0 calc(var(--spacing-unit) * 8);
     border: 1px solid var(--color-text-primary);
