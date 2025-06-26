@@ -90,6 +90,18 @@ export const composers = {
     yearOfBirth: 1860,
     yearOfDeath: 1911
   },
+  mendelssohn: {
+    shortName: 'メンデルスゾーン',
+    fullName: 'フェリックス・メンデルスゾーン・バルトルディ',
+    yearOfBirth: 1809,
+    yearOfDeath: 1847
+  },
+  schumann: {
+    shortName: 'シューマン',
+    fullName: 'ロベルト・シューマン',
+    yearOfBirth: 1810,
+    yearOfDeath: 1856
+  },
   smetana: {
     shortName: 'スメタナ',
     fullName: 'ベドジフ・スメタナ',
