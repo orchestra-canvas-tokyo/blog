@@ -17,7 +17,8 @@
     title: '楽劇『トリスタンとイゾルデ』 より前奏曲と愛の死',
     composerSlug: 'wagner',
     concertSlug: 'regular-13',
-    tags: ['曲目解説', '第13回定期', 'ワーグナー']
+    tags: ['曲目解説', '第13回定期', 'ワーグナー'],
+    youTubeVideoId: 's8h-xLJUdDc'
   };
 </script>
 
