@@ -7,7 +7,7 @@
   import type { PageData } from './$types';
   import type { Composer } from '$lib/posts/composers';
   import Meta from '$lib/component/Meta.svelte';
-  // import regular14Flyer from './regular-14.png';
+  // import regular15Flyer from './regular-15.png';
   import Flyer from '$lib/component/Flyer.svelte';
 
   interface Props {
@@ -88,7 +88,7 @@
     </svg>
 
     <p>
-      Orchestra Canvas Tokyo<br />第14回定期演奏会
+      Orchestra Canvas Tokyo<br />第15回定期演奏会
     </p>
     <p>
       2025年11月24日(月祝)<br />
@@ -113,11 +113,11 @@
     <hr />
 
     <p>
-      詳細は<a href="https://www.orch-canvas.tokyo/concerts/regular-14">当団ホームページ</a>にて
+      詳細は<a href="https://www.orch-canvas.tokyo/concerts/regular-15">当団ホームページ</a>にて
     </p>
 
-    <!-- <a href="https://www.orch-canvas.tokyo/concerts/regular-14">
-      <Flyer src={regular14Flyer} alt="第14回定期演奏会のフライヤー" />
+    <!-- <a href="https://www.orch-canvas.tokyo/concerts/regular-15">
+      <Flyer src={regular15Flyer} alt="第15回定期演奏会のフライヤー" />
     </a> -->
   </section>
 </div>
