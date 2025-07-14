@@ -17,7 +17,8 @@
     title: '交響曲第8番 ハ短調 WAB108',
     composerSlug: 'bruckner',
     concertSlug: 'regular-13',
-    tags: ['曲目解説', '第13回定期', 'ブルックナー']
+    tags: ['曲目解説', '第13回定期', 'ブルックナー'],
+    youTubeVideoId: '8c7INjezBOI'
   };
 </script>
 

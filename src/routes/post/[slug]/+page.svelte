@@ -7,7 +7,7 @@
   import type { PageData } from './$types';
   import type { Composer } from '$lib/posts/composers';
   import Meta from '$lib/component/Meta.svelte';
-  import regular14Flyer from './regular-14.png';
+  // import regular15Flyer from './regular-15.png';
   import Flyer from '$lib/component/Flyer.svelte';
 
   interface Props {
@@ -88,20 +88,37 @@
     </svg>
 
     <p>
-      Orchestra Canvas Tokyo<br />第14回定期演奏会
+      Orchestra Canvas Tokyo<br />第15回定期演奏会
     </p>
     <p>
-      2025年7月12日(土)<br />
-      練馬区立練馬文化センター 大ホール
+      2025年11月24日(月祝)<br />
+      ミューザ川崎シンフォニーホール
     </p>
-    <p>シューマン / 交響曲第2番 ほか</p>
     <p>
-      詳細は<a href="https://www.orch-canvas.tokyo/concerts/regular-14">当団ホームページ</a>にて
+      指揮：石﨑真弥奈<br />
+      ヴァイオリン：北川千紗
     </p>
 
-    <a href="https://www.orch-canvas.tokyo/concerts/regular-14">
-      <Flyer src={regular14Flyer} alt="第14回定期演奏会のフライヤー" />
-    </a>
+    <hr />
+
+    <p>
+      チャイコフスキー<br />
+      ヴァイオリン協奏曲 ニ長調 作品35
+    </p>
+    <p>
+      ストラヴィンスキー<br />
+      バレエ音楽『火の鳥』組曲（1945年版） ほか
+    </p>
+
+    <hr />
+
+    <p>
+      詳細は<a href="https://www.orch-canvas.tokyo/concerts/regular-15">当団ホームページ</a>にて
+    </p>
+
+    <!-- <a href="https://www.orch-canvas.tokyo/concerts/regular-15">
+      <Flyer src={regular15Flyer} alt="第15回定期演奏会のフライヤー" />
+    </a> -->
   </section>
 </div>
 
