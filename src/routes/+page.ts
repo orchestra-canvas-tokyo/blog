@@ -30,10 +30,7 @@ export const load: PageLoad = ({ url }) => {
   if (totalNumberOfPages < pageNumber) error(404);
 
   return {
-    posts: posts.slice(
-      PostCountInOnePage * (pageNumber - 1),
-      PostCountInOnePage * (pageNumber + 1)
-    ),
+    posts: posts.slice(PostCountInOnePage * (pageNumber - 1), PostCountInOnePage * pageNumber),
     currentPageNumber: pageNumber,
     totalNumberOfPages: totalNumberOfPages
   };
