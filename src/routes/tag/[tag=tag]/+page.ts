@@ -35,10 +35,7 @@ export const load: PageLoad = ({ params, url }) => {
   return {
     tag: params.tag,
     totalNumberOfPosts: posts.length,
-    posts: posts.slice(
-      PostCountInOnePage * (pageNumber - 1),
-      PostCountInOnePage * (pageNumber + 1)
-    ),
+    posts: posts.slice(PostCountInOnePage * (pageNumber - 1), PostCountInOnePage * pageNumber),
     currentPageNumber: pageNumber,
     totalNumberOfPages: totalNumberOfPages
   };
