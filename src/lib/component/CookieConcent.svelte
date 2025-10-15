@@ -2,6 +2,8 @@
   import { onMount } from 'svelte';
   import { scriptsToManage } from '$lib/config/thirdPartyScripts';
 
+  const isProduction = import.meta.env.PROD;
+
   let showToast = $state(false);
   let concentObtained: boolean | null = $state(false);
 
@@ -41,6 +43,11 @@
   }
 
   $effect(() => {
+    if (!isProduction) {
+      removeScripts();
+      return;
+    }
+
     if (concentObtained === true) {
       injectScripts();
     } else {
@@ -127,14 +134,16 @@
 </script>
 
 <svelte:head>
-  <!-- Cloudflare Web Analytics -->
-  <!-- 3rd party Cookieを使用していないため、Cookie同意は不要 -->
-  <script
-    defer
-    src="https://static.cloudflareinsights.com/beacon.min.js"
-    data-cf-beacon={'{"token": "8044631ab8984a1c90d8d1f3f8fb4d33"}'}
-  ></script>
-  <!-- End Cloudflare Web Analytics -->
+  {#if isProduction}
+    <!-- Cloudflare Web Analytics -->
+    <!-- 3rd party Cookieを使用していないため、Cookie同意は不要 -->
+    <script
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon={'{"token": "8044631ab8984a1c90d8d1f3f8fb4d33"}'}
+    ></script>
+    <!-- End Cloudflare Web Analytics -->
+  {/if}
 </svelte:head>
 
 <div class="toast" class:show={showToast}>
