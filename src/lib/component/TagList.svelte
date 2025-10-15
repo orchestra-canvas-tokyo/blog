@@ -23,9 +23,9 @@
 -->
 
 <div class="tag">
-  {#each tags as tag}
+  {#each tags as tag (tag)}
     <div class="tag-item">
-      <a href="/tag/{tag}"><span class="sharp">#&thinsp;</span>{tag}</a>
+      <a href={`/tag/${tag}`}><span class="sharp">#&thinsp;</span>{tag}</a>
     </div>
   {/each}
 </div>

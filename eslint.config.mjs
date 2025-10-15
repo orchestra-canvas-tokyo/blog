@@ -1,21 +1,10 @@
-import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import globals from 'globals';
-import tsParser from '@typescript-eslint/parser';
-import parser from 'svelte-eslint-parser';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import js from '@eslint/js';
-import { FlatCompat } from '@eslint/eslintrc';
+import svelte from 'eslint-plugin-svelte';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
+import svelteConfig from './svelte.config.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all
-});
-
-export default [
+export default tseslint.config(
   {
     ignores: [
       '**/.DS_Store',
@@ -31,48 +20,40 @@ export default [
       '**/yarn.lock'
     ]
   },
-  ...compat.extends(
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:svelte/recommended',
-    'prettier'
-  ),
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+  ...svelte.configs.recommended,
   {
-    plugins: {
-      '@typescript-eslint': typescriptEslint
-    },
-
     languageOptions: {
       globals: {
         ...globals.browser,
         ...globals.node
-      },
-
-      parser: tsParser,
-      ecmaVersion: 2020,
-      sourceType: 'module',
-
-      parserOptions: {
-        extraFileExtensions: ['.svelte']
       }
     }
   },
   {
-    files: ['**/*.svelte'],
-
+    files: ['**/*.ts', '**/*.tsx', '**/*.cts', '**/*.mts'],
     languageOptions: {
-      parser: parser,
-      ecmaVersion: 5,
-      sourceType: 'script',
-
       parserOptions: {
-        parser: '@typescript-eslint/parser'
+        projectService: true
+      }
+    }
+  },
+  {
+    files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js'],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        extraFileExtensions: ['.svelte'],
+        parser: tseslint.parser,
+        svelteConfig
       }
     }
   },
   {
     rules: {
-      'no-irregular-whitespace': 'off'
+      'no-irregular-whitespace': 'off',
+      'svelte/no-navigation-without-resolve': 'off'
     }
   }
-];
+);

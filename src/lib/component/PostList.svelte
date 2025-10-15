@@ -39,7 +39,7 @@
 -->
 
 <main class="article-list">
-  {#each posts as post}
+  {#each posts as post (post.slug)}
     <div class="article">
       <div class="meta-container">
         <TagList tags={post.metadata.tags} />
@@ -67,7 +67,7 @@
       {#if currentPageNumber === 2}
         <a href={baseUrl} class="pointer"> &lt; prev </a>
       {:else if currentPageNumber > 2}
-        <a href="{baseUrl}?p={currentPageNumber - 1}" class="pointer"> &lt; prev </a>
+        <a href={`${baseUrl}?p=${currentPageNumber - 1}`} class="pointer"> &lt; prev </a>
       {/if}
     </div>
     <div class="page-number">
@@ -75,7 +75,7 @@
     </div>
     <div class="page-button right">
       {#if currentPageNumber < totalNumberOfPages}
-        <a href="{baseUrl}?p={currentPageNumber + 1}" class="pointer"> next &gt; </a>
+        <a href={`${baseUrl}?p=${currentPageNumber + 1}`} class="pointer"> next &gt; </a>
       {/if}
     </div>
   </div>
