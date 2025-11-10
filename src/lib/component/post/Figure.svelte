@@ -4,7 +4,7 @@
     src: string;
     /** キャプション */
     caption?: string | undefined;
-    /** 画像の最大高さ(px単位、オプション) */
+    /** 全体の最大高さ(px単位、オプション) */
     maxHeightPx?: number | undefined;
   }
 
