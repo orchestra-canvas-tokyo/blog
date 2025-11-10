@@ -15,7 +15,7 @@
     title: 'シンフォニック・バリエーション『メリーゴーランド』',
     composerSlug: 'hisaishi',
     concertSlug: 'regular-11',
-    youTubeVideoId: '22XqFmJml_o',
+    youTubeVideoIds: ['22XqFmJml_o'],
     tags: ['曲目解説', '第11回定期', '久石譲']
   };
 </script>

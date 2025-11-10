@@ -9,7 +9,7 @@
     title: '『コリオラン』序曲',
     composerSlug: 'beethoven',
     concertSlug: 'regular-7',
-    youTubeVideoId: 'SyxB17_L0CU',
+    youTubeVideoIds: ['SyxB17_L0CU'],
     tags: ['曲目解説', '第7回定期', 'ベートーヴェン']
   };
 </script>

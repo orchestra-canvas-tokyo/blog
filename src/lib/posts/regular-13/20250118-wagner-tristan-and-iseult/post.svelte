@@ -18,7 +18,7 @@
     composerSlug: 'wagner',
     concertSlug: 'regular-13',
     tags: ['曲目解説', '第13回定期', 'ワーグナー'],
-    youTubeVideoId: 's8h-xLJUdDc'
+    youTubeVideoIds: ['s8h-xLJUdDc']
   };
 </script>
 

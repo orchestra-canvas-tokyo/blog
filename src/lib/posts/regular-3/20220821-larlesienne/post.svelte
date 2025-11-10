@@ -9,7 +9,7 @@
     title: '《アルルの女》第2組曲',
     composerSlug: 'bizet',
     concertSlug: 'regular-3',
-    youTubeVideoId: 'wGcpaYXt7k8',
+    youTubeVideoIds: ['wGcpaYXt7k8'],
     tags: ['曲目解説', '第3回定期', 'ビゼー']
   };
 </script>

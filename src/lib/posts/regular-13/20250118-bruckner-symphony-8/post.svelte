@@ -18,7 +18,7 @@
     composerSlug: 'bruckner',
     concertSlug: 'regular-13',
     tags: ['曲目解説', '第13回定期', 'ブルックナー'],
-    youTubeVideoId: '8c7INjezBOI'
+    youTubeVideoIds: ['8c7INjezBOI']
   };
 </script>
 

@@ -11,7 +11,7 @@
     title: '交響曲第10番 ホ短調 作品93',
     composerSlug: 'shostakovich',
     concertSlug: 'regular-10',
-    youTubeVideoId: 'WkJp04hjkVg',
+    youTubeVideoIds: ['WkJp04hjkVg'],
     tags: ['曲目解説', '第10回定期', 'ショスタコーヴィチ']
   };
 </script>

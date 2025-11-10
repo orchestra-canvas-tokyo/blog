@@ -9,7 +9,7 @@
     title: '交響曲第9番《新世界より》 ホ短調 作品95',
     composerSlug: 'dvorak',
     concertSlug: 'regular-2',
-    youTubeVideoId: 'z8SSaLam_4g',
+    youTubeVideoIds: ['z8SSaLam_4g'],
     tags: ['曲目解説', '第2回定期', 'ドヴォルザーク']
   };
 </script>

@@ -18,7 +18,7 @@
     title: 'ヴァイオリン協奏曲 ニ長調 作品35 ',
     composerSlug: 'tchaikovsky',
     concertSlug: 'regular-15',
-    // youTubeVideoId: '●',
+    // youTubeVideoIds: ['●'],
     tags: ['曲目解説', '第15回定期', 'チャイコフスキー']
   };
 </script>

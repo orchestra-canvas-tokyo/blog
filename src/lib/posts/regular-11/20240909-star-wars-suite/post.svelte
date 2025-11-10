@@ -14,7 +14,7 @@
     title: '『スター・ウォーズ』組曲',
     composerSlug: 'williams',
     concertSlug: 'regular-11',
-    youTubeVideoId: 'db_ddMH_2qU',
+    youTubeVideoIds: ['db_ddMH_2qU'],
     tags: ['曲目解説', '第11回定期', 'ジョン・ウィリアムズ']
   };
 </script>

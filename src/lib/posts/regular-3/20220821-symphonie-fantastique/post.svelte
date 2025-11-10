@@ -18,7 +18,7 @@
     title: '幻想交響曲 作品14',
     composerSlug: 'berlioz',
     concertSlug: 'regular-3',
-    youTubeVideoId: 'Kk_154PCUuM',
+    youTubeVideoIds: ['Kk_154PCUuM'],
     tags: ['曲目解説', '第3回定期', 'ベルリオーズ']
   };
 </script>

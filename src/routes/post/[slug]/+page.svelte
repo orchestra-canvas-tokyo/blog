@@ -54,18 +54,20 @@
 <main>
   <data.post.default />
 
-  {#if metadata.youTubeVideoId}
+  {#if metadata.youTubeVideoIds}
     <div class="video">
-      <iframe
-        width="560"
-        height="315"
-        style="max-width: 100%;"
-        src={`https://www.youtube-nocookie.com/embed/${metadata.youTubeVideoId}`}
-        title="YouTube video player"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-      ></iframe>
+      {#each metadata.youTubeVideoIds as id (id)}
+        <iframe
+          width="560"
+          height="315"
+          style="max-width: 100%;"
+          src={`https://www.youtube-nocookie.com/embed/${id}`}
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      {/each}
     </div>
   {/if}
 </main>
@@ -190,6 +192,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: calc(var(--spacing-unit) * 8);
     margin-top: calc(var(--spacing-unit) * 20);
   }
 

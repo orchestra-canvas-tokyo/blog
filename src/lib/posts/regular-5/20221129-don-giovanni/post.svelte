@@ -13,7 +13,7 @@
     title: '歌劇『ドン・ジョヴァンニ』K. 527：序曲',
     composerSlug: 'mozart',
     concertSlug: 'regular-5',
-    youTubeVideoId: 'yA_0G-ahFc0',
+    youTubeVideoIds: ['yA_0G-ahFc0'],
     tags: ['曲目解説', '第5回定期', 'モーツァルト']
   };
 </script>

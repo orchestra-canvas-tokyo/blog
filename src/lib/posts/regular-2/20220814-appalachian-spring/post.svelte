@@ -10,7 +10,7 @@
     title: 'バレエ音楽「アパラチアの春」組曲',
     composerSlug: 'copland',
     concertSlug: 'regular-2',
-    youTubeVideoId: '7-AA-Z1Y4cM',
+    youTubeVideoIds: ['7-AA-Z1Y4cM'],
     tags: ['曲目解説', '第2回定期', 'コープランド']
   };
 </script>

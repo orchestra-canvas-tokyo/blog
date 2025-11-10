@@ -12,7 +12,7 @@
     title: '交響曲第1番 変イ長調 作品55',
     composerSlug: 'elgar',
     concertSlug: 'regular-9',
-    youTubeVideoId: '52MUNrquaQI',
+    youTubeVideoIds: ['52MUNrquaQI'],
     tags: ['曲目解説', '第9回定期', 'エルガー']
   };
 </script>

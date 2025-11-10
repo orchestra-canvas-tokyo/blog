@@ -9,7 +9,7 @@
     title: 'バレエ音楽《三角帽子》第2組曲',
     composerSlug: 'falla',
     concertSlug: 'regular-8',
-    youTubeVideoId: 'tuBNsbWaP6I',
+    youTubeVideoIds: ['tuBNsbWaP6I'],
     tags: ['曲目解説', '第8回定期', 'ファリャ']
   };
 </script>

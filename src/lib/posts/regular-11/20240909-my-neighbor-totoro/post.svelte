@@ -13,7 +13,7 @@
     title: 'となりのトトロ',
     composerSlug: 'hisaishi',
     concertSlug: 'regular-11',
-    youTubeVideoId: '-zJ6M747jwI',
+    youTubeVideoIds: ['-zJ6M747jwI'],
     tags: ['曲目解説', '第11回定期', '久石譲']
   };
 </script>
