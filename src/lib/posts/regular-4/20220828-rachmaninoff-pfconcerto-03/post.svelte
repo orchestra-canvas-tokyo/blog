@@ -15,7 +15,7 @@
     title: 'ピアノ協奏曲第3番 Op.30',
     composerSlug: 'rachmaninoff',
     concertSlug: 'regular-4',
-    youTubeVideoId: 'ouQLcKNfn5Y',
+    youTubeVideoIds: ['ouQLcKNfn5Y'],
     tags: ['曲目解説', '第4回定期', 'ラフマニノフ']
   };
 </script>

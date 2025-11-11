@@ -11,7 +11,7 @@
     title: '《交響的舞曲》作品45',
     composerSlug: 'rachmaninoff',
     concertSlug: 'regular-4',
-    youTubeVideoId: 'TyXSkZmElRI',
+    youTubeVideoIds: ['TyXSkZmElRI'],
     tags: ['曲目解説', '第4回定期', 'ラフマニノフ']
   };
 </script>

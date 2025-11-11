@@ -18,7 +18,7 @@
     title: 'ピアノ協奏曲第3番 ハ長調 作品26',
     composerSlug: 'prokofiev',
     concertSlug: 'regular-10',
-    youTubeVideoId: '9xn7DE3nvJo',
+    youTubeVideoIds: ['9xn7DE3nvJo'],
     tags: ['曲目解説', '第10回定期', 'プロコフィエフ']
   };
 </script>

@@ -1,7 +1,7 @@
 <script lang="ts">
   interface Props {
     /** 描画する音楽記号 */
-    content: 'fortissimo' | 'fortissississimo' | 'pianissimo';
+    content: 'fortissimo' | 'fortississimo' | 'fortissississimo' | 'pianissimo';
   }
 
   let { content }: Props = $props();
@@ -27,6 +27,8 @@ Noto Musicフォントを使用。
 <span>
   {#if content === 'fortissimo'}
     𝆑𝆑
+  {:else if content === 'fortississimo'}
+    𝆑𝆑𝆑
   {:else if content === 'fortissississimo'}
     𝆑𝆑𝆑𝆑
   {:else if content === 'pianissimo'}

@@ -12,7 +12,7 @@
     composerSlug: 'badelt',
     arrangerSlug: 'ricketts',
     concertSlug: 'regular-11',
-    youTubeVideoId: 'B_7sFmrJDR4',
+    youTubeVideoIds: ['B_7sFmrJDR4'],
     tags: ['曲目解説', '第11回定期', 'クラウス・バデルト', 'テッド・リケッツ']
   };
 </script>

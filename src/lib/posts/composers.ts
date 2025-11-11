@@ -175,6 +175,12 @@ export const composers = {
     fullName: 'ヨーゼフ・アントン・ブルックナー',
     yearOfBirth: 1824,
     yearOfDeath: 1896
+  },
+  stravinsky: {
+    shortName: 'ストラヴィンスキー',
+    fullName: 'イーゴリ・ストラヴィンスキー',
+    yearOfBirth: 1882,
+    yearOfDeath: 1971
   }
 } as const satisfies {
   [slug: string]: Composer;

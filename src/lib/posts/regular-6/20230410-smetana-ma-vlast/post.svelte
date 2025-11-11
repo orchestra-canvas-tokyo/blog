@@ -9,7 +9,7 @@
     title: '連作交響曲《我が祖国》',
     composerSlug: 'smetana',
     concertSlug: 'regular-6',
-    youTubeVideoId: 'RFn8oVd2y50',
+    youTubeVideoIds: ['RFn8oVd2y50'],
     tags: ['曲目解説', '第6回定期', 'スメタナ']
   };
 </script>

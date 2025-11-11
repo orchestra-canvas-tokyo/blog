@@ -15,7 +15,7 @@
     title: '交響曲第1番 ハ長調 作品68',
     composerSlug: 'brahms',
     concertSlug: 'regular-1',
-    youTubeVideoId: 'Aqzi66WNTfY',
+    youTubeVideoIds: ['Aqzi66WNTfY'],
     tags: ['曲目解説', '第1回定期', 'ブラームス']
   };
 </script>

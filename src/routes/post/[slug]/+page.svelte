@@ -7,7 +7,7 @@
   import type { PageData } from './$types';
   import type { Composer } from '$lib/posts/composers';
   import Meta from '$lib/component/Meta.svelte';
-  // import regular15Flyer from './regular-15.png';
+  import regular15Flyer from './regular-15.png';
   import Flyer from '$lib/component/Flyer.svelte';
 
   interface Props {
@@ -54,18 +54,20 @@
 <main>
   <data.post.default />
 
-  {#if metadata.youTubeVideoId}
+  {#if metadata.youTubeVideoIds}
     <div class="video">
-      <iframe
-        width="560"
-        height="315"
-        style="max-width: 100%;"
-        src={`https://www.youtube-nocookie.com/embed/${metadata.youTubeVideoId}`}
-        title="YouTube video player"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-      ></iframe>
+      {#each metadata.youTubeVideoIds as id (id)}
+        <iframe
+          width="560"
+          height="315"
+          style="max-width: 100%;"
+          src={`https://www.youtube-nocookie.com/embed/${id}`}
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      {/each}
     </div>
   {/if}
 </main>
@@ -116,9 +118,9 @@
       詳細は<a href="https://www.orch-canvas.tokyo/concerts/regular-15">当団ホームページ</a>にて
     </p>
 
-    <!-- <a href="https://www.orch-canvas.tokyo/concerts/regular-15">
+    <a href="https://www.orch-canvas.tokyo/concerts/regular-15">
       <Flyer src={regular15Flyer} alt="第15回定期演奏会のフライヤー" />
-    </a> -->
+    </a>
   </section>
 </div>
 
@@ -190,6 +192,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: calc(var(--spacing-unit) * 8);
     margin-top: calc(var(--spacing-unit) * 20);
   }
 

@@ -15,7 +15,7 @@
     title: '交響曲第1番 ニ長調',
     composerSlug: 'mahler',
     concertSlug: 'regular-5',
-    youTubeVideoId: '交響曲第1番 ニ長調',
+    youTubeVideoIds: ['UEqpuy2LAek'],
     tags: ['曲目解説', '第5回定期', 'マーラー']
   };
 </script>

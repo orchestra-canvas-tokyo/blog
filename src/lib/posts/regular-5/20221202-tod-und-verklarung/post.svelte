@@ -14,7 +14,7 @@
     title: '交響詩《死と変容》作品24',
     composerSlug: 'rStrauss',
     concertSlug: 'regular-5',
-    youTubeVideoId: 'k0zHKtP8s-M',
+    youTubeVideoIds: ['k0zHKtP8s-M'],
     tags: ['曲目解説', '第5回定期', 'R.シュトラウス']
   };
 </script>

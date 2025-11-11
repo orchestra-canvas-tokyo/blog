@@ -15,7 +15,7 @@
     title: '祝典序曲',
     composerSlug: 'shostakovich',
     concertSlug: 'regular-10',
-    youTubeVideoId: 'xx7afrbRqoo',
+    youTubeVideoIds: ['xx7afrbRqoo'],
     tags: ['曲目解説', '第10回定期', 'ショスタコーヴィチ']
   };
 </script>

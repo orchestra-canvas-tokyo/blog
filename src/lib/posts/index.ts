@@ -12,7 +12,7 @@ export type Metadata = {
   composerSlug?: composerSlug;
   arrangerSlug?: composerSlug;
   concertSlug: concertSlug;
-  youTubeVideoId?: string;
+  youTubeVideoIds?: string[];
   tags: Tag[];
 };
 /** ポストオブジェクトの型 */

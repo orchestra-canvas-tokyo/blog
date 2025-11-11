@@ -13,7 +13,7 @@
     title: '独創主題による変奏曲『エニグマ』',
     composerSlug: 'elgar',
     concertSlug: 'regular-9',
-    youTubeVideoId: 'AdzV1dahsvk',
+    youTubeVideoIds: ['AdzV1dahsvk'],
     tags: ['曲目解説', '第9回定期', 'エルガー']
   };
 </script>

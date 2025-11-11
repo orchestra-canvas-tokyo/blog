@@ -9,7 +9,7 @@
     title: '狂詩曲《スペイン》',
     composerSlug: 'chabrier',
     concertSlug: 'regular-3',
-    youTubeVideoId: 'RBw8jv-k3gU',
+    youTubeVideoIds: ['RBw8jv-k3gU'],
     tags: ['曲目解説', '第3回定期', 'シャブリエ']
   };
 </script>
