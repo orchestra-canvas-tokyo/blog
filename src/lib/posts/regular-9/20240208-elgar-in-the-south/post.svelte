@@ -12,7 +12,7 @@
     title: '『南国にて』',
     composerSlug: 'elgar',
     concertSlug: 'regular-9',
-    youTubeVideoId: 'aFvuhcYBL1s',
+    youTubeVideoIds: ['aFvuhcYBL1s'],
     tags: ['曲目解説', '第9回定期', 'エルガー']
   };
 </script>

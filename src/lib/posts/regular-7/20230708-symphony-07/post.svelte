@@ -12,7 +12,7 @@
     title: '交響曲第7番 ヘ長調 作品92',
     composerSlug: 'beethoven',
     concertSlug: 'regular-7',
-    youTubeVideoId: '1nIsFhU5o_w',
+    youTubeVideoIds: ['1nIsFhU5o_w'],
     tags: ['曲目解説', '第7回定期', 'ベートーヴェン']
   };
 </script>

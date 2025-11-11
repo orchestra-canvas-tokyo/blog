@@ -12,7 +12,7 @@
     title: '交響詩《死の島》 作品29',
     composerSlug: 'rachmaninoff',
     concertSlug: 'regular-4',
-    youTubeVideoId: 'xDXSmh1NXZc',
+    youTubeVideoIds: ['xDXSmh1NXZc'],
     tags: ['曲目解説', '第4回定期', 'ラフマニノフ']
   };
 </script>

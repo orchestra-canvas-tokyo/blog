@@ -16,7 +16,7 @@
     title: '交響曲第1番 ハ長調 作品 21',
     composerSlug: 'beethoven',
     concertSlug: 'regular-1',
-    youTubeVideoId: '3woG41w4_ak',
+    youTubeVideoIds: ['3woG41w4_ak'],
     tags: ['曲目解説', '第1回定期', 'ベートーヴェン']
   };
 </script>

@@ -10,7 +10,7 @@
     title: 'パリのアメリカ人',
     composerSlug: 'gershwin',
     concertSlug: 'regular-2',
-    youTubeVideoId: 'RUViLdFIwtE',
+    youTubeVideoIds: ['RUViLdFIwtE'],
     tags: ['曲目解説', '第2回定期', 'ガーシュウィン']
   };
 </script>

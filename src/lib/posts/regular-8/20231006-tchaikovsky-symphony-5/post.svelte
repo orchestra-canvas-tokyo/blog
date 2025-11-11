@@ -16,7 +16,7 @@
     title: '交響曲第5番 ホ短調 作品64',
     composerSlug: 'tchaikovsky',
     concertSlug: 'regular-8',
-    youTubeVideoId: 'hsCedAK9S1Q',
+    youTubeVideoIds: ['hsCedAK9S1Q'],
     tags: ['曲目解説', '第8回定期', 'チャイコフスキー']
   };
 </script>

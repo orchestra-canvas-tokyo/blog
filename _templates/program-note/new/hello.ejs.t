@@ -13,7 +13,7 @@ to: src/lib/posts/regular-<%= number %>/<%= slug %>/post.svelte
 		title: '●',
 		composerSlug: '●',
 		concertSlug: 'regular-<%= number %>',
-		youTubeVideoId: '●',
+		youTubeVideoIds: ['●'],
 		tags: ['曲目解説', '第<%= number %>回定期', '●']
 	};
 </script>

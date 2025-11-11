@@ -15,7 +15,7 @@
     title: 'チェロ協奏曲 ロ短調 作品104',
     composerSlug: 'dvorak',
     concertSlug: 'regular-6',
-    youTubeVideoId: 'ILLmB699qGk',
+    youTubeVideoIds: ['ILLmB699qGk'],
     tags: ['曲目解説', '第6回定期', 'ドヴォルザーク']
   };
 </script>

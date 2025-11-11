@@ -19,7 +19,8 @@
     title: '真夏の夜の夢',
     composerSlug: 'mendelssohn',
     concertSlug: 'regular-14',
-    tags: ['曲目解説', '第14回定期', 'メンデルスゾーン']
+    tags: ['曲目解説', '第14回定期', 'メンデルスゾーン'],
+    youTubeVideoIds: ['TrN8xI1lMoE', '29x7jiE_U0M']
   };
 </script>
 

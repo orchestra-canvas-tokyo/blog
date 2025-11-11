@@ -9,7 +9,7 @@
     title: '交響曲第8番 ヘ長調 作品93',
     composerSlug: 'beethoven',
     concertSlug: 'regular-7',
-    youTubeVideoId: '6C0NQ88MU6M',
+    youTubeVideoIds: ['6C0NQ88MU6M'],
     tags: ['曲目解説', '第7回定期', 'ベートーヴェン']
   };
 </script>

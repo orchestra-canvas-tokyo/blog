@@ -16,7 +16,7 @@
     title: 'ヴァイオリン協奏曲 ニ短調 作品47',
     composerSlug: 'sibelius',
     concertSlug: 'regular-8',
-    youTubeVideoId: 'r2ljCrCCgBM',
+    youTubeVideoIds: ['r2ljCrCCgBM'],
     tags: ['曲目解説', '第8回定期', 'シベリウス']
   };
 </script>

@@ -16,7 +16,7 @@
     title: '交響詩《前奏曲》',
     composerSlug: 'liszt',
     concertSlug: 'regular-1',
-    youTubeVideoId: 'o6G39Qm1DLY',
+    youTubeVideoIds: ['o6G39Qm1DLY'],
     tags: ['曲目解説', '第1回定期', 'リスト']
   };
 </script>
