@@ -18,6 +18,7 @@
     title: '交響曲第2番 ハ長調 Op.61',
     composerSlug: 'schumann',
     concertSlug: 'regular-14',
+    youTubeVideoIds: ['IPTsWd9SJNc'],
     tags: ['曲目解説', '第14回定期', 'シューマン']
   };
 </script>
