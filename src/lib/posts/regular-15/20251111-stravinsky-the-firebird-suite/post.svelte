@@ -1,10 +1,7 @@
 <script lang="ts" context="module">
   import type { Metadata } from '../../index.ts';
   import Author from '$lib/component/post/Author.svelte';
-  import Figure from '$lib/component/post/Figure.svelte';
   import Reference from '$lib/component/post/Reference.svelte';
-
-  import figure from './figure.jpg';
 
   export const metadata: Metadata = {
     published: true,
@@ -93,14 +90,12 @@
 <h4>終曲</h4>
 
 <p>
-  ホルンが静かに、しかし確信をもって民謡由来の旋律を歌い始める（譜例）。解放と勝利の象徴である。やがて諸楽器が次々と加わり、響きは壮大に膨れ上がる。ティンパニの確かな拍動、金管の荘厳なコラール、オーケストラ全体の高揚――物語は光に包まれて大団円を迎える。
+  ホルンが静かに、しかし確信をもって民謡由来の旋律を歌い始める。解放と勝利の象徴である。やがて諸楽器が次々と加わり、響きは壮大に膨れ上がる。ティンパニの確かな拍動、金管の荘厳なコラール、オーケストラ全体の高揚――物語は光に包まれて大団円を迎える。
 </p>
 
 <p>
   （※ヴァリアシオン、パ・ド・ドゥ、スケルツォの後にはパントマイムが挿入される。これらは舞台転換のために奏されるごく短い楽曲である。）
 </p>
-
-<Figure src={figure} caption="譜例" maxHeightPx={90}></Figure>
 
 <h3>終わりに</h3>
 
