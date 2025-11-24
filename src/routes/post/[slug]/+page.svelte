@@ -7,7 +7,7 @@
   import type { PageData } from './$types';
   import type { Composer } from '$lib/posts/composers';
   import Meta from '$lib/component/Meta.svelte';
-  import regular15Flyer from './regular-15.png';
+  // import regular16Flyer from './regular-16.png';
   import Flyer from '$lib/component/Flyer.svelte';
 
   interface Props {
@@ -90,37 +90,30 @@
     </svg>
 
     <p>
-      Orchestra Canvas Tokyo<br />第15回定期演奏会
+      Orchestra Canvas Tokyo<br />第16回定期演奏会
     </p>
     <p>
-      2025年11月24日(月祝)<br />
-      ミューザ川崎シンフォニーホール
+      2026年3月15日(日)<br />
+      府中の森芸術劇場 どりーむホール
     </p>
+    <p>指揮：神成 大輝</p>
+
+    <hr />
+
     <p>
-      指揮：石﨑真弥奈<br />
-      ヴァイオリン：北川千紗
+      バーンスタイン<br />
+      「ウェストサイドストーリー」よりシンフォニックダンス ほか
     </p>
 
     <hr />
 
     <p>
-      チャイコフスキー<br />
-      ヴァイオリン協奏曲 ニ長調 作品35
-    </p>
-    <p>
-      ストラヴィンスキー<br />
-      バレエ音楽『火の鳥』組曲（1945年版） ほか
+      詳細は<a href="https://www.orch-canvas.tokyo/concerts/regular-16">当団ホームページ</a>にて
     </p>
 
-    <hr />
-
-    <p>
-      詳細は<a href="https://www.orch-canvas.tokyo/concerts/regular-15">当団ホームページ</a>にて
-    </p>
-
-    <a href="https://www.orch-canvas.tokyo/concerts/regular-15">
-      <Flyer src={regular15Flyer} alt="第15回定期演奏会のフライヤー" />
-    </a>
+    <!-- <a href="https://www.orch-canvas.tokyo/concerts/regular-16">
+      <Flyer src={regular16Flyer} alt="第16回定期演奏会のフライヤー" />
+    </a> -->
   </section>
 </div>
 
