@@ -181,6 +181,12 @@ export const composers = {
     fullName: 'イーゴリ・ストラヴィンスキー',
     yearOfBirth: 1882,
     yearOfDeath: 1971
+  },
+  bernstein: {
+    shortName: 'バーンスタイン',
+    fullName: 'レナード・バーンスタイン',
+    yearOfBirth: 1918,
+    yearOfDeath: 1990
   }
 } as const satisfies {
   [slug: string]: Composer;
