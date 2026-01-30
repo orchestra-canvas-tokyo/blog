@@ -192,6 +192,12 @@ export const composers = {
     shortName: 'マルケス',
     fullName: 'アルトゥロ・マルケス',
     yearOfBirth: 1950
+  },
+  saintSaens: {
+    shortName: 'サン＝サーンス',
+    fullName: 'カミーユ・サン＝サーンス',
+    yearOfBirth: 1835,
+    yearOfDeath: 1921
   }
 } as const satisfies {
   [slug: string]: Composer;
