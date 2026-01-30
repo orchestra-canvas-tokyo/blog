@@ -204,6 +204,12 @@ export const composers = {
     fullName: 'ベーラ・バルトーク',
     yearOfBirth: 1881,
     yearOfDeath: 1945
+  },
+  strauss2: {
+    shortName: 'ヨハン・シュトラウス2世',
+    fullName: 'ヨハン・シュトラウス2世',
+    yearOfBirth: 1825,
+    yearOfDeath: 1899
   }
 } as const satisfies {
   [slug: string]: Composer;
