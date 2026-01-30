@@ -187,6 +187,11 @@ export const composers = {
     fullName: 'レナード・バーンスタイン',
     yearOfBirth: 1918,
     yearOfDeath: 1990
+  },
+  marquez: {
+    shortName: 'マルケス',
+    fullName: 'アルトゥロ・マルケス',
+    yearOfBirth: 1950
   }
 } as const satisfies {
   [slug: string]: Composer;
