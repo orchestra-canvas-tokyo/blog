@@ -198,6 +198,12 @@ export const composers = {
     fullName: 'カミーユ・サン＝サーンス',
     yearOfBirth: 1835,
     yearOfDeath: 1921
+  },
+  bartok: {
+    shortName: 'バルトーク',
+    fullName: 'ベーラ・バルトーク',
+    yearOfBirth: 1881,
+    yearOfDeath: 1945
   }
 } as const satisfies {
   [slug: string]: Composer;
