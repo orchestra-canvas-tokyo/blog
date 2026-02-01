@@ -3,7 +3,7 @@
     /** 表示する画像 */
     src: string;
     /** キャプション */
-    caption?: string | undefined;
+    caption?: string | string[];
     /** 全体の最大高さ(px単位、オプション) */
     maxHeightPx?: number | undefined;
   }
@@ -28,7 +28,15 @@
 <figure style={maxHeightStyle}>
   <img {src} alt="" class="image" />
   {#if caption}
-    <figcaption>{caption}</figcaption>
+    <figcaption>
+      {#if typeof caption === 'string'}
+        {caption}
+      {:else}
+        {#each caption as row}
+          {row}<br />
+        {/each}
+      {/if}
+    </figcaption>
   {/if}
 </figure>
 

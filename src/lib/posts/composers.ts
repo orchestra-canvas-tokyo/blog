@@ -181,6 +181,35 @@ export const composers = {
     fullName: 'イーゴリ・ストラヴィンスキー',
     yearOfBirth: 1882,
     yearOfDeath: 1971
+  },
+  bernstein: {
+    shortName: 'バーンスタイン',
+    fullName: 'レナード・バーンスタイン',
+    yearOfBirth: 1918,
+    yearOfDeath: 1990
+  },
+  marquez: {
+    shortName: 'マルケス',
+    fullName: 'アルトゥロ・マルケス',
+    yearOfBirth: 1950
+  },
+  saintSaens: {
+    shortName: 'サン＝サーンス',
+    fullName: 'カミーユ・サン＝サーンス',
+    yearOfBirth: 1835,
+    yearOfDeath: 1921
+  },
+  bartok: {
+    shortName: 'バルトーク',
+    fullName: 'ベーラ・バルトーク',
+    yearOfBirth: 1881,
+    yearOfDeath: 1945
+  },
+  strauss2: {
+    shortName: 'ヨハン・シュトラウス2世',
+    fullName: 'ヨハン・シュトラウス2世',
+    yearOfBirth: 1825,
+    yearOfDeath: 1899
   }
 } as const satisfies {
   [slug: string]: Composer;
