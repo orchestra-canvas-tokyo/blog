@@ -10,7 +10,9 @@
 
   let { src, caption = undefined, maxHeightPx = undefined }: Props = $props();
 
-  let maxHeightStyle = maxHeightPx !== undefined ? `--max-height-px: ${maxHeightPx}px;` : '';
+  const maxHeightStyle = $derived(
+    maxHeightPx !== undefined ? `--max-height-px: ${maxHeightPx}px;` : ''
+  );
 </script>
 
 <!--
