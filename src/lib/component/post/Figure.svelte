@@ -34,7 +34,7 @@
       {#if typeof caption === 'string'}
         {caption}
       {:else}
-        {#each caption as row}
+        {#each caption as row, index (index)}
           {row}<br />
         {/each}
       {/if}

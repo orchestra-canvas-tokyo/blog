@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { resolve } from '$app/paths';
   import { onMount } from 'svelte';
   import { scriptsToManage } from '$lib/config/thirdPartyScripts';
 
@@ -140,7 +141,7 @@
 <div class="toast" class:show={showToast}>
   <p>
     このブログでは、サービスの品質向上と利用状況の把握のためにCookieを使用しています。<br />
-    詳細は<a href="/cookie-policy">Cookieポリシー</a>をご確認ください。
+    詳細は<a href={resolve('/cookie-policy')}>Cookieポリシー</a>をご確認ください。
   </p>
   <p>Cookieの使用に同意いただける場合は、「同意する」をクリックしてください。</p>
 
@@ -177,7 +178,7 @@
     Cookieの設定を変更
   </button>
   ・
-  <a class="secondary-link" href="/cookie-policy">Cookieポリシー</a>
+  <a class="secondary-link" href={resolve('/cookie-policy')}>Cookieポリシー</a>
 </div>
 
 <style>
