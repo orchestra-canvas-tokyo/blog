@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { resolve } from '$app/paths';
   import headerSmall from './header-small.svg';
   import headerLarge from './header-large.svg';
   import logo from './orchestra-canvas-tokyo.svg';
@@ -60,7 +61,7 @@
 
 <header>
   <!-- header -->
-  <a href="/" id="page_top">
+  <a href={resolve('/')} id="page_top">
     <h1>
       <div class="logo-container">
         <picture>

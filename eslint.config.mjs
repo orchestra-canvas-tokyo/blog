@@ -46,9 +46,7 @@ export default [
   prettier,
   {
     rules: {
-      'no-irregular-whitespace': 'off',
-      'svelte/no-navigation-without-resolve': 'off',
-      'svelte/require-each-key': 'off'
+      'no-irregular-whitespace': 'off'
     }
   }
 ];

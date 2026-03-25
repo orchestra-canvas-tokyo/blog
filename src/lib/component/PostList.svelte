@@ -1,24 +1,22 @@
 <script lang="ts">
-  import { getFullTitle, getUrl, type Post } from '$lib/posts';
+  import { resolve } from '$app/paths';
+  import { getFullTitle, type Post } from '$lib/posts';
+  import type { Tag } from '$lib/posts/tags';
   import { formatDate2JpStyle } from '$lib/util';
   import TagList from './TagList.svelte';
 
   interface Props {
     /** 表示するポストの配列 */
     posts: Post[];
-    /**
-     * ページネーションの起点となる、このコンポーネントが配置されるURL
-     * スラッシュ始まり、スラッシュ終わりを想定。
-     * e.g. '/', '/tag/hoge/'
-     * */
-    baseUrl: string;
+    /** タグページの場合のタグ名 */
+    tag?: Tag;
     /** 現在のページ数（1始まり） */
     currentPageNumber: number;
     /** 総ページ数 */
     totalNumberOfPages: number;
   }
 
-  let { posts, baseUrl, currentPageNumber, totalNumberOfPages }: Props = $props();
+  let { posts, tag = undefined, currentPageNumber, totalNumberOfPages }: Props = $props();
 </script>
 
 <!--
@@ -34,12 +32,12 @@
 
 @example
 ```svelte
-<PostList {posts} baseUrl="/tag/hoge/" {currentPageNumber} {totalNumberOfPages}>
+<PostList {posts} tag="hoge" {currentPageNumber} {totalNumberOfPages}>
 ```
 -->
 
 <main class="article-list">
-  {#each posts as post}
+  {#each posts as post (post.slug)}
     <div class="article">
       <div class="meta-container">
         <TagList tags={post.metadata.tags} />
@@ -48,7 +46,7 @@
         </div>
       </div>
 
-      <a href={getUrl(post.slug)} class="article-link">
+      <a href={resolve('/post/[slug]', { slug: post.slug })} class="article-link">
         <h2 class="title">{getFullTitle(post)}</h2>
 
         <p class="description">
@@ -65,9 +63,24 @@
   <div class="page-control">
     <div class="page-button">
       {#if currentPageNumber === 2}
-        <a href={baseUrl} class="pointer"> &lt; prev </a>
+        {#if tag}
+          <a href={resolve('/tag/[tag=tag]', { tag })} class="pointer"> &lt; prev </a>
+        {:else}
+          <a href={resolve('/')} class="pointer"> &lt; prev </a>
+        {/if}
       {:else if currentPageNumber > 2}
-        <a href="{baseUrl}?p={currentPageNumber - 1}" class="pointer"> &lt; prev </a>
+        {#if tag}
+          <a
+            href={resolve(`/tag/${tag}?p=${currentPageNumber - 1}` as `/tag/${string}?${string}`)}
+            class="pointer"
+          >
+            &lt; prev
+          </a>
+        {:else}
+          <a href={resolve(`/?p=${currentPageNumber - 1}` as `/?${string}`)} class="pointer">
+            &lt; prev
+          </a>
+        {/if}
       {/if}
     </div>
     <div class="page-number">
@@ -75,7 +88,18 @@
     </div>
     <div class="page-button right">
       {#if currentPageNumber < totalNumberOfPages}
-        <a href="{baseUrl}?p={currentPageNumber + 1}" class="pointer"> next &gt; </a>
+        {#if tag}
+          <a
+            href={resolve(`/tag/${tag}?p=${currentPageNumber + 1}` as `/tag/${string}?${string}`)}
+            class="pointer"
+          >
+            next &gt;
+          </a>
+        {:else}
+          <a href={resolve(`/?p=${currentPageNumber + 1}` as `/?${string}`)} class="pointer">
+            next &gt;
+          </a>
+        {/if}
       {/if}
     </div>
   </div>

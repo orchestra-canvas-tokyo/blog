@@ -17,4 +17,4 @@
 ```
 -->
 
-<a href={url}>{url}</a>
+<a href={url} rel="external">{url}</a>
