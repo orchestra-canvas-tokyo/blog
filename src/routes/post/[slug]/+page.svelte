@@ -7,7 +7,7 @@
   import type { PageData } from './$types';
   import type { Composer } from '$lib/posts/composers';
   import Meta from '$lib/component/Meta.svelte';
-  import regular16Flyer from './regular-16.png';
+  // import regular17Flyer from './regular-17.png';
   import Flyer from '$lib/component/Flyer.svelte';
 
   interface Props {
@@ -90,30 +90,30 @@
     </svg>
 
     <p>
-      Orchestra Canvas Tokyo<br />第16回定期演奏会
+      Orchestra Canvas Tokyo<br />第17回定期演奏会
     </p>
     <p>
-      2026年3月15日(日)<br />
-      府中の森芸術劇場 どりーむホール
+      2026年9月12日(土)<br />
+      横浜みなとみらいホール 大ホール
     </p>
-    <p>指揮：神成 大輝</p>
+    <p>指揮：田代 俊文</p>
 
     <hr />
 
     <p>
-      バーンスタイン<br />
-      「ウェストサイドストーリー」よりシンフォニックダンス ほか
+      リヒャルト・シュトラウス<br />
+      アルプス交響曲 作品64
     </p>
 
     <hr />
 
     <p>
-      詳細は<a href="https://www.orch-canvas.tokyo/concerts/regular-16">当団ホームページ</a>にて
+      詳細は<a href="https://www.orch-canvas.tokyo/concerts/regular-17">当団ホームページ</a>にて
     </p>
 
-    <a href="https://www.orch-canvas.tokyo/concerts/regular-16">
-      <Flyer src={regular16Flyer} alt="第16回定期演奏会のフライヤー" />
-    </a>
+    <!-- <a href="https://www.orch-canvas.tokyo/concerts/regular-17">
+      <Flyer src={regular17Flyer} alt="第17回定期演奏会のフライヤー" />
+    </a> -->
   </section>
 </div>
 
