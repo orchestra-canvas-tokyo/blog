@@ -22,6 +22,9 @@
 その他、各コミットやブランチに対するプレビューURLが発行されます。
 詳細は[Cloudflare ダッシュボード](https://dash.cloudflare.com/940baf35dc60e6a39b351d032b853543/pages/view/blog)を参照。
 
+`main`ブランチに push されると、GitHub Actions によって `main` から `production` への production release 用PRが自動作成されます。
+すでに open な release PR がある場合は新規作成せず、そのPRに `main` の更新が継続して反映されます。
+
 ## 開発環境の構築
 
 ```shell
