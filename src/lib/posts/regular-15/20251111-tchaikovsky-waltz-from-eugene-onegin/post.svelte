@@ -15,7 +15,7 @@
     title: '歌劇《エフゲニー・オネーギン》より〈ワルツ〉 作品24 ',
     composerSlug: 'tchaikovsky',
     concertSlug: 'regular-15',
-    // youTubeVideoIds: ['●'],
+    youTubeVideoIds: ['OyG6i7XK63c'],
     tags: ['曲目解説', '第15回定期', 'チャイコフスキー']
   };
 </script>
