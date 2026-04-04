@@ -1,6 +1,7 @@
 <script lang="ts">
+  import { resolve } from '$app/paths';
   import TagList from '$lib/component/TagList.svelte';
-  import { getFullTitle, getUrl } from '$lib/posts';
+  import { getFullTitle } from '$lib/posts';
   import { composers } from '$lib/posts/composers';
   import { concerts } from '$lib/posts/concerts';
   import { formatDate2JpStyle } from '$lib/util';
@@ -119,13 +120,13 @@
 
 <div class="adjacent-posts">
   {#if data.adjacentPostListItems.prev !== null}
-    <a href={getUrl(data.adjacentPostListItems.prev.slug)} class="prev">
+    <a href={resolve('/post/[slug]', { slug: data.adjacentPostListItems.prev.slug })} class="prev">
       前の投稿<br />
       {getFullTitle(data.adjacentPostListItems.prev)}
     </a>
   {/if}
   {#if data.adjacentPostListItems.next !== null}
-    <a href={getUrl(data.adjacentPostListItems.next.slug)} class="next">
+    <a href={resolve('/post/[slug]', { slug: data.adjacentPostListItems.next.slug })} class="next">
       次の投稿<br />
       {getFullTitle(data.adjacentPostListItems.next)}
     </a>
@@ -133,7 +134,7 @@
 </div>
 
 <div class="concert">
-  <a href={concert.url}>
+  <a href={concert.url} rel="external">
     <p>{concert.title}演奏会<br />{formatDate2JpStyle(concert.date)}</p>
     <Flyer src={concert.flyer} alt={`${concert.title}のフライヤー`} />
   </a>

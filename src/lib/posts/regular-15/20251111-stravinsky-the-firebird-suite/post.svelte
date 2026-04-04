@@ -9,7 +9,7 @@
     title: 'バレエ音楽 『火の鳥』組曲（1945年版）',
     composerSlug: 'stravinsky',
     concertSlug: 'regular-15',
-    // youTubeVideoIds: ['●'],
+    youTubeVideoIds: ['25eVPkMWyjY'],
     tags: ['曲目解説', '第15回定期', 'ストラヴィンスキー']
   };
 </script>

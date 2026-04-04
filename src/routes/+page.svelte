@@ -14,7 +14,6 @@
 
 <PostList
   posts={data.posts}
-  baseUrl="/"
   currentPageNumber={data.currentPageNumber}
   totalNumberOfPages={data.totalNumberOfPages}
 />
