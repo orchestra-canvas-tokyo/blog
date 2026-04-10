@@ -78,8 +78,13 @@ type ConcertSearchEntry = {
   normalizedTitle: string;
 };
 
+const katakanaToHiragana = (value: string) =>
+  value.replaceAll(/[\u30a1-\u30f6]/g, (character) =>
+    String.fromCharCode(character.charCodeAt(0) - 0x60)
+  );
+
 const normalizeSearchText = (value: string) =>
-  value.normalize('NFKC').toLowerCase().replaceAll(/\s+/g, ' ').trim();
+  katakanaToHiragana(value.normalize('NFKC').toLowerCase()).replaceAll(/\s+/g, ' ').trim();
 
 const splitQueryTokens = (value: string) => normalizeSearchText(value).split(' ').filter(Boolean);
 

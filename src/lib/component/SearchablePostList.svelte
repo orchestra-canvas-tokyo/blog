@@ -1,8 +1,11 @@
 <script lang="ts">
   import { browser } from '$app/environment';
+  import { pushState } from '$app/navigation';
   import { resolve } from '$app/paths';
+  import { page } from '$app/state';
   import { onMount, tick } from 'svelte';
   import { fade, fly } from 'svelte/transition';
+  import type { Page } from '@sveltejs/kit';
   import type { Post } from '$lib/posts';
   import type { BlogSearchResults } from '$lib/posts/search';
   import type { Tag } from '$lib/posts/tags';
@@ -17,6 +20,10 @@
     currentPageNumber: number;
     totalNumberOfPages: number;
   }
+
+  type SearchPageState = Page['state'] & {
+    blogSearchOpen?: boolean;
+  };
 
   let {
     heading,
@@ -36,6 +43,8 @@
   let isSearchLoading = $state(false);
   let focusRestoreTarget: HTMLElement | null = null;
   let searchLoadPromise: Promise<void> | null = null;
+  let hasSearchHistoryEntry = false;
+  let isClosingSearchHistory = false;
 
   const emptySearchResults: BlogSearchResults = {
     articles: [],
@@ -84,16 +93,28 @@
     return searchLoadPromise;
   };
 
+  const pushSearchHistoryEntry = () => {
+    if (!browser || hasSearchHistoryEntry) return;
+
+    pushState('', { ...(page.state as SearchPageState), blogSearchOpen: true });
+    hasSearchHistoryEntry = true;
+  };
+
+  const isSearchPageState = () => (page.state as SearchPageState).blogSearchOpen === true;
+
   const openSearch = async ({
     restoreFocusTarget = null,
-    selectQuery = true
+    selectQuery = true,
+    pushHistory = true
   }: {
     restoreFocusTarget?: HTMLElement | null;
     selectQuery?: boolean;
+    pushHistory?: boolean;
   } = {}) => {
     if (!isSearchOpen) {
       focusRestoreTarget = restoreFocusTarget;
       isSearchOpen = true;
+      if (pushHistory) pushSearchHistoryEntry();
     }
     void loadSearch();
 
@@ -102,7 +123,21 @@
     if (selectQuery) searchInput?.select();
   };
 
-  const closeSearch = async ({ restoreFocus = false }: { restoreFocus?: boolean } = {}) => {
+  const closeSearch = async ({
+    restoreFocus = false,
+    syncHistory = true
+  }: {
+    restoreFocus?: boolean;
+    syncHistory?: boolean;
+  } = {}) => {
+    const shouldRestoreHistory = browser && syncHistory && hasSearchHistoryEntry;
+
+    if (shouldRestoreHistory) {
+      isClosingSearchHistory = true;
+      hasSearchHistoryEntry = false;
+      history.back();
+    }
+
     isSearchOpen = false;
     await tick();
 
@@ -140,8 +175,35 @@
     };
 
     window.addEventListener('keydown', handleKeydown);
+    const handlePopstate = () => {
+      if (isClosingSearchHistory) {
+        isClosingSearchHistory = false;
+        return;
+      }
+
+      window.setTimeout(() => {
+        if (isSearchPageState()) {
+          hasSearchHistoryEntry = true;
+          openSearch({ restoreFocusTarget: searchTrigger, pushHistory: false });
+          return;
+        }
+
+        if (isSearchOpen) {
+          hasSearchHistoryEntry = false;
+          closeSearch({ restoreFocus: true, syncHistory: false });
+        }
+      });
+    };
+
+    window.addEventListener('popstate', handlePopstate);
+    if (isSearchPageState()) {
+      hasSearchHistoryEntry = true;
+      openSearch({ restoreFocusTarget: searchTrigger, pushHistory: false });
+    }
+
     return () => {
       window.removeEventListener('keydown', handleKeydown);
+      window.removeEventListener('popstate', handlePopstate);
     };
   });
 
@@ -278,7 +340,7 @@
                         <a
                           href={resolve('/post/[slug]', { slug: article.slug })}
                           class="article-result"
-                          onclick={() => closeSearch()}
+                          onclick={() => closeSearch({ syncHistory: false })}
                         >
                           <div class="article-result-meta">
                             <span class="match-label">{article.matchedFieldLabel}</span>
@@ -309,7 +371,7 @@
                         <a
                           href={resolve('/tag/[tag=tag]', { tag: composer.tag })}
                           class="compact-result"
-                          onclick={() => closeSearch()}
+                          onclick={() => closeSearch({ syncHistory: false })}
                         >
                           <strong>{composer.shortName}</strong>
                           <span>{composer.fullName}</span>
@@ -329,7 +391,7 @@
                         <a
                           href={resolve('/tag/[tag=tag]', { tag: concert.tag })}
                           class="compact-result"
-                          onclick={() => closeSearch()}
+                          onclick={() => closeSearch({ syncHistory: false })}
                         >
                           <strong>{concert.title}</strong>
                           <span>{formatDate2JpStyle(concert.date)}</span>
@@ -349,7 +411,7 @@
                         <a
                           href={resolve('/tag/[tag=tag]', { tag: entry.tag })}
                           class="compact-result"
-                          onclick={() => closeSearch()}
+                          onclick={() => closeSearch({ syncHistory: false })}
                         >
                           <strong>#&thinsp;{entry.tag}</strong>
                           <span>タグページを開く</span>
@@ -673,7 +735,6 @@
 
   @media (max-width: 576px) {
     .post-list-header {
-      flex-direction: column;
       gap: calc(var(--spacing-unit) * 3);
     }
 
