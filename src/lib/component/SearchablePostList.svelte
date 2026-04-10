@@ -2,8 +2,9 @@
   import { browser } from '$app/environment';
   import { resolve } from '$app/paths';
   import { onMount, tick } from 'svelte';
+  import { fade, fly } from 'svelte/transition';
   import type { Post } from '$lib/posts';
-  import { searchBlog } from '$lib/posts/search';
+  import type { BlogSearchResults } from '$lib/posts/search';
   import type { Tag } from '$lib/posts/tags';
   import { formatDate2JpStyle } from '$lib/util';
   import PostList from './PostList.svelte';
@@ -28,18 +29,60 @@
 
   let isSearchOpen = $state(false);
   let searchQuery = $state('');
-  let searchTrigger = $state<HTMLInputElement | null>(null);
+  let searchTrigger = $state<HTMLButtonElement | null>(null);
   let searchInput = $state<HTMLInputElement | null>(null);
   let searchDialog = $state<HTMLDivElement | null>(null);
+  let searchBlogFn = $state<typeof import('$lib/posts/search').searchBlog | null>(null);
+  let isSearchLoading = $state(false);
   let focusRestoreTarget: HTMLElement | null = null;
+  let searchLoadPromise: Promise<void> | null = null;
 
-  const searchResults = $derived(searchBlog(searchQuery));
+  const emptySearchResults: BlogSearchResults = {
+    articles: [],
+    tags: [],
+    composers: [],
+    concerts: []
+  };
+  const trimmedSearchQuery = $derived(searchQuery.trim());
+  const searchResults = $derived(searchBlogFn ? searchBlogFn(searchQuery) : emptySearchResults);
   const hasAnyResults = $derived(
     searchResults.articles.length > 0 ||
       searchResults.tags.length > 0 ||
       searchResults.composers.length > 0 ||
       searchResults.concerts.length > 0
   );
+  const resultCount = $derived(
+    searchResults.articles.length +
+      searchResults.tags.length +
+      searchResults.composers.length +
+      searchResults.concerts.length
+  );
+  const resultStatusText = $derived(
+    isSearchLoading && searchBlogFn === null
+      ? '検索を読み込んでいます。'
+      : trimmedSearchQuery.length === 0
+        ? ''
+        : hasAnyResults
+          ? `${resultCount}件の候補があります。`
+          : `「${searchQuery}」に一致する結果は見つかりませんでした。`
+  );
+
+  const loadSearch = () => {
+    if (searchBlogFn !== null) return Promise.resolve();
+    if (searchLoadPromise !== null) return searchLoadPromise;
+
+    isSearchLoading = true;
+    searchLoadPromise = import('$lib/posts/search')
+      .then(({ searchBlog }) => {
+        searchBlogFn = searchBlog;
+      })
+      .finally(() => {
+        isSearchLoading = false;
+        searchLoadPromise = null;
+      });
+
+    return searchLoadPromise;
+  };
 
   const openSearch = async ({
     restoreFocusTarget = null,
@@ -52,6 +95,7 @@
       focusRestoreTarget = restoreFocusTarget;
       isSearchOpen = true;
     }
+    void loadSearch();
 
     await tick();
     searchInput?.focus();
@@ -62,12 +106,7 @@
     isSearchOpen = false;
     await tick();
 
-    if (
-      restoreFocus &&
-      focusRestoreTarget &&
-      focusRestoreTarget !== searchTrigger &&
-      focusRestoreTarget !== document.body
-    ) {
+    if (restoreFocus && focusRestoreTarget && focusRestoreTarget !== document.body) {
       focusRestoreTarget.focus();
     }
 
@@ -124,30 +163,23 @@
     {/if}
   </div>
 
-  <div class="search-field">
-    <label class="search-label" for="post-search-trigger">記事を検索</label>
-    <div class="search-trigger-wrapper">
-      <input
-        bind:this={searchTrigger}
-        id="post-search-trigger"
-        class="search-trigger"
-        type="text"
-        value=""
-        placeholder="タイトル・本文・タグから検索"
-        readonly
-        aria-haspopup="dialog"
-        onfocus={() => openSearch()}
-        onclick={() => openSearch()}
+  <button
+    bind:this={searchTrigger}
+    type="button"
+    class="search-trigger"
+    aria-label="記事を検索"
+    aria-haspopup="dialog"
+    aria-expanded={isSearchOpen}
+    aria-controls="blog-search-dialog"
+    aria-keyshortcuts="Control+K Meta+K"
+    onclick={(event) => openSearch({ restoreFocusTarget: event.currentTarget })}
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path
+        d="M10.8 5.2a5.6 5.6 0 1 0 0 11.2 5.6 5.6 0 0 0 0-11.2Zm-7.2 5.6a7.2 7.2 0 1 1 12.7 4.6l4 4a.8.8 0 0 1-1.1 1.1l-4-4A7.2 7.2 0 0 1 3.6 10.8Z"
       />
-      <span class="shortcut-hint" aria-hidden="true">
-        <kbd>Ctrl</kbd>
-        <span>+</span>
-        <kbd>K</kbd>
-        <span class="mac-shortcut">/ ⌘K</span>
-      </span>
-    </div>
-    <p class="search-note">タイトル・本文・タグ・作曲家・演奏会から検索できます。</p>
-  </div>
+    </svg>
+  </button>
 </section>
 
 {#if isSearchOpen}
@@ -158,14 +190,17 @@
       tabindex="-1"
       aria-label="検索を閉じる"
       onclick={() => closeSearch({ restoreFocus: true })}
+      transition:fade={{ duration: 140 }}
     ></button>
     <div
       bind:this={searchDialog}
+      id="blog-search-dialog"
       class="search-dialog"
       role="dialog"
       tabindex="-1"
       aria-modal="true"
       aria-labelledby="blog-search-heading"
+      transition:fly={{ y: -12, duration: 160 }}
       onkeydown={(event) => {
         if (event.key === 'Escape') {
           event.preventDefault();
@@ -191,21 +226,19 @@
       <div class="search-dialog-header">
         <div class="search-dialog-title-group">
           <p id="blog-search-heading" class="search-dialog-title">ブログを検索</p>
-          <p class="search-dialog-note">
-            {#if tag}
-              現在は #&thinsp;{tag} の一覧を表示中です。検索対象は全記事です。
-            {:else}
-              検索対象は全記事です。
-            {/if}
-          </p>
         </div>
 
         <button
           type="button"
           class="close-button"
+          aria-label="検索を閉じる"
           onclick={() => closeSearch({ restoreFocus: true })}
         >
-          閉じる
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path
+              d="M6.2 5.1 12 10.9l5.8-5.8a.8.8 0 0 1 1.1 1.1L13.1 12l5.8 5.8a.8.8 0 0 1-1.1 1.1L12 13.1l-5.8 5.8a.8.8 0 1 1-1.1-1.1l5.8-5.8-5.8-5.8a.8.8 0 1 1 1.1-1.1Z"
+            />
+          </svg>
         </button>
       </div>
 
@@ -221,118 +254,120 @@
           autocomplete="off"
           autocapitalize="off"
           spellcheck="false"
+          aria-keyshortcuts="Control+K Meta+K"
         />
+        <span class="input-shortcut-hint" aria-hidden="true">
+          <kbd>Ctrl</kbd>
+          <span>+</span>
+          <kbd>K</kbd>
+          <span class="mac-shortcut">/ ⌘K</span>
+        </span>
       </div>
+      <p class="sr-only" role="status" aria-live="polite">{resultStatusText}</p>
 
-      <div class="search-results">
-        {#if searchQuery.trim().length === 0}
-          <div class="search-empty-state">
-            <p>タイトル・本文・タグ・作曲家・演奏会を横断検索できます。</p>
-            <p class="keyboard-help">
-              <kbd>Esc</kbd> で閉じます。<span class="divider">/</span><kbd>Ctrl</kbd>+<kbd>K</kbd>
-              で再度開けます。
-            </p>
-          </div>
-        {:else if hasAnyResults}
-          <div class="search-sections">
-            {#if searchResults.articles.length > 0}
-              <section class="result-section">
-                <h3>記事</h3>
-                <ul class="result-list article-result-list">
-                  {#each searchResults.articles as article (article.slug)}
-                    <li>
-                      <a
-                        href={resolve('/post/[slug]', { slug: article.slug })}
-                        class="article-result"
-                        onclick={() => closeSearch()}
-                      >
-                        <div class="article-result-meta">
-                          <span class="match-label">{article.matchedFieldLabel}</span>
-                          <span class="published-at">
-                            {formatDate2JpStyle(article.publishedAt)}
-                          </span>
-                        </div>
-                        <strong>{article.title}</strong>
-                        <p>{article.description}……</p>
-                        <div class="article-result-tags">
-                          {#each article.tags as articleTag (articleTag)}
-                            <span class="article-result-tag">#&thinsp;{articleTag}</span>
-                          {/each}
-                        </div>
-                      </a>
-                    </li>
-                  {/each}
-                </ul>
-              </section>
-            {/if}
+      {#if trimmedSearchQuery.length > 0 && searchBlogFn !== null}
+        <div class="search-results">
+          {#if hasAnyResults}
+            <div class="search-sections">
+              {#if searchResults.articles.length > 0}
+                <section class="result-section">
+                  <h3>記事</h3>
+                  <ul class="result-list article-result-list">
+                    {#each searchResults.articles as article (article.slug)}
+                      <li>
+                        <a
+                          href={resolve('/post/[slug]', { slug: article.slug })}
+                          class="article-result"
+                          onclick={() => closeSearch()}
+                        >
+                          <div class="article-result-meta">
+                            <span class="match-label">{article.matchedFieldLabel}</span>
+                            <span class="published-at">
+                              {formatDate2JpStyle(article.publishedAt)}
+                            </span>
+                          </div>
+                          <strong>{article.title}</strong>
+                          <p>{article.description}……</p>
+                          <div class="article-result-tags">
+                            {#each article.tags as articleTag (articleTag)}
+                              <span class="article-result-tag">#&thinsp;{articleTag}</span>
+                            {/each}
+                          </div>
+                        </a>
+                      </li>
+                    {/each}
+                  </ul>
+                </section>
+              {/if}
 
-            {#if searchResults.composers.length > 0}
-              <section class="result-section">
-                <h3>作曲家</h3>
-                <ul class="result-list compact-result-list">
-                  {#each searchResults.composers as composer (composer.slug)}
-                    <li>
-                      <a
-                        href={resolve('/tag/[tag=tag]', { tag: composer.tag })}
-                        class="compact-result"
-                        onclick={() => closeSearch()}
-                      >
-                        <strong>{composer.shortName}</strong>
-                        <span>{composer.fullName}</span>
-                      </a>
-                    </li>
-                  {/each}
-                </ul>
-              </section>
-            {/if}
+              {#if searchResults.composers.length > 0}
+                <section class="result-section">
+                  <h3>作曲家</h3>
+                  <ul class="result-list compact-result-list">
+                    {#each searchResults.composers as composer (composer.slug)}
+                      <li>
+                        <a
+                          href={resolve('/tag/[tag=tag]', { tag: composer.tag })}
+                          class="compact-result"
+                          onclick={() => closeSearch()}
+                        >
+                          <strong>{composer.shortName}</strong>
+                          <span>{composer.fullName}</span>
+                        </a>
+                      </li>
+                    {/each}
+                  </ul>
+                </section>
+              {/if}
 
-            {#if searchResults.concerts.length > 0}
-              <section class="result-section">
-                <h3>演奏会</h3>
-                <ul class="result-list compact-result-list">
-                  {#each searchResults.concerts as concert (concert.slug)}
-                    <li>
-                      <a
-                        href={resolve('/tag/[tag=tag]', { tag: concert.tag })}
-                        class="compact-result"
-                        onclick={() => closeSearch()}
-                      >
-                        <strong>{concert.title}</strong>
-                        <span>{formatDate2JpStyle(concert.date)}</span>
-                      </a>
-                    </li>
-                  {/each}
-                </ul>
-              </section>
-            {/if}
+              {#if searchResults.concerts.length > 0}
+                <section class="result-section">
+                  <h3>演奏会</h3>
+                  <ul class="result-list compact-result-list">
+                    {#each searchResults.concerts as concert (concert.slug)}
+                      <li>
+                        <a
+                          href={resolve('/tag/[tag=tag]', { tag: concert.tag })}
+                          class="compact-result"
+                          onclick={() => closeSearch()}
+                        >
+                          <strong>{concert.title}</strong>
+                          <span>{formatDate2JpStyle(concert.date)}</span>
+                        </a>
+                      </li>
+                    {/each}
+                  </ul>
+                </section>
+              {/if}
 
-            {#if searchResults.tags.length > 0}
-              <section class="result-section">
-                <h3>タグ</h3>
-                <ul class="result-list compact-result-list">
-                  {#each searchResults.tags as entry (entry.tag)}
-                    <li>
-                      <a
-                        href={resolve('/tag/[tag=tag]', { tag: entry.tag })}
-                        class="compact-result"
-                        onclick={() => closeSearch()}
-                      >
-                        <strong>#&thinsp;{entry.tag}</strong>
-                        <span>タグページを開く</span>
-                      </a>
-                    </li>
-                  {/each}
-                </ul>
-              </section>
-            {/if}
-          </div>
-        {:else}
-          <div class="search-empty-state">
-            <p>「{searchQuery}」に一致する結果は見つかりませんでした。</p>
-            <p>キーワードを短くするか、作曲家名・演奏会名でもお試しください。</p>
-          </div>
-        {/if}
-      </div>
+              {#if searchResults.tags.length > 0}
+                <section class="result-section">
+                  <h3>タグ</h3>
+                  <ul class="result-list compact-result-list">
+                    {#each searchResults.tags as entry (entry.tag)}
+                      <li>
+                        <a
+                          href={resolve('/tag/[tag=tag]', { tag: entry.tag })}
+                          class="compact-result"
+                          onclick={() => closeSearch()}
+                        >
+                          <strong>#&thinsp;{entry.tag}</strong>
+                          <span>タグページを開く</span>
+                        </a>
+                      </li>
+                    {/each}
+                  </ul>
+                </section>
+              {/if}
+            </div>
+          {:else}
+            <div class="search-empty-state">
+              <p>「{searchQuery}」に一致する結果は見つかりませんでした。</p>
+              <p>キーワードを短くするか、作曲家名・演奏会名でもお試しください。</p>
+            </div>
+          {/if}
+        </div>
+      {/if}
     </div>
   </div>
 {/if}
@@ -342,11 +377,13 @@
 <style>
   .post-list-header {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     gap: calc(var(--spacing-unit) * 5);
+    align-items: flex-start;
   }
 
   .heading-group {
+    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: calc(var(--spacing-unit) * 1);
@@ -363,71 +400,59 @@
     color: var(--color-text-secondary);
   }
 
-  .search-field {
-    display: flex;
-    flex-direction: column;
-    gap: calc(var(--spacing-unit) * 2);
-  }
-
-  .search-label {
-    font-size: 0.95em;
-    color: var(--color-text-secondary);
-  }
-
-  .search-trigger-wrapper {
-    position: relative;
-    display: flex;
+  .search-trigger {
+    flex: 0 0 auto;
+    display: inline-flex;
+    justify-content: center;
     align-items: center;
+    width: calc(var(--spacing-unit) * 11);
+    height: calc(var(--spacing-unit) * 11);
+    border: 1px solid var(--color-text-primary);
+    border-radius: calc(var(--spacing-unit) * 2);
+    padding: 0;
+    background-color: rgba(255, 255, 255, 0.92);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease;
   }
 
-  .search-trigger,
+  .search-trigger svg,
+  .close-button svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: currentColor;
+  }
+
+  .search-trigger:hover,
+  .close-button:hover {
+    border-color: var(--color-text-primary);
+    background-color: rgba(238, 238, 238, 0.8);
+  }
+
+  .search-trigger:focus-visible,
+  .close-button:focus-visible {
+    outline: 2px solid var(--color-text-primary);
+    outline-offset: 2px;
+  }
+
   .search-input {
     box-sizing: border-box;
     width: 100%;
     border: 1px solid var(--color-text-primary);
     border-radius: calc(var(--spacing-unit) * 2);
-    padding: calc(var(--spacing-unit) * 4) calc(var(--spacing-unit) * 5);
+    padding: calc(var(--spacing-unit) * 4) calc(var(--spacing-unit) * 34)
+      calc(var(--spacing-unit) * 4) calc(var(--spacing-unit) * 5);
     font: inherit;
+    font-size: 1.05rem;
     background-color: rgba(255, 255, 255, 0.92);
     color: inherit;
   }
 
-  .search-trigger {
-    cursor: text;
-    padding-right: calc(var(--spacing-unit) * 34);
-  }
-
-  .search-trigger::placeholder,
   .search-input::placeholder {
     color: var(--color-text-secondary);
     opacity: 1;
-  }
-
-  .search-note {
-    margin: 0;
-    font-size: 0.9em;
-    color: var(--color-text-secondary);
-  }
-
-  .shortcut-hint {
-    position: absolute;
-    right: calc(var(--spacing-unit) * 4);
-    display: inline-flex;
-    align-items: center;
-    gap: calc(var(--spacing-unit) * 1);
-    font-size: 0.78em;
-    color: var(--color-text-secondary);
-    pointer-events: none;
-  }
-
-  .shortcut-hint kbd,
-  .keyboard-help kbd {
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: calc(var(--spacing-unit) * 1.5);
-    padding: 0 calc(var(--spacing-unit) * 1.5);
-    font-family: inherit;
-    font-size: 0.95em;
-    background-color: rgba(255, 255, 255, 0.75);
   }
 
   .search-layer {
@@ -469,7 +494,7 @@
     display: flex;
     justify-content: space-between;
     gap: calc(var(--spacing-unit) * 4);
-    align-items: flex-start;
+    align-items: center;
   }
 
   .search-dialog-title-group {
@@ -478,36 +503,54 @@
     gap: calc(var(--spacing-unit) * 1);
   }
 
-  .search-dialog-title,
-  .search-dialog-note {
-    margin: 0;
-  }
-
   .search-dialog-title {
     font-family: var(--serif);
     font-size: 1.25rem;
-  }
-
-  .search-dialog-note {
-    color: var(--color-text-secondary);
-    font-size: 0.9em;
+    margin: 0;
   }
 
   .close-button {
+    flex: 0 0 auto;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: calc(var(--spacing-unit) * 10);
+    height: calc(var(--spacing-unit) * 10);
     border: 1px solid var(--color-text-primary);
     border-radius: calc(var(--spacing-unit) * 2);
-    padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 4);
-    font: inherit;
+    padding: 0;
     background: transparent;
+    color: inherit;
     cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease;
   }
 
   .search-input-wrapper {
+    position: relative;
     display: flex;
+    align-items: center;
   }
 
-  .search-input {
-    font-size: 1.05rem;
+  .input-shortcut-hint {
+    position: absolute;
+    right: calc(var(--spacing-unit) * 4);
+    display: inline-flex;
+    align-items: center;
+    gap: calc(var(--spacing-unit) * 1);
+    font-size: 0.78em;
+    color: var(--color-text-secondary);
+    pointer-events: none;
+  }
+
+  .input-shortcut-hint kbd {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: calc(var(--spacing-unit) * 1.5);
+    padding: 0 calc(var(--spacing-unit) * 1.5);
+    font-family: inherit;
+    font-size: 0.95em;
+    background-color: rgba(255, 255, 255, 0.75);
   }
 
   .search-results {
@@ -550,8 +593,7 @@
   }
 
   .article-result:hover,
-  .compact-result:hover,
-  .close-button:hover {
+  .compact-result:hover {
     border-color: var(--color-text-primary);
     background-color: rgba(238, 238, 238, 0.8);
     text-decoration: none;
@@ -617,17 +659,6 @@
     margin: 0;
   }
 
-  .keyboard-help {
-    display: flex;
-    align-items: center;
-    gap: calc(var(--spacing-unit) * 1.5);
-    flex-wrap: wrap;
-  }
-
-  .divider {
-    color: rgba(0, 0, 0, 0.3);
-  }
-
   .sr-only {
     position: absolute;
     width: 1px;
@@ -641,23 +672,13 @@
   }
 
   @media (max-width: 576px) {
+    .post-list-header {
+      flex-direction: column;
+      gap: calc(var(--spacing-unit) * 3);
+    }
+
     h2 {
       font-size: 1.7rem;
-    }
-
-    .search-trigger {
-      padding-right: calc(var(--spacing-unit) * 5);
-    }
-
-    .shortcut-hint {
-      position: static;
-      justify-content: flex-end;
-      margin-top: calc(var(--spacing-unit) * 2);
-    }
-
-    .search-trigger-wrapper {
-      flex-direction: column;
-      align-items: stretch;
     }
 
     .search-layer {
@@ -671,11 +692,19 @@
     }
 
     .search-dialog-header {
-      flex-direction: column;
+      gap: calc(var(--spacing-unit) * 3);
     }
 
     .close-button {
       align-self: flex-end;
+    }
+
+    .search-input {
+      padding-right: calc(var(--spacing-unit) * 20);
+    }
+
+    .input-shortcut-hint .mac-shortcut {
+      display: none;
     }
 
     .article-result-meta {
