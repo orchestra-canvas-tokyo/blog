@@ -6,7 +6,7 @@
   import { onMount, tick } from 'svelte';
   import { fade, fly } from 'svelte/transition';
   import type { Page } from '@sveltejs/kit';
-  import type { Post } from '$lib/posts';
+  import type { PostListItem } from '$lib/posts';
   import type { BlogSearchResults } from '$lib/posts/search';
   import type { Tag } from '$lib/posts/tags';
   import { formatDate2JpStyle } from '$lib/util';
@@ -15,7 +15,7 @@
   interface Props {
     heading: string;
     summary?: string;
-    posts: Post[];
+    posts: PostListItem[];
     tag?: Tag;
     currentPageNumber: number;
     totalNumberOfPages: number;
@@ -82,7 +82,8 @@
 
     isSearchLoading = true;
     searchLoadPromise = import('$lib/posts/search')
-      .then(({ searchBlog }) => {
+      .then(async ({ loadBlogSearchIndex, searchBlog }) => {
+        await loadBlogSearchIndex();
         searchBlogFn = searchBlog;
       })
       .finally(() => {
@@ -327,9 +328,13 @@
       </div>
       <p class="sr-only" role="status" aria-live="polite">{resultStatusText}</p>
 
-      {#if trimmedSearchQuery.length > 0 && searchBlogFn !== null}
+      {#if trimmedSearchQuery.length > 0}
         <div class="search-results">
-          {#if hasAnyResults}
+          {#if isSearchLoading && searchBlogFn === null}
+            <div class="search-empty-state">
+              <p>検索を読み込んでいます。</p>
+            </div>
+          {:else if hasAnyResults}
             <div class="search-sections">
               {#if searchResults.articles.length > 0}
                 <section class="result-section">

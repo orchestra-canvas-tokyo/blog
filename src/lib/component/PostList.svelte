@@ -1,13 +1,13 @@
 <script lang="ts">
   import { resolve } from '$app/paths';
-  import { getFullTitle, type Post } from '$lib/posts';
+  import { getFullTitle, type PostListItem } from '$lib/posts';
   import type { Tag } from '$lib/posts/tags';
   import { formatDate2JpStyle } from '$lib/util';
   import TagList from './TagList.svelte';
 
   interface Props {
     /** 表示するポストの配列 */
-    posts: Post[];
+    posts: PostListItem[];
     /** タグページの場合のタグ名 */
     tag?: Tag;
     /** 現在のページ数（1始まり） */

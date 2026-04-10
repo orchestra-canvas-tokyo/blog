@@ -1,7 +1,13 @@
-import { getFullTitle, getSearchablePosts, type SearchablePost } from '$lib/posts';
+import {
+  getFullTitle,
+  getPublishedPostMetadata,
+  type PostMetadata,
+  type SearchablePost
+} from '$lib/posts';
 import { composers, type composerSlug } from '$lib/posts/composers';
 import { concerts, type concertSlug } from '$lib/posts/concerts';
 import type { Tag } from '$lib/posts/tags';
+import { convertToDescription, convertToPlainText } from '$lib/util';
 
 export type ArticleSearchResult = {
   slug: string;
@@ -78,6 +84,20 @@ type ConcertSearchEntry = {
   normalizedTitle: string;
 };
 
+type BlogSearchIndex = {
+  articleSearchEntries: ArticleSearchEntry[];
+  tagSearchEntries: TagSearchEntry[];
+  composerSearchEntries: ComposerSearchEntry[];
+  concertSearchEntries: ConcertSearchEntry[];
+};
+
+const emptyBlogSearchResults: BlogSearchResults = {
+  articles: [],
+  tags: [],
+  composers: [],
+  concerts: []
+};
+
 const katakanaToHiragana = (value: string) =>
   value.replaceAll(/[\u30a1-\u30f6]/g, (character) =>
     String.fromCharCode(character.charCodeAt(0) - 0x60)
@@ -91,61 +111,108 @@ const splitQueryTokens = (value: string) => normalizeSearchText(value).split(' '
 const includesAllTokens = (value: string, tokens: string[]) =>
   tokens.length > 0 && tokens.every((token) => value.includes(token));
 
-const publishedPosts = getSearchablePosts();
+let blogSearchIndex: BlogSearchIndex | null = null;
+let blogSearchIndexPromise: Promise<BlogSearchIndex> | null = null;
 
-const articleSearchEntries: ArticleSearchEntry[] = publishedPosts.map((post) =>
-  createArticleSearchEntry(post)
-);
+const rawModules = import.meta.glob('./**/post.svelte', {
+  import: 'default',
+  query: '?raw',
+  eager: true
+}) as Record<string, string>;
 
-const usedComposerTags = new Set<string>(
-  publishedPosts.flatMap((post) => {
-    const slugs = [post.metadata.composerSlug, post.metadata.arrangerSlug].filter(
-      (slug): slug is composerSlug => slug !== undefined
-    );
-
-    return slugs.map((slug) => composers[slug].shortName);
+const rawPostsBySlug = new Map(
+  Object.entries(rawModules).flatMap(([path, rawPost]) => {
+    const slug = /^.+\/(?<slug>[^/]+)\/post\.svelte$/.exec(path)?.groups?.slug;
+    return slug === undefined ? [] : [[slug, rawPost]];
   })
 );
 
-const usedConcertTags = new Set<string>(
-  publishedPosts.map((post) => concerts[post.metadata.concertSlug].title)
-);
+const toSearchablePost = (post: PostMetadata): SearchablePost | null => {
+  const rawPost = rawPostsBySlug.get(post.slug);
+  if (rawPost === undefined) return null;
 
-const tagSearchEntries: TagSearchEntry[] = [
-  ...new Set(publishedPosts.flatMap((post) => post.metadata.tags))
-]
-  .filter((tag) => !usedComposerTags.has(tag) && !usedConcertTags.has(tag))
-  .map((tag) => ({
-    tag,
-    normalizedTag: normalizeSearchText(tag)
-  }));
+  return {
+    ...post,
+    description: convertToDescription(rawPost),
+    searchText: convertToPlainText(rawPost)
+  };
+};
 
-const composerSearchEntries: ComposerSearchEntry[] = [
-  ...new Set(
-    publishedPosts.flatMap((post) =>
-      [post.metadata.composerSlug, post.metadata.arrangerSlug].filter(
+const createBlogSearchIndex = (): BlogSearchIndex => {
+  const publishedPosts = getPublishedPostMetadata()
+    .map((post) => toSearchablePost(post))
+    .filter((post): post is SearchablePost => post !== null);
+
+  const usedComposerTags = new Set<string>(
+    publishedPosts.flatMap((post) => {
+      const slugs = [post.metadata.composerSlug, post.metadata.arrangerSlug].filter(
         (slug): slug is composerSlug => slug !== undefined
-      )
-    )
-  )
-].map((slug) => ({
-  slug,
-  shortName: composers[slug].shortName,
-  fullName: composers[slug].fullName,
-  tag: composers[slug].shortName as Tag,
-  normalizedShortName: normalizeSearchText(composers[slug].shortName),
-  normalizedFullName: normalizeSearchText(composers[slug].fullName)
-}));
+      );
 
-const concertSearchEntries: ConcertSearchEntry[] = [
-  ...new Set(publishedPosts.map((post) => post.metadata.concertSlug))
-].map((slug) => ({
-  slug,
-  title: concerts[slug].title,
-  date: concerts[slug].date,
-  tag: concerts[slug].title as Tag,
-  normalizedTitle: normalizeSearchText(concerts[slug].title)
-}));
+      return slugs.map((slug) => composers[slug].shortName);
+    })
+  );
+
+  const usedConcertTags = new Set<string>(
+    publishedPosts.map((post) => concerts[post.metadata.concertSlug].title)
+  );
+
+  return {
+    articleSearchEntries: publishedPosts.map((post) => createArticleSearchEntry(post)),
+    tagSearchEntries: [...new Set(publishedPosts.flatMap((post) => post.metadata.tags))]
+      .filter((tag) => !usedComposerTags.has(tag) && !usedConcertTags.has(tag))
+      .map((tag) => ({
+        tag,
+        normalizedTag: normalizeSearchText(tag)
+      })),
+    composerSearchEntries: [
+      ...new Set(
+        publishedPosts.flatMap((post) =>
+          [post.metadata.composerSlug, post.metadata.arrangerSlug].filter(
+            (slug): slug is composerSlug => slug !== undefined
+          )
+        )
+      )
+    ].map((slug) => ({
+      slug,
+      shortName: composers[slug].shortName,
+      fullName: composers[slug].fullName,
+      tag: composers[slug].shortName as Tag,
+      normalizedShortName: normalizeSearchText(composers[slug].shortName),
+      normalizedFullName: normalizeSearchText(composers[slug].fullName)
+    })),
+    concertSearchEntries: [...new Set(publishedPosts.map((post) => post.metadata.concertSlug))].map(
+      (slug) => ({
+        slug,
+        title: concerts[slug].title,
+        date: concerts[slug].date,
+        tag: concerts[slug].title as Tag,
+        normalizedTitle: normalizeSearchText(concerts[slug].title)
+      })
+    )
+  };
+};
+
+const getBlogSearchIndex = () => {
+  if (blogSearchIndex !== null) return Promise.resolve(blogSearchIndex);
+  if (blogSearchIndexPromise !== null) return blogSearchIndexPromise;
+
+  blogSearchIndexPromise = Promise.resolve()
+    .then(() => createBlogSearchIndex())
+    .then((index) => {
+      blogSearchIndex = index;
+      return index;
+    })
+    .finally(() => {
+      blogSearchIndexPromise = null;
+    });
+
+  return blogSearchIndexPromise;
+};
+
+export const loadBlogSearchIndex = async (): Promise<void> => {
+  await getBlogSearchIndex();
+};
 
 function createArticleSearchEntry(post: SearchablePost): ArticleSearchEntry {
   const composerNames = [post.metadata.composerSlug, post.metadata.arrangerSlug]
@@ -301,18 +368,14 @@ const scoreConcert = (
 export const searchBlog = (query: string, limitPerSection = 5): BlogSearchResults => {
   const normalizedQuery = normalizeSearchText(query);
   const queryTokens = splitQueryTokens(query);
+  const searchIndex = blogSearchIndex;
 
-  if (normalizedQuery.length === 0 || queryTokens.length === 0) {
-    return {
-      articles: [],
-      tags: [],
-      composers: [],
-      concerts: []
-    };
+  if (normalizedQuery.length === 0 || queryTokens.length === 0 || searchIndex === null) {
+    return emptyBlogSearchResults;
   }
 
   return {
-    articles: articleSearchEntries
+    articles: searchIndex.articleSearchEntries
       .map((entry) => scoreArticle(entry, normalizedQuery, queryTokens))
       .filter((entry): entry is ArticleSearchResult => entry !== null)
       .sort(
@@ -321,12 +384,12 @@ export const searchBlog = (query: string, limitPerSection = 5): BlogSearchResult
           new Date(entryB.publishedAt).getTime() - new Date(entryA.publishedAt).getTime()
       )
       .slice(0, limitPerSection),
-    tags: tagSearchEntries
+    tags: searchIndex.tagSearchEntries
       .map((entry) => scoreTag(entry, normalizedQuery, queryTokens))
       .filter((entry): entry is TagSearchResult => entry !== null)
       .sort((entryA, entryB) => entryB.score - entryA.score || entryA.tag.localeCompare(entryB.tag))
       .slice(0, limitPerSection),
-    composers: composerSearchEntries
+    composers: searchIndex.composerSearchEntries
       .map((entry) => scoreComposer(entry, normalizedQuery, queryTokens))
       .filter((entry): entry is ComposerSearchResult => entry !== null)
       .sort(
@@ -334,7 +397,7 @@ export const searchBlog = (query: string, limitPerSection = 5): BlogSearchResult
           entryB.score - entryA.score || entryA.shortName.localeCompare(entryB.shortName)
       )
       .slice(0, limitPerSection),
-    concerts: concertSearchEntries
+    concerts: searchIndex.concertSearchEntries
       .map((entry) => scoreConcert(entry, normalizedQuery, queryTokens))
       .filter((entry): entry is ConcertSearchResult => entry !== null)
       .sort(
