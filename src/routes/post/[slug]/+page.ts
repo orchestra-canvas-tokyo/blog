@@ -6,11 +6,11 @@ import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ params }) => {
   // slugが一致する記事がない、未publishの場合は404
-  const post = getPostBySlug(params.slug);
+  const post = await getPostBySlug(params.slug);
   if (post === null) error(404);
   if (!post.metadata.published) error(404);
 
-  const adjacentPostListItems = getAdjacentPostListItemsBySlug(params.slug);
+  const adjacentPostListItems = await getAdjacentPostListItemsBySlug(params.slug);
 
   return {
     post: post,

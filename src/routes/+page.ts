@@ -1,10 +1,10 @@
-import { getPosts } from '$lib/posts';
+import { getPostCount, getPostListItems } from '$lib/posts';
 import { PostCountInOnePage } from '$lib/util';
 import { error, redirect } from '@sveltejs/kit';
 
 import type { PageLoad } from './$types';
 
-export const load: PageLoad = ({ url }) => {
+export const load: PageLoad = async ({ url }) => {
   // URLからpageNumberを取得
   const rawPageNumber = url.searchParams.get('p');
   let pageNumber: number;
@@ -24,13 +24,16 @@ export const load: PageLoad = ({ url }) => {
   }
 
   // ポストを取得する
-  const posts = getPosts();
-  const totalNumberOfPages = Math.ceil(posts.length / PostCountInOnePage);
+  const totalNumberOfPosts = getPostCount();
+  const totalNumberOfPages = Math.ceil(totalNumberOfPosts / PostCountInOnePage);
   // インデックス範囲外には404を
   if (totalNumberOfPages < pageNumber) error(404);
 
   return {
-    posts: posts.slice(PostCountInOnePage * (pageNumber - 1), PostCountInOnePage * pageNumber),
+    posts: await getPostListItems({
+      offset: PostCountInOnePage * (pageNumber - 1),
+      limit: PostCountInOnePage
+    }),
     currentPageNumber: pageNumber,
     totalNumberOfPages: totalNumberOfPages
   };

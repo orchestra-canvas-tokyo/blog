@@ -7,17 +7,27 @@ export const formatDate2JpStyle = (date: string) =>
   `${new Date(date).getFullYear()}/${new Date(date).getMonth() + 1}/${new Date(date).getDate()}`;
 
 /**
- * descriptionとして用いられる冒頭抽出文字列を生成する。
+ * ポストの生テキストから検索用のプレーンテキストを生成する。
  * @param rawPost ポストのHTML文字列
- * @returns 冒頭を抽出した文字列
+ * @returns タグ類を除去したプレーンテキスト
  */
-export const convertToDescription = (rawPost: string) =>
+export const convertToPlainText = (rawPost: string) =>
   rawPost
     .replaceAll(/<script.+?<\/script>/gs, '') // スクリプトを削除
     .replaceAll(/<style.+?<\/style>/gs, '') // スタイリングを削除
     .replaceAll(/<h\d.+?<\/h\d>/gs, '') // ヘッダーを削除
     .replaceAll(/<figcaption.+?<\/figcaption>/gs, '') // キャプションを削除
     .replaceAll(/<.+?>/gs, '') // タグ文字列を削除
+    .replaceAll(/\s+/gs, ' ') // 空白を圧縮
+    .trim();
+
+/**
+ * descriptionとして用いられる冒頭抽出文字列を生成する。
+ * @param rawPost ポストのHTML文字列
+ * @returns 冒頭を抽出した文字列
+ */
+export const convertToDescription = (rawPost: string) =>
+  convertToPlainText(rawPost)
     .replaceAll(/\s+/gs, '') // 空白を削除
     .substring(0, 200);
 

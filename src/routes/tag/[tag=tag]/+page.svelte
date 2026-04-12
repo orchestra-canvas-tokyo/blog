@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { PageData } from './$types';
-  import PostList from '$lib/component/PostList.svelte';
   import Meta from '$lib/component/Meta.svelte';
+  import SearchablePostList from '$lib/component/SearchablePostList.svelte';
 
   interface Props {
     data: PageData;
@@ -12,23 +12,11 @@
 
 <Meta title={`#${data.tag}の記事一覧`} canonical={`/tag/${data.tag}`} />
 
-<p>#&thinsp;{data.tag}の記事：{data.totalNumberOfPosts}件</p>
-
-<PostList
+<SearchablePostList
+  heading={`#${data.tag}の記事一覧`}
+  summary={`${data.totalNumberOfPosts}件`}
   posts={data.posts}
   tag={data.tag}
   currentPageNumber={data.currentPageNumber}
   totalNumberOfPages={data.totalNumberOfPages}
 />
-
-<style>
-  p {
-    text-indent: 0;
-    margin-left: calc(var(--spacing-unit) * 4);
-  }
-  @media (max-width: 576px) {
-    p {
-      margin-left: 0;
-    }
-  }
-</style>
