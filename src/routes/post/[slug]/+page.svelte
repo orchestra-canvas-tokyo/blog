@@ -8,7 +8,6 @@
   import type { PageData } from './$types';
   import type { Composer } from '$lib/posts/composers';
   import Meta from '$lib/component/Meta.svelte';
-  // import regular17Flyer from './regular-17.png';
   import Flyer from '$lib/component/Flyer.svelte';
 
   interface Props {
@@ -112,9 +111,9 @@
       詳細は<a href="https://www.orch-canvas.tokyo/concerts/regular-17">当団ホームページ</a>にて
     </p>
 
-    <!-- <a href="https://www.orch-canvas.tokyo/concerts/regular-17">
-      <Flyer src={regular17Flyer} alt="第17回定期演奏会のフライヤー" />
-    </a> -->
+    <a href={concerts['regular-17'].url} rel="external">
+      <Flyer src={concerts['regular-17'].flyer} alt="第17回定期演奏会のフライヤー" />
+    </a>
   </section>
 </div>
 
