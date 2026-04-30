@@ -14,6 +14,7 @@ import regular13 from './regular-13/flyer.png';
 import regular14 from './regular-14/flyer.png';
 import regular15 from './regular-15/flyer.png';
 import regular16 from './regular-16/flyer.png';
+import regular17 from './regular-17/flyer.jpg';
 
 /** 演奏会の基本情報をまとめた型 */
 type Concert = {
@@ -120,6 +121,12 @@ export const concerts = {
     date: '2026-03-15',
     url: 'https://www.orch-canvas.tokyo/concerts/regular-16',
     flyer: regular16
+  },
+  'regular-17': {
+    title: '第17回定期',
+    date: '2026-09-12',
+    url: 'https://www.orch-canvas.tokyo/concerts/regular-17',
+    flyer: regular17
   }
 } as const satisfies {
   [slug: string]: Concert;
