@@ -7,6 +7,7 @@
   import { formatDate2JpStyle } from '$lib/util';
   import type { PageData } from './$types';
   import type { Composer } from '$lib/posts/composers';
+  import BlogSearch from '$lib/component/BlogSearch.svelte';
   import Meta from '$lib/component/Meta.svelte';
   import Flyer from '$lib/component/Flyer.svelte';
 
@@ -37,9 +38,13 @@
   <div class="date for-large-screen">{formatDate2JpStyle(metadata.publicatedAt)}</div>
 </div>
 
-<h2>
-  {metadata.title}
-</h2>
+<div class="title-row">
+  <h2>
+    {metadata.title}
+  </h2>
+
+  <BlogSearch />
+</div>
 
 {#if arranger && composer}
   <p class="composer">
@@ -163,12 +168,24 @@
     width: 100%;
   }
 
+  .title-row {
+    display: flex;
+    justify-content: space-between;
+    gap: calc(var(--spacing-unit) * 5);
+    align-items: flex-start;
+  }
+
   h2 {
+    min-width: 0;
     margin: 0;
     font-family: var(--serif);
     font-size: 2.2rem;
   }
   @media (max-width: 576px) {
+    .title-row {
+      gap: calc(var(--spacing-unit) * 3);
+    }
+
     h2 {
       font-size: 2rem;
     }
