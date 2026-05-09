@@ -417,15 +417,15 @@
     align-items: center;
     width: calc(var(--spacing-unit) * 11);
     height: calc(var(--spacing-unit) * 11);
-    border: 1px solid var(--color-text-primary);
+    border: 0;
     border-radius: calc(var(--spacing-unit) * 2);
     padding: 0;
-    background-color: rgba(255, 255, 255, 0.92);
-    color: var(--color-text-primary);
+    background-color: transparent;
+    color: var(--color-text-secondary);
     cursor: pointer;
     transition:
       background-color 0.2s ease,
-      border-color 0.2s ease;
+      color 0.2s ease;
   }
 
   .search-trigger svg,
@@ -435,13 +435,22 @@
     fill: currentColor;
   }
 
-  .search-trigger:hover,
+  .search-trigger:hover {
+    background-color: rgba(0, 0, 0, 0.06);
+    color: var(--color-text-primary);
+  }
+
+  .search-trigger:focus-visible {
+    outline: none;
+    background-color: rgba(0, 0, 0, 0.08);
+    color: var(--color-text-primary);
+  }
+
   .close-button:hover {
     border-color: var(--color-text-primary);
     background-color: rgba(238, 238, 238, 0.8);
   }
 
-  .search-trigger:focus-visible,
   .close-button:focus-visible {
     outline: 2px solid var(--color-text-primary);
     outline-offset: 2px;
