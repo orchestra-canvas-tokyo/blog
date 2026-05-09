@@ -417,7 +417,7 @@
     align-items: center;
     width: calc(var(--spacing-unit) * 11);
     height: calc(var(--spacing-unit) * 11);
-    border: 0;
+    border: 1px solid rgba(0, 0, 0, 0.16);
     border-radius: calc(var(--spacing-unit) * 2);
     padding: 0;
     background-color: transparent;
@@ -425,6 +425,7 @@
     cursor: pointer;
     transition:
       background-color 0.2s ease,
+      border-color 0.2s ease,
       color 0.2s ease;
   }
 
@@ -437,12 +438,14 @@
 
   .search-trigger:hover {
     background-color: rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.28);
     color: var(--color-text-primary);
   }
 
   .search-trigger:focus-visible {
     outline: none;
     background-color: rgba(0, 0, 0, 0.08);
+    border-color: rgba(0, 0, 0, 0.32);
     color: var(--color-text-primary);
   }
 
