@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { PostListItem } from '$lib/posts';
   import type { Tag } from '$lib/posts/tags';
-  import BlogSearch from './BlogSearch.svelte';
   import PostList from './PostList.svelte';
 
   interface Props {
@@ -30,8 +29,6 @@
       <p class="summary">{summary}</p>
     {/if}
   </div>
-
-  <BlogSearch />
 </section>
 
 <PostList {posts} {tag} {currentPageNumber} {totalNumberOfPages} />

@@ -7,7 +7,6 @@
   import { formatDate2JpStyle } from '$lib/util';
   import type { PageData } from './$types';
   import type { Composer } from '$lib/posts/composers';
-  import BlogSearch from '$lib/component/BlogSearch.svelte';
   import Meta from '$lib/component/Meta.svelte';
   import Flyer from '$lib/component/Flyer.svelte';
 
@@ -27,10 +26,6 @@
 </script>
 
 <Meta title={getFullTitle(data.post)} canonical={`/post/${data.slug}`} />
-
-<div class="post-search">
-  <BlogSearch />
-</div>
 
 <div class="meta meta-container for-small-screen">
   <div></div>
@@ -166,12 +161,6 @@
     justify-content: space-between;
     align-items: baseline;
     width: 100%;
-  }
-
-  .post-search {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: calc(var(--spacing-unit) * 3);
   }
 
   h2 {
