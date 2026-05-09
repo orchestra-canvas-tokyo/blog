@@ -28,6 +28,10 @@
 
 <Meta title={getFullTitle(data.post)} canonical={`/post/${data.slug}`} />
 
+<div class="post-search">
+  <BlogSearch />
+</div>
+
 <div class="meta meta-container for-small-screen">
   <div></div>
   <div class="date">{formatDate2JpStyle(metadata.publicatedAt)}</div>
@@ -38,13 +42,9 @@
   <div class="date for-large-screen">{formatDate2JpStyle(metadata.publicatedAt)}</div>
 </div>
 
-<div class="title-row">
-  <h2>
-    {metadata.title}
-  </h2>
-
-  <BlogSearch />
-</div>
+<h2>
+  {metadata.title}
+</h2>
 
 {#if arranger && composer}
   <p class="composer">
@@ -168,24 +168,18 @@
     width: 100%;
   }
 
-  .title-row {
+  .post-search {
     display: flex;
-    justify-content: space-between;
-    gap: calc(var(--spacing-unit) * 5);
-    align-items: flex-start;
+    justify-content: flex-end;
+    margin-bottom: calc(var(--spacing-unit) * 3);
   }
 
   h2 {
-    min-width: 0;
     margin: 0;
     font-family: var(--serif);
     font-size: 2.2rem;
   }
   @media (max-width: 576px) {
-    .title-row {
-      gap: calc(var(--spacing-unit) * 3);
-    }
-
     h2 {
       font-size: 2rem;
     }
