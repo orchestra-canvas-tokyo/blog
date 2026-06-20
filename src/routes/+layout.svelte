@@ -8,6 +8,7 @@
   import x from './sns-x.svg';
   import youtube from './sns-youtube.svg';
   import { onMount } from 'svelte';
+  import BlogSearch from '$lib/component/BlogSearch.svelte';
   import CookieConcent from '$lib/component/CookieConcent.svelte';
   interface Props {
     children?: import('svelte').Snippet;
@@ -71,6 +72,9 @@
       </div>
     </h1>
   </a>
+  <div class="header-search">
+    <BlogSearch />
+  </div>
 </header>
 
 {@render children?.()}
@@ -162,8 +166,15 @@
   }
 
   header {
+    position: relative;
     /* header.margin-bottom = body.padding-top + h1.margin-top */
     margin-bottom: calc(var(--spacing-unit) * 12 + 0.67em);
+  }
+
+  .header-search {
+    position: absolute;
+    top: calc(var(--spacing-unit) * 2);
+    right: 0;
   }
 
   .logo-container > picture {
@@ -178,6 +189,9 @@
     header {
       /* header.margin-bottom = body.padding-top */
       margin-bottom: calc(var(--spacing-unit) * 8);
+    }
+    .header-search {
+      top: 0;
     }
     .logo-container {
       display: grid;

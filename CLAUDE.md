@@ -49,6 +49,7 @@ npm run add:program-note  # 新しいプログラムノート（演奏会記事�
 
 - `/src/lib/component/` - 再利用可能なSvelteコンポーネント
   - `CookieConsent.svelte` - Cookie同意バナー
+  - `BlogSearch.svelte` - ブログ全体検索のトリガーとダイアログ
   - `Meta.svelte` - メタタグ管理
   - `PostList.svelte` - 記事一覧表示
   - `Flyer.svelte` - 演奏会フライヤー表示
@@ -56,7 +57,7 @@ npm run add:program-note  # 新しいプログラムノート（演奏会記事�
 - `/src/routes/` - ページルーティング
   - `/post/[slug]/` - 個別記事ページ（動的ルート）
   - `/tag/[tag]/` - タグ別記事一覧（動的ルート）
-  - `+layout.svelte` - 共通レイアウト（ヘッダー、フッター）
+  - `+layout.svelte` - 共通レイアウト（ヘッダー、フッター、ブログ全体検索）
 
 ### 重要な実装パターン
 
