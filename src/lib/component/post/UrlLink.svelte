@@ -18,3 +18,11 @@
 -->
 
 <a href={url} rel="external">{url}</a>
+
+<style>
+  a {
+    overflow-wrap: anywhere;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+</style>

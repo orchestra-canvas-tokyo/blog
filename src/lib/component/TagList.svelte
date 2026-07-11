@@ -23,25 +23,41 @@
 ```
 -->
 
-<div class="tag">
+<ul class="tag" aria-label="記事のタグ">
   {#each tags as tag (tag)}
-    <div class="tag-item">
+    <li class="tag-item">
       <a href={resolve('/tag/[tag=tag]', { tag })}><span class="sharp">#&thinsp;</span>{tag}</a>
-    </div>
+    </li>
   {/each}
-</div>
+</ul>
 
 <style>
   .tag {
     display: flex;
-    flex-direction: row;
     flex-wrap: wrap;
+    gap: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
+
   .tag-item {
-    display: block;
-    margin-right: 1em;
+    display: flex;
   }
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    border-bottom: 1px solid transparent;
+  }
+
+  a:hover {
+    border-color: currentColor;
+    text-decoration: none;
+  }
+
   .sharp {
-    font-size: 95%;
+    color: var(--color-text-secondary);
   }
 </style>

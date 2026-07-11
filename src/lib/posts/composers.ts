@@ -81,8 +81,8 @@ export const composers = {
   rStrauss: {
     shortName: 'R.シュトラウス',
     fullName: 'リヒャルト・シュトラウス',
-    yearOfBirth: 1756,
-    yearOfDeath: 1791
+    yearOfBirth: 1864,
+    yearOfDeath: 1949
   },
   mahler: {
     shortName: 'マーラー',
@@ -123,8 +123,8 @@ export const composers = {
   tchaikovsky: {
     shortName: 'チャイコフスキー',
     fullName: 'ピョートル・チャイコフスキー',
-    yearOfBirth: 1865,
-    yearOfDeath: 1957
+    yearOfBirth: 1840,
+    yearOfDeath: 1893
   },
   elgar: {
     shortName: 'エルガー',

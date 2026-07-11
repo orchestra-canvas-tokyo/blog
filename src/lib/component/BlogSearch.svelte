@@ -289,12 +289,6 @@
           spellcheck="false"
           aria-keyshortcuts="Control+K Meta+K"
         />
-        <span class="input-shortcut-hint" aria-hidden="true">
-          <kbd>Ctrl</kbd>
-          <span>+</span>
-          <kbd>K</kbd>
-          <span class="mac-shortcut">/ ⌘K</span>
-        </span>
       </div>
       <p class="sr-only" role="status" aria-live="polite">{resultStatusText}</p>
 
@@ -417,11 +411,11 @@
     align-items: center;
     width: calc(var(--spacing-unit) * 11);
     height: calc(var(--spacing-unit) * 11);
-    border: 1px solid rgba(0, 0, 0, 0.16);
-    border-radius: calc(var(--spacing-unit) * 2);
+    border: 1px solid var(--color-text-secondary);
+    border-radius: var(--spacing-unit);
     padding: 0;
     background-color: transparent;
-    color: var(--color-text-secondary);
+    color: var(--color-text-primary);
     cursor: pointer;
     transition:
       background-color 0.2s ease,
@@ -437,43 +431,46 @@
   }
 
   .search-trigger:hover {
-    background-color: rgba(0, 0, 0, 0.06);
-    border-color: rgba(0, 0, 0, 0.28);
+    background-color: var(--color-surface-raised);
+    border-color: var(--color-text-secondary);
     color: var(--color-text-primary);
   }
 
   .search-trigger:focus-visible {
-    outline: none;
-    background-color: rgba(0, 0, 0, 0.08);
-    border-color: rgba(0, 0, 0, 0.32);
+    background-color: var(--color-surface-raised);
+    border-color: var(--color-text-primary);
     color: var(--color-text-primary);
   }
 
   .close-button:hover {
-    border-color: var(--color-text-primary);
-    background-color: rgba(238, 238, 238, 0.8);
+    border-color: var(--color-text-secondary);
+    background-color: var(--color-surface-raised);
   }
 
   .close-button:focus-visible {
-    outline: 2px solid var(--color-text-primary);
-    outline-offset: 2px;
+    border-color: var(--color-text-primary);
   }
 
   .search-input {
     box-sizing: border-box;
     width: 100%;
-    border: 1px solid var(--color-text-primary);
-    border-radius: calc(var(--spacing-unit) * 2);
-    padding: calc(var(--spacing-unit) * 4) calc(var(--spacing-unit) * 34)
-      calc(var(--spacing-unit) * 4) calc(var(--spacing-unit) * 5);
+    min-height: 52px;
+    border: 1px solid var(--color-text-secondary);
+    border-radius: var(--spacing-unit);
+    padding: calc(var(--spacing-unit) * 4) calc(var(--spacing-unit) * 5);
     font: inherit;
     font-size: 1.05rem;
-    background-color: rgba(255, 255, 255, 0.92);
-    color: inherit;
+    background-color: var(--color-surface-raised);
+    color: var(--color-text-primary);
+    caret-color: var(--color-text-primary);
+  }
+
+  .search-input:focus {
+    border-color: var(--color-text-primary);
   }
 
   .search-input::placeholder {
-    color: var(--color-text-secondary);
+    color: #c6c0bd;
     opacity: 1;
   }
 
@@ -484,7 +481,7 @@
     display: grid;
     place-items: start center;
     overflow-y: auto;
-    padding: calc(var(--spacing-unit) * 8);
+    padding: calc(var(--spacing-unit) * 12) calc(var(--spacing-unit) * 8);
   }
 
   .search-backdrop {
@@ -492,8 +489,8 @@
     inset: 0;
     border: 0;
     padding: 0;
-    background: rgba(238, 238, 238, 0.7);
-    backdrop-filter: blur(6px);
+    background: rgba(10, 6, 6, 0.86);
+    backdrop-filter: blur(8px);
   }
 
   .search-dialog {
@@ -502,14 +499,14 @@
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: calc(var(--spacing-unit) * 4);
-    width: min(100%, 760px);
-    max-height: min(80vh, 760px);
-    border: 1px solid var(--color-text-primary);
-    border-radius: calc(var(--spacing-unit) * 3);
+    gap: calc(var(--spacing-unit) * 5);
+    width: min(100%, 780px);
+    max-height: min(calc(100dvh - var(--spacing-unit) * 24), 780px);
+    border: 1px solid var(--color-border);
+    border-radius: calc(var(--spacing-unit) * 2);
     padding: calc(var(--spacing-unit) * 6);
-    background-color: rgba(255, 255, 255, 0.92);
-    box-shadow: 0 0 24px rgba(0, 0, 0, 0.16);
+    background-color: var(--color-surface);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
   }
 
   .search-dialog-header {
@@ -526,8 +523,9 @@
   }
 
   .search-dialog-title {
-    font-family: var(--serif);
-    font-size: 1.25rem;
+    font-family: var(--display-font);
+    font-size: 1.125rem;
+    font-weight: 500;
     margin: 0;
   }
 
@@ -536,10 +534,10 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    width: calc(var(--spacing-unit) * 10);
-    height: calc(var(--spacing-unit) * 10);
-    border: 1px solid var(--color-text-primary);
-    border-radius: calc(var(--spacing-unit) * 2);
+    width: calc(var(--spacing-unit) * 11);
+    height: calc(var(--spacing-unit) * 11);
+    border: 1px solid var(--color-border);
+    border-radius: var(--spacing-unit);
     padding: 0;
     background: transparent;
     color: inherit;
@@ -555,28 +553,10 @@
     align-items: center;
   }
 
-  .input-shortcut-hint {
-    position: absolute;
-    right: calc(var(--spacing-unit) * 4);
-    display: inline-flex;
-    align-items: center;
-    gap: calc(var(--spacing-unit) * 1);
-    font-size: 0.78em;
-    color: var(--color-text-secondary);
-    pointer-events: none;
-  }
-
-  .input-shortcut-hint kbd {
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: calc(var(--spacing-unit) * 1.5);
-    padding: 0 calc(var(--spacing-unit) * 1.5);
-    font-family: inherit;
-    font-size: 0.95em;
-    background-color: rgba(255, 255, 255, 0.75);
-  }
-
   .search-results {
+    min-height: 0;
     overflow-y: auto;
+    scrollbar-color: var(--color-text-secondary) var(--color-surface);
   }
 
   .search-sections {
@@ -587,15 +567,17 @@
 
   .result-section h3 {
     margin-top: 0;
-    margin-bottom: calc(var(--spacing-unit) * 3);
-    font-size: 1rem;
+    margin-bottom: calc(var(--spacing-unit) * 2);
+    font-family: var(--display-font);
+    font-size: 0.75rem;
+    font-weight: 500;
     color: var(--color-text-secondary);
   }
 
   .result-list {
     display: flex;
     flex-direction: column;
-    gap: calc(var(--spacing-unit) * 3);
+    gap: 0;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -606,19 +588,30 @@
     display: flex;
     flex-direction: column;
     gap: calc(var(--spacing-unit) * 2);
-    border: 1px solid rgba(0, 0, 0, 0.14);
-    border-radius: calc(var(--spacing-unit) * 2);
-    padding: calc(var(--spacing-unit) * 4);
+    min-height: 44px;
+    border-top: 1px solid var(--color-border);
+    padding: calc(var(--spacing-unit) * 4) calc(var(--spacing-unit) * 2);
     transition:
       background-color 0.2s ease,
       border-color 0.2s ease;
   }
 
+  .result-list li:last-child .article-result,
+  .result-list li:last-child .compact-result {
+    border-bottom: 1px solid var(--color-border);
+  }
+
   .article-result:hover,
   .compact-result:hover {
-    border-color: var(--color-text-primary);
-    background-color: rgba(238, 238, 238, 0.8);
+    border-color: var(--color-border);
+    background-color: var(--color-surface-raised);
     text-decoration: none;
+  }
+
+  .article-result:focus-visible,
+  .compact-result:focus-visible {
+    position: relative;
+    z-index: 1;
   }
 
   .article-result strong,
@@ -643,9 +636,7 @@
 
   .match-label {
     display: inline-block;
-    border: 1px solid rgba(0, 0, 0, 0.18);
-    border-radius: 999px;
-    padding: 0 calc(var(--spacing-unit) * 2);
+    padding: 0;
     color: var(--color-text-secondary);
   }
 
@@ -695,13 +686,16 @@
 
   @media (max-width: 576px) {
     .search-layer {
-      padding: calc(var(--spacing-unit) * 4);
+      padding: 0;
     }
 
     .search-dialog {
-      min-height: calc(100vh - var(--spacing-unit) * 8);
-      max-height: calc(100vh - var(--spacing-unit) * 8);
-      padding: calc(var(--spacing-unit) * 5);
+      width: 100%;
+      min-height: 100dvh;
+      max-height: 100dvh;
+      border: 0;
+      border-radius: 0;
+      padding: calc(var(--spacing-unit) * 4);
     }
 
     .search-dialog-header {
@@ -713,11 +707,7 @@
     }
 
     .search-input {
-      padding-right: calc(var(--spacing-unit) * 20);
-    }
-
-    .input-shortcut-hint .mac-shortcut {
-      display: none;
+      padding-right: calc(var(--spacing-unit) * 5);
     }
 
     .article-result-meta {

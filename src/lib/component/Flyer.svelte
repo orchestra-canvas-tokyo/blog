@@ -4,9 +4,10 @@
   interface Props {
     src: string;
     alt: string;
+    loading?: 'eager' | 'lazy';
   }
 
-  let { src, alt }: Props = $props();
+  let { src, alt, loading = 'lazy' }: Props = $props();
   const commonOptions = [
     ['format', 'auto'],
     ['fit', 'scale-down']
@@ -31,14 +32,19 @@
     src={getCloudflareSrc(src, [...commonOptions, ['height', '400']])}
     srcset={`${getCloudflareSrc(src, [...commonOptions, ['height', '800']])} 2x`}
     {alt}
+    {loading}
+    decoding="async"
   />
 {:else if useCloudflareImages === false}
-  <img {src} {alt} />
+  <img {src} {alt} {loading} decoding="async" />
 {/if}
 
 <style>
   img {
+    display: block;
     max-height: 400px;
+    height: auto;
     width: 100%;
+    object-fit: contain;
   }
 </style>

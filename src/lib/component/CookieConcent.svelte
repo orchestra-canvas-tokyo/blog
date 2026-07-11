@@ -138,12 +138,23 @@
   <!-- End Cloudflare Web Analytics -->
 </svelte:head>
 
-<div class="toast" class:show={showToast}>
-  <p>
+<div
+  class="toast"
+  class:show={showToast}
+  role="region"
+  aria-live="polite"
+  aria-labelledby="cookie-consent-title"
+  aria-describedby="cookie-consent-description cookie-consent-request"
+  aria-hidden={!showToast}
+>
+  <h2 id="cookie-consent-title">Cookieの設定</h2>
+  <p id="cookie-consent-description">
     このブログでは、サービスの品質向上と利用状況の把握のためにCookieを使用しています。<br />
     詳細は<a href={resolve('/cookie-policy')}>Cookieポリシー</a>をご確認ください。
   </p>
-  <p>Cookieの使用に同意いただける場合は、「同意する」をクリックしてください。</p>
+  <p id="cookie-consent-request">
+    Cookieの使用に同意いただける場合は、「同意する」を選択してください。
+  </p>
 
   <div class="button-container">
     <button
@@ -177,7 +188,6 @@
   >
     Cookieの設定を変更
   </button>
-  ・
   <a class="secondary-link" href={resolve('/cookie-policy')}>Cookieポリシー</a>
 </div>
 
@@ -185,7 +195,6 @@
   button {
     padding: 0;
     border: none;
-    outline: none;
     font: inherit;
     color: inherit;
     background: none;
@@ -195,92 +204,129 @@
   .text-link {
     color: var(--color-text-secondary);
     text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
 
   .toast {
     position: fixed;
     bottom: calc(var(--spacing-unit) * 8);
-    z-index: 2;
+    left: 50%;
+    z-index: 20;
 
-    margin: 0 calc(var(--spacing-unit) * 8);
-    border: 1px solid var(--color-text-primary);
+    width: min(calc(100% - var(--spacing-unit) * 8), 720px);
+    margin: 0;
+    border: 1px solid var(--color-border);
     padding: calc(var(--spacing-unit) * 6);
 
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 20px 56px rgba(0, 0, 0, 0.48);
     border-radius: var(--spacing-unit);
 
-    background-color: rgba(255, 255, 255, 0.75);
-    backdrop-filter: blur(5px);
+    background-color: var(--color-surface-raised);
+    color: var(--color-text-primary);
 
-    animation: fadeOut 0.1s ease-in 0s forwards;
     display: none;
     opacity: 0;
+    transform: translate(-50%, calc(var(--spacing-unit) * 2));
+
+    h2 {
+      margin: 0 0 calc(var(--spacing-unit) * 4);
+      font-family: var(--display-font);
+      font-size: 1rem;
+      font-weight: 500;
+    }
 
     p {
       margin-top: 0;
       margin-bottom: calc(var(--spacing-unit) * 4);
     }
-
-    button {
-      padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 4);
-      border: 1px solid var(--color-text-primary);
-      border-radius: var(--spacing-unit);
-    }
   }
 
   .show {
-    animation: fadeIn 0.1s ease-in 0s forwards;
+    animation: fadeIn 160ms ease-out forwards;
 
     display: block;
     opacity: 1;
   }
 
   @keyframes fadeIn {
-    0% {
-      display: none;
+    from {
       opacity: 0;
-      transform: scale(0.95);
+      transform: translate(-50%, calc(var(--spacing-unit) * 2));
     }
-    1% {
-      display: block;
-      opacity: 0;
-    }
-    100% {
-      display: block;
+    to {
       opacity: 1;
-      transform: scale(1);
+      transform: translate(-50%, 0);
     }
   }
 
-  @keyframes fadeOut {
-    0% {
-      display: block;
-      opacity: 1;
-      transform: scale(1);
-    }
-    99% {
-      display: block;
-      opacity: 0;
-    }
-    100% {
-      display: none;
-      opacity: 0;
-      transform: scale(0.95);
-    }
+  .toast a {
+    color: var(--color-text-primary);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
 
   .button-container {
     display: flex;
+    flex-wrap: wrap;
     justify-content: flex-end;
-    gap: calc(var(--spacing-unit) * 6);
+    gap: calc(var(--spacing-unit) * 3);
   }
 
-  a {
-    text-decoration: underline;
+  .button-container button {
+    min-height: 44px;
+    border: 1px solid var(--color-text-secondary);
+    border-radius: var(--spacing-unit);
+    padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 5);
+    transition:
+      background-color 160ms ease,
+      border-color 160ms ease,
+      color 160ms ease;
+  }
+
+  .button-container button:first-child {
+    border-color: var(--color-inverse-background);
+    background: var(--color-inverse-background);
+    color: var(--color-inverse-text);
+  }
+
+  .button-container button:hover {
+    border-color: var(--color-text-primary);
+  }
+
+  .button-container button:not(:first-child):hover {
+    background: var(--color-surface);
   }
 
   .footer-section {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 5);
     color: var(--color-text-secondary);
-    font-size: 0.8em;
+    font-size: 0.75rem;
+  }
+
+  .footer-section button,
+  .footer-section a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .secondary-link {
+    color: var(--color-text-secondary);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  @media (max-width: 576px) {
+    .toast {
+      bottom: calc(var(--spacing-unit) * 4);
+      padding: calc(var(--spacing-unit) * 4);
+    }
+
+    .button-container button {
+      flex: 1 1 120px;
+    }
   }
 </style>

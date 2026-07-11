@@ -20,16 +20,24 @@
 ```
 -->
 
-<h3>参考文献</h3>
+<section class="references">
+  <h3>参考文献</h3>
 
-<ol>
-  {@render children?.()}
-</ol>
+  <ol>
+    {@render children?.()}
+  </ol>
+</section>
 
 <style>
   ol {
-    margin: 0 0 calc(var(--spacing-unit) * 8) 0;
+    margin: 0 0 calc(var(--spacing-unit) * 8);
+    padding-inline-start: 1.5em;
+    color: var(--color-text-secondary);
     font-size: 0.85em;
-    list-style-type: '・';
+    line-height: 1.75;
+  }
+
+  ol :global(li)::marker {
+    font-family: var(--sans-serif);
   }
 </style>

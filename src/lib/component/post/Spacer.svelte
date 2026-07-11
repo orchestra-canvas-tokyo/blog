@@ -11,7 +11,7 @@
 ```
 -->
 
-<div></div>
+<div aria-hidden="true"></div>
 
 <style>
   div {

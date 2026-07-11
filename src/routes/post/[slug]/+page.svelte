@@ -1,20 +1,30 @@
 <script lang="ts">
   import { resolve } from '$app/paths';
+  import Flyer from '$lib/component/Flyer.svelte';
+  import Meta from '$lib/component/Meta.svelte';
   import TagList from '$lib/component/TagList.svelte';
   import { getFullTitle } from '$lib/posts';
   import { composers } from '$lib/posts/composers';
   import { concerts } from '$lib/posts/concerts';
   import { formatDate2JpStyle } from '$lib/util';
-  import type { PageData } from './$types';
   import type { Composer } from '$lib/posts/composers';
-  import Meta from '$lib/component/Meta.svelte';
-  import Flyer from '$lib/component/Flyer.svelte';
+  import type { PageData } from './$types';
 
   interface Props {
     data: PageData;
   }
 
+  type TableOfContentsEntry = {
+    id: string;
+    level: 3 | 4;
+    title: string;
+  };
+
   let { data }: Props = $props();
+  let articleBody: HTMLElement;
+  let tableOfContents = $state<TableOfContentsEntry[]>([]);
+  let authors = $state<string[]>([]);
+
   let metadata = $derived(data.post.metadata);
   let composer = $derived(metadata.composerSlug ? composers[metadata.composerSlug] : null);
   let arranger = $derived(metadata.arrangerSlug ? composers[metadata.arrangerSlug] : null);
@@ -23,352 +33,810 @@
   const hasYearOfDeath = (composer: Composer): composer is Composer & { yearOfDeath: number } => {
     return Object.keys(composer).includes('yearOfDeath');
   };
+
+  const todayInJapan = new Intl.DateTimeFormat('sv-SE', {
+    timeZone: 'Asia/Tokyo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).format(new Date());
+  const concertsByDate = [...Object.values(concerts)].sort((a, b) => a.date.localeCompare(b.date));
+  const upcomingConcert = concertsByDate.find((item) => item.date >= todayInJapan);
+  const featuredConcert = upcomingConcert ?? concertsByDate.at(-1)!;
+  const featuredConcertLabel = upcomingConcert ? 'NEXT CONCERT' : 'LATEST CONCERT';
+
+  $effect(() => {
+    const slug = data.slug;
+    const headings = Array.from(articleBody.querySelectorAll<HTMLHeadingElement>('h3, h4'));
+    tableOfContents = headings.map((heading, index) => {
+      const id = heading.id || `${slug}-section-${index + 1}`;
+      heading.id = id;
+
+      return {
+        id,
+        level: heading.tagName === 'H3' ? 3 : 4,
+        title: heading.textContent?.replace(/\s+/g, ' ').trim() || `セクション ${index + 1}`
+      };
+    });
+
+    authors = Array.from(articleBody.querySelectorAll<HTMLElement>('.post-author'))
+      .map((author) => author.textContent?.replace(/[（）]/g, '').trim() ?? '')
+      .filter((author, index, allAuthors) => author !== '' && allAuthors.indexOf(author) === index);
+  });
 </script>
 
 <Meta title={getFullTitle(data.post)} canonical={`/post/${data.slug}`} />
 
-<div class="meta meta-container for-small-screen">
-  <div></div>
-  <div class="date">{formatDate2JpStyle(metadata.publicatedAt)}</div>
-</div>
+<main class="article-page">
+  <nav class="breadcrumb" aria-label="パンくずリスト">
+    <ol>
+      <li><a href={resolve('/')}>PROGRAM NOTES</a></li>
+      <li><a href={concert.url} rel="external">{concert.title}演奏会</a></li>
+      <li aria-current="page">{metadata.title}</li>
+    </ol>
+  </nav>
 
-<div class="meta meta-container">
-  <TagList tags={metadata.tags} />
-  <div class="date for-large-screen">{formatDate2JpStyle(metadata.publicatedAt)}</div>
-</div>
+  <header class="article-header">
+    <p class="eyebrow">PROGRAM NOTE</p>
+    <h1>{metadata.title}</h1>
 
-<h2>
-  {metadata.title}
-</h2>
+    {#if arranger && composer}
+      <p class="composer-name">{composer.fullName} <span>／ {arranger.fullName} 編</span></p>
+    {:else if composer}
+      <p class="composer-name">
+        {composer.fullName}
+        <span>
+          ／ {composer.yearOfBirth}&ndash;{#if hasYearOfDeath(composer)}{composer.yearOfDeath}{/if}
+        </span>
+      </p>
+    {/if}
 
-{#if arranger && composer}
-  <p class="composer">
-    {composer.fullName} ({arranger.fullName} 編)
-  </p>
-{:else if composer}
-  <p class="composer">
-    {composer.fullName} ({composer.yearOfBirth}&ndash;{#if hasYearOfDeath(composer)}{composer.yearOfDeath}{/if})
-  </p>
-{/if}
-
-<main>
-  <data.post.default />
-
-  {#if metadata.youTubeVideoIds}
-    <div class="video">
-      {#each metadata.youTubeVideoIds as id (id)}
-        <iframe
-          width="560"
-          height="315"
-          style="max-width: 100%;"
-          src={`https://www.youtube-nocookie.com/embed/${id}`}
-          title="YouTube video player"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-        ></iframe>
-      {/each}
+    <div class="article-metadata">
+      <div>
+        <span class="metadata-label">CONCERT</span>
+        <a href={concert.url} rel="external">{concert.title}演奏会</a>
+      </div>
+      <div>
+        <span class="metadata-label">CONCERT DATE</span>
+        <time datetime={concert.date}>{formatDate2JpStyle(concert.date)}</time>
+      </div>
+      <div>
+        <span class="metadata-label">PUBLISHED</span>
+        <time datetime={metadata.publicatedAt}>{formatDate2JpStyle(metadata.publicatedAt)}</time>
+      </div>
+      {#if data.post.hasAuthorCredit}
+        <div class:metadata-pending={authors.length === 0}>
+          <span class="metadata-label">TEXT</span>
+          <span>{authors.join(' ／ ')}</span>
+        </div>
+      {/if}
     </div>
+
+    <div class="article-tags">
+      <TagList tags={metadata.tags} />
+    </div>
+  </header>
+
+  {#if data.post.hasTableOfContents}
+    <details class="mobile-toc" class:toc-pending={tableOfContents.length === 0}>
+      <summary>目次</summary>
+      {#if tableOfContents.length > 0}
+        <ol>
+          {#each tableOfContents as entry (entry.id)}
+            <li class:toc-subsection={entry.level === 4}>
+              <a href={`#${entry.id}`}>{entry.title}</a>
+            </li>
+          {/each}
+        </ol>
+      {/if}
+    </details>
   {/if}
+
+  <div class="reading-layout">
+    <aside class="desktop-toc" aria-label="目次">
+      {#if tableOfContents.length > 0}
+        <p>CONTENTS</p>
+        <ol>
+          {#each tableOfContents as entry (entry.id)}
+            <li class:toc-subsection={entry.level === 4}>
+              <a href={`#${entry.id}`}>{entry.title}</a>
+            </li>
+          {/each}
+        </ol>
+      {/if}
+    </aside>
+
+    <article bind:this={articleBody} class="reading-body">
+      <h2 class="sr-only">曲目解説本文</h2>
+      <data.post.default />
+
+      {#if metadata.youTubeVideoIds}
+        <div class="video-list">
+          {#each metadata.youTubeVideoIds as id, index (id)}
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/${id}`}
+              title={`${metadata.title} 関連動画 ${index + 1}`}
+              loading="lazy"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          {/each}
+        </div>
+      {/if}
+    </article>
+  </div>
+
+  {#if data.relatedPostListItems.sameConcert.length > 0}
+    <section class="related-notes" aria-labelledby="same-concert-heading">
+      <p class="section-label">PROGRAM</p>
+      <h2 id="same-concert-heading">同じ演奏会の曲目</h2>
+      <div class="related-list">
+        {#each data.relatedPostListItems.sameConcert as post (post.slug)}
+          <a href={resolve('/post/[slug]', { slug: post.slug })}>
+            <span>{getFullTitle(post)}</span>
+            <time datetime={post.metadata.publicatedAt}>
+              {formatDate2JpStyle(post.metadata.publicatedAt)}
+            </time>
+          </a>
+        {/each}
+      </div>
+    </section>
+  {/if}
+
+  {#if data.relatedPostListItems.sameComposer.length > 0}
+    <section class="related-notes compact" aria-labelledby="same-composer-heading">
+      <p class="section-label">MORE NOTES</p>
+      <h2 id="same-composer-heading">同じ作曲家の曲目解説</h2>
+      <div class="related-list">
+        {#each data.relatedPostListItems.sameComposer as post (post.slug)}
+          <a href={resolve('/post/[slug]', { slug: post.slug })}>
+            <span>{getFullTitle(post)}</span>
+            <time datetime={post.metadata.publicatedAt}>
+              {formatDate2JpStyle(post.metadata.publicatedAt)}
+            </time>
+          </a>
+        {/each}
+      </div>
+    </section>
+  {/if}
+
+  <section class="concert-band" aria-labelledby="featured-concert-heading">
+    <div class="concert-band-inner">
+      <a class="concert-flyer" href={featuredConcert.url} rel="external">
+        <Flyer src={featuredConcert.flyer} alt={`${featuredConcert.title}演奏会のフライヤー`} />
+      </a>
+      <div class="concert-details">
+        <p class="section-label">{featuredConcertLabel}</p>
+        <h2 id="featured-concert-heading">{featuredConcert.title}演奏会</h2>
+        <p>Orchestra Canvas Tokyo</p>
+        <time datetime={featuredConcert.date}>{formatDate2JpStyle(featuredConcert.date)}</time>
+        <a class="concert-link" href={featuredConcert.url} rel="external">演奏会詳細</a>
+      </div>
+    </div>
+  </section>
 </main>
 
-<div class="fullwidth-gray-background">
-  <section class="upcoming-concerts">
-    <h3>次回演奏会のご案内</h3>
-
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
-      fill="currentColor"
-      class="megaphone"
-      viewBox="0 0 16 16"
-    >
-      <path
-        d="M13 2.5a1.5 1.5 0 0 1 3 0v11a1.5 1.5 0 0 1-3 0zm-1 .724c-2.067.95-4.539 1.481-7 1.656v6.237a25 25 0 0 1 1.088.085c2.053.204 4.038.668 5.912 1.56zm-8 7.841V4.934c-.68.027-1.399.043-2.008.053A2.02 2.02 0 0 0 0 7v2c0 1.106.896 1.996 1.994 2.009l.496.008a64 64 0 0 1 1.51.048m1.39 1.081q.428.032.85.078l.253 1.69a1 1 0 0 1-.983 1.187h-.548a1 1 0 0 1-.916-.599l-1.314-2.48a66 66 0 0 1 1.692.064q.491.026.966.06"
-      />
-    </svg>
-
-    <p>
-      Orchestra Canvas Tokyo<br />第17回定期演奏会
-    </p>
-    <p>
-      2026年9月12日(土)<br />
-      横浜みなとみらいホール 大ホール
-    </p>
-    <p>指揮：田代 俊文</p>
-
-    <hr />
-
-    <p>
-      リヒャルト・シュトラウス<br />
-      アルプス交響曲 作品64
-    </p>
-
-    <hr />
-
-    <p>
-      詳細は<a href="https://www.orch-canvas.tokyo/concerts/regular-17">当団ホームページ</a>にて
-    </p>
-
-    <a href={concerts['regular-17'].url} rel="external">
-      <Flyer src={concerts['regular-17'].flyer} alt="第17回定期演奏会のフライヤー" />
-    </a>
-  </section>
-</div>
-
-<div class="adjacent-posts">
-  {#if data.adjacentPostListItems.prev !== null}
-    <a href={resolve('/post/[slug]', { slug: data.adjacentPostListItems.prev.slug })} class="prev">
-      前の投稿<br />
-      {getFullTitle(data.adjacentPostListItems.prev)}
-    </a>
-  {/if}
-  {#if data.adjacentPostListItems.next !== null}
-    <a href={resolve('/post/[slug]', { slug: data.adjacentPostListItems.next.slug })} class="next">
-      次の投稿<br />
-      {getFullTitle(data.adjacentPostListItems.next)}
-    </a>
-  {/if}
-</div>
-
-<div class="concert">
-  <a href={concert.url} rel="external">
-    <p>{concert.title}演奏会<br />{formatDate2JpStyle(concert.date)}</p>
-    <Flyer src={concert.flyer} alt={`${concert.title}のフライヤー`} />
-  </a>
-</div>
-
 <style>
-  @media (max-width: 576px) {
-    .for-large-screen {
-      display: none !important;
-    }
-  }
-  @media (min-width: 577px) {
-    .for-small-screen {
-      display: none !important;
-    }
-  }
-
-  .meta {
-    font-size: 0.85em;
-    font-family: var(--sans-serif);
-    color: var(--color-text-secondary);
-  }
-  .meta-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
+  .article-page {
     width: 100%;
+    color: var(--color-text-primary);
+    letter-spacing: 0;
   }
 
-  h2 {
-    margin: 0;
-    font-family: var(--serif);
-    font-size: 2.2rem;
-  }
-  @media (max-width: 576px) {
-    h2 {
-      font-size: 2rem;
-    }
-  }
-
-  .composer {
-    margin-top: 0;
-    margin-bottom: calc(var(--spacing-unit) * 8);
-    text-align: right;
-    font-family: var(--serif);
+  .breadcrumb,
+  .article-header,
+  .reading-layout,
+  .mobile-toc,
+  .related-notes,
+  .concert-band-inner {
+    width: min(100%, var(--content-max-width));
+    margin-inline: auto;
   }
 
-  .video {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: calc(var(--spacing-unit) * 8);
-    margin-top: calc(var(--spacing-unit) * 20);
+  .breadcrumb {
+    margin-bottom: calc(var(--spacing-unit) * 14);
+    color: var(--color-text-secondary);
+    font-family: var(--sans-serif);
+    font-size: 0.7rem;
   }
 
-  .adjacent-posts {
+  .breadcrumb ol {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
-    gap: calc(var(--spacing-unit) * 8);
-    margin-top: calc(var(--spacing-unit) * 20);
-    font-family: var(--serif);
-  }
-  .prev {
-    margin-left: 2em;
-  }
-  .next {
-    margin-right: 2em;
-    margin-left: auto;
-    text-align: right;
-  }
-  .prev,
-  .next {
-    position: relative;
-    display: inline-block;
-  }
-  .prev::before,
-  .next::after {
-    content: '';
-    width: 1em;
-    height: 1em;
-    margin-top: -0.5em;
-    border-top: solid 1px currentColor;
-    border-right: solid 1px currentColor;
-    position: absolute;
-    top: 50%;
-  }
-  .prev::before {
-    transform: rotate(225deg);
-    left: -1.5em;
-  }
-  .next::after {
-    transform: rotate(45deg);
-    right: -1.5em;
+    gap: calc(var(--spacing-unit) * 2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
-  .concert {
+  .breadcrumb li {
     display: flex;
-    flex-direction: column;
+    min-width: 0;
     align-items: center;
-    margin: calc(var(--spacing-unit) * 20) 0;
-    text-align: center;
+    gap: calc(var(--spacing-unit) * 2);
+  }
+
+  .breadcrumb li:not(:last-child)::after {
+    content: '/';
+    color: var(--color-border);
+  }
+
+  .breadcrumb li:last-child {
+    overflow: hidden;
+    max-width: 32ch;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .breadcrumb a,
+  .article-metadata a,
+  .desktop-toc a,
+  .mobile-toc a {
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+    transition:
+      color 160ms ease,
+      text-decoration-color 160ms ease;
+  }
+
+  .breadcrumb a:hover,
+  .article-metadata a:hover,
+  .desktop-toc a:hover,
+  .mobile-toc a:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .article-header {
+    padding-bottom: calc(var(--spacing-unit) * 14);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .eyebrow,
+  .section-label,
+  .metadata-label,
+  .desktop-toc > p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-family: var(--display-font);
+    font-size: 0.68rem;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+
+  h1 {
+    max-width: 20ch;
+    margin: calc(var(--spacing-unit) * 4) 0 0;
+    overflow-wrap: anywhere;
     font-family: var(--serif);
+    font-size: 3rem;
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: 0;
   }
-  .concert a {
-    padding: calc(var(--spacing-unit) * 4);
-    transition: background-color 0.3s;
+
+  .composer-name {
+    margin: calc(var(--spacing-unit) * 5) 0 0;
+    color: var(--color-text-secondary);
+    font-family: var(--serif);
+    font-size: 1rem;
+    line-height: 1.8;
+    letter-spacing: 0;
   }
-  .concert a:hover {
-    background-color: var(--color-background-secondary);
+
+  .composer-name span {
+    font-size: 0.82em;
+  }
+
+  .article-metadata {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: calc(var(--spacing-unit) * 7);
+    margin-top: calc(var(--spacing-unit) * 12);
+    font-family: var(--sans-serif);
+    font-size: 0.78rem;
+    line-height: 1.6;
+  }
+
+  .article-metadata > div {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: calc(var(--spacing-unit) * 1.5);
+  }
+
+  .metadata-pending {
+    visibility: hidden;
+  }
+
+  .article-tags {
+    margin-top: calc(var(--spacing-unit) * 7);
+    color: var(--color-text-secondary);
+    font-family: var(--sans-serif);
+    font-size: 0.75rem;
+  }
+
+  .reading-layout {
+    display: grid;
+    grid-template-columns: minmax(150px, 210px) minmax(0, var(--reading-max-width));
+    gap: calc(var(--spacing-unit) * 14);
+    justify-content: center;
+    margin-top: calc(var(--spacing-unit) * 16);
+  }
+
+  .desktop-toc {
+    position: sticky;
+    top: calc(var(--spacing-unit) * 8);
+    align-self: start;
+    max-height: calc(100vh - var(--spacing-unit) * 16);
+    overflow-y: auto;
+    padding-top: calc(var(--spacing-unit) * 2);
+    color: var(--color-text-secondary);
+    font-family: var(--sans-serif);
+    font-size: 0.7rem;
+    line-height: 1.55;
+    scrollbar-width: thin;
+  }
+
+  .desktop-toc ol,
+  .mobile-toc ol {
+    margin: calc(var(--spacing-unit) * 4) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .desktop-toc li + li,
+  .mobile-toc li + li {
+    margin-top: calc(var(--spacing-unit) * 2.5);
+  }
+
+  .desktop-toc .toc-subsection,
+  .mobile-toc .toc-subsection {
+    padding-inline-start: 1em;
+    color: var(--color-text-secondary);
+  }
+
+  .mobile-toc {
+    display: none;
+  }
+
+  .toc-pending {
+    visibility: hidden;
+  }
+
+  .reading-body {
+    min-width: 0;
+    max-width: var(--reading-max-width);
+    font-family: var(--serif);
+    font-size: 1rem;
+    line-height: 1.95;
+    letter-spacing: 0;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .reading-body :global(*) {
+    letter-spacing: 0;
+  }
+
+  .reading-body :global(h3),
+  .reading-body :global(h4) {
+    scroll-margin-top: calc(var(--spacing-unit) * 8);
+    overflow-wrap: anywhere;
+    font-family: var(--serif);
+    line-height: 1.55;
+  }
+
+  .reading-body :global(h3) {
+    margin: calc(var(--spacing-unit) * 18) 0 calc(var(--spacing-unit) * 6);
+    padding-top: calc(var(--spacing-unit) * 4);
+    border-top: 1px solid var(--color-border);
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .reading-body :global(h4) {
+    margin: calc(var(--spacing-unit) * 10) 0 calc(var(--spacing-unit) * 4);
+    font-size: 1.08rem;
+    font-weight: 600;
+  }
+
+  .reading-body :global(p) {
+    margin: calc(var(--spacing-unit) * 5) 0;
+    text-align: left;
+    text-indent: 1em;
+  }
+
+  .reading-body :global(a) {
+    border-radius: 1px;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
+    transition:
+      color 160ms ease,
+      background-color 160ms ease;
+  }
+
+  .reading-body :global(a:hover) {
+    background: var(--color-inverse-background);
+    color: var(--color-inverse-text);
     text-decoration: none;
   }
-  .concert p {
-    text-indent: 0;
-    margin: 0;
-    margin-bottom: calc(var(--spacing-unit) * 4);
+
+  .reading-body :global(blockquote) {
+    margin: calc(var(--spacing-unit) * 12) 0;
+    padding: calc(var(--spacing-unit) * 2) 0 calc(var(--spacing-unit) * 2)
+      calc(var(--spacing-unit) * 6);
+    border-inline-start: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    font-style: normal;
   }
 
-  main {
+  .reading-body :global(blockquote p:first-child) {
+    margin-top: 0;
+  }
+
+  .reading-body :global(blockquote p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .reading-body :global(ul),
+  .reading-body :global(ol) {
+    padding-inline-start: 1.5em;
+  }
+
+  .reading-body :global(li + li) {
+    margin-top: calc(var(--spacing-unit) * 2);
+  }
+
+  .reading-body :global(figure:has(blockquote)) {
     margin: calc(var(--spacing-unit) * 12) 0;
   }
 
-  /* 本文に対するスタイル */
-  main {
-    :global(*) {
-      font-family: var(--serif);
-      letter-spacing: 0.04em;
-    }
-
-    :global(h3) {
-      margin-top: calc(var(--spacing-unit) * 12);
-      font-size: 1.5em;
-    }
-    :global(h4) {
-      margin-top: calc(var(--spacing-unit) * 8);
-      margin-bottom: 0;
-      font-size: 1.1em;
-    }
-
-    :global(p) {
-      text-indent: 1rem;
-      text-align: justify;
-      line-height: 1.75;
-    }
-
-    :global(blockquote) {
-      margin-top: calc(var(--spacing-unit) * 12);
-      margin-bottom: calc(var(--spacing-unit) * 12);
-      font-style: italic;
-      text-indent: 1em;
-    }
-    :global(blockquote h4) {
-      text-indent: 0;
-    }
-
-    @media (max-width: 576px) {
-      :global(blockquote) {
-        margin-right: 1em;
-        margin-left: 1em;
-      }
-    }
-
-    :global(li:not(li:last-child)) {
-      margin-bottom: calc(var(--spacing-unit) * 2);
-    }
-
-    /* 引用元が示されている引用に対するスタイル
-		figure	-> blockquote
-				-> figcaption */
-    :global(figure:has(blockquote)) {
-      margin: calc(var(--spacing-unit) * 12) 1em;
-    }
-    :global(figure blockquote) {
-      margin: initial;
-    }
-    :global(figure:has(blockquote) > figcaption) {
-      text-align: right;
-      font-size: 0.85em;
-    }
+  .reading-body :global(figure blockquote) {
+    margin: 0;
   }
 
-  /* 次回演奏会に対するスタイル */
-  .fullwidth-gray-background {
-    display: flex;
-    justify-content: center;
-    margin: calc(var(--spacing-unit) * 20) calc(-1 * var(--spacing-unit) * 8) 0;
-    padding: calc(var(--spacing-unit) * 6) 0;
-    background-color: var(--color-background-secondary);
-
-    @media (max-width: 576px) {
-      margin: calc(var(--spacing-unit) * 20) calc(-1 * var(--spacing-unit) * 6) 0;
-    }
+  .reading-body :global(figure:has(blockquote) > figcaption) {
+    margin-top: calc(var(--spacing-unit) * 3);
+    color: var(--color-text-secondary);
+    font-family: var(--sans-serif);
+    font-size: 0.75rem;
+    line-height: 1.6;
+    text-align: right;
   }
 
-  .upcoming-concerts {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  .reading-body :global(hr) {
+    margin: calc(var(--spacing-unit) * 12) 0;
+    border: 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .reading-body :global(table) {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+  }
+
+  .reading-body :global(th),
+  .reading-body :global(td) {
+    padding: calc(var(--spacing-unit) * 2);
+    border-bottom: 1px solid var(--color-border);
+    text-align: left;
+  }
+
+  .video-list {
+    display: grid;
+    gap: calc(var(--spacing-unit) * 8);
+    margin-top: calc(var(--spacing-unit) * 18);
+  }
+
+  .video-list iframe {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    background: var(--color-surface);
+  }
+
+  .related-notes {
+    margin-top: calc(var(--spacing-unit) * 28);
+  }
+
+  .related-notes.compact {
+    margin-top: calc(var(--spacing-unit) * 18);
+  }
+
+  .related-notes h2,
+  .concert-details h2 {
+    margin: calc(var(--spacing-unit) * 2) 0 calc(var(--spacing-unit) * 7);
+    font-family: var(--serif);
+    font-size: 1.7rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0;
+  }
+
+  .related-list {
+    border-top: 1px solid var(--color-border);
+  }
+
+  .related-list a {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: calc(var(--spacing-unit) * 6);
+    align-items: baseline;
+    padding: calc(var(--spacing-unit) * 5) calc(var(--spacing-unit) * 2);
+    border-bottom: 1px solid var(--color-border);
+    font-family: var(--serif);
+    line-height: 1.6;
+    text-decoration: none;
+    transition:
+      color 160ms ease,
+      background-color 160ms ease;
+  }
+
+  .related-list a:hover {
+    background: var(--color-inverse-background);
+    color: var(--color-inverse-text);
+  }
+
+  .related-list time {
+    color: var(--color-text-secondary);
+    font-family: var(--sans-serif);
+    font-size: 0.7rem;
+    white-space: nowrap;
+  }
+
+  .related-list a:hover time {
+    color: inherit;
+  }
+
+  .concert-band {
+    margin-top: calc(var(--spacing-unit) * 28);
+    padding: calc(var(--spacing-unit) * 12) 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+
+  .concert-band-inner {
+    display: grid;
+    grid-template-columns: minmax(140px, 220px) minmax(0, 1fr);
+    gap: calc(var(--spacing-unit) * 12);
     align-items: center;
-    gap: calc(var(--spacing-unit) * 2);
+  }
 
-    position: relative;
+  .concert-flyer {
+    display: block;
+    min-width: 0;
+    aspect-ratio: 1 / 1.4142;
+    transition: opacity 160ms ease;
+  }
 
-    border-radius: 10px;
-    padding: calc(var(--spacing-unit) * 6) calc(var(--spacing-unit) * 12);
-    width: min(300px, 50dvw);
+  .concert-flyer :global(img) {
+    max-height: none;
+  }
 
-    overflow: hidden;
+  .concert-flyer:hover {
+    opacity: 0.82;
+  }
 
-    background-color: #fff;
-    font-size: 90%;
-    text-align: center;
+  .concert-details {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-    > * {
-      margin: 0;
-      z-index: 2;
+  .concert-details h2 {
+    margin-bottom: calc(var(--spacing-unit) * 2);
+    overflow-wrap: anywhere;
+  }
+
+  .concert-details > p:not(.section-label),
+  .concert-details time {
+    margin: 0;
+    font-family: var(--sans-serif);
+    font-size: 0.82rem;
+    line-height: 1.7;
+  }
+
+  .concert-details time {
+    color: var(--color-text-secondary);
+  }
+
+  .concert-link {
+    display: inline-block;
+    margin-top: calc(var(--spacing-unit) * 7);
+    padding: calc(var(--spacing-unit) * 2.5) calc(var(--spacing-unit) * 4);
+    border: 1px solid var(--color-border);
+    font-family: var(--sans-serif);
+    font-size: 0.72rem;
+    text-decoration: none;
+    transition:
+      color 160ms ease,
+      background-color 160ms ease,
+      border-color 160ms ease;
+  }
+
+  .concert-link:hover {
+    border-color: var(--color-inverse-background);
+    background: var(--color-inverse-background);
+    color: var(--color-inverse-text);
+  }
+
+  :is(a, summary):focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 900px) {
+    .article-metadata {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .megaphone {
-      position: absolute;
-      top: 60px;
-      right: 65px;
-      z-index: 1;
-
-      transform: rotate(-30deg) scale(5.9);
-      fill: var(--color-background-secondary);
+    .reading-layout {
+      grid-template-columns: minmax(0, var(--reading-max-width));
+      gap: 0;
     }
 
-    > h3,
-    > :global(picture) {
-      margin: calc(var(--spacing-unit) * 2) 0;
+    .desktop-toc {
+      display: none;
     }
 
-    a {
-      text-decoration: underline;
+    .mobile-toc {
+      display: block;
+      margin-top: calc(var(--spacing-unit) * 8);
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text-secondary);
+      font-family: var(--sans-serif);
+      font-size: 0.78rem;
+    }
+
+    .mobile-toc summary {
+      padding: calc(var(--spacing-unit) * 4) 0;
+      cursor: pointer;
+      color: var(--color-text-primary);
+      font-family: var(--display-font);
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    .mobile-toc ol {
+      padding-bottom: calc(var(--spacing-unit) * 5);
+    }
+
+    .reading-layout {
+      margin-top: calc(var(--spacing-unit) * 12);
+    }
+  }
+
+  @media (max-width: 620px) {
+    .breadcrumb {
+      margin-bottom: calc(var(--spacing-unit) * 10);
+    }
+
+    .article-header {
+      padding-bottom: calc(var(--spacing-unit) * 10);
+    }
+
+    h1 {
+      max-width: none;
+      font-size: 2.15rem;
+      line-height: 1.45;
+    }
+
+    .composer-name {
+      font-size: 0.92rem;
+    }
+
+    .article-metadata {
+      grid-template-columns: 1fr;
+      gap: calc(var(--spacing-unit) * 4);
+      margin-top: calc(var(--spacing-unit) * 9);
+    }
+
+    .article-metadata > div {
+      display: grid;
+      grid-template-columns: 7.5rem minmax(0, 1fr);
+      gap: calc(var(--spacing-unit) * 3);
+    }
+
+    .article-metadata > div:last-child {
+      min-height: 3.2em;
+    }
+
+    .reading-body {
+      line-height: 1.9;
+    }
+
+    .reading-body :global(h3) {
+      margin-top: calc(var(--spacing-unit) * 14);
+      font-size: 1.32rem;
+    }
+
+    .reading-body :global(h4) {
+      font-size: 1rem;
+    }
+
+    .reading-body :global(blockquote) {
+      padding-inline-start: calc(var(--spacing-unit) * 4);
+    }
+
+    .related-notes {
+      margin-top: calc(var(--spacing-unit) * 22);
+    }
+
+    .related-notes h2,
+    .concert-details h2 {
+      font-size: 1.4rem;
+    }
+
+    .related-list a {
+      grid-template-columns: 1fr;
+      gap: calc(var(--spacing-unit) * 1.5);
+    }
+
+    .concert-band {
+      margin-top: calc(var(--spacing-unit) * 22);
+      padding: calc(var(--spacing-unit) * 8) 0;
+    }
+
+    .concert-band-inner {
+      grid-template-columns: minmax(82px, 105px) minmax(0, 1fr);
+      gap: calc(var(--spacing-unit) * 5);
+      align-items: start;
+    }
+
+    .concert-details h2 {
+      margin-top: calc(var(--spacing-unit) * 1.5);
+      font-size: 1.18rem;
+    }
+
+    .concert-details > p:not(.section-label),
+    .concert-details time {
+      font-size: 0.72rem;
+    }
+
+    .concert-link {
+      margin-top: calc(var(--spacing-unit) * 4);
+      padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 3);
+    }
+  }
+
+  @media (max-width: 360px) {
+    h1 {
+      font-size: 1.85rem;
+    }
+
+    .article-metadata > div {
+      grid-template-columns: 6.5rem minmax(0, 1fr);
+    }
+
+    .concert-band-inner {
+      grid-template-columns: 82px minmax(0, 1fr);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .article-page * {
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
     }
   }
 </style>

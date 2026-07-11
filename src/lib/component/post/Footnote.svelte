@@ -24,6 +24,9 @@
   section {
     margin-top: calc(var(--spacing-unit) * 12);
     margin-bottom: calc(var(--spacing-unit) * 12);
+    padding-top: calc(var(--spacing-unit) * 4);
+    border-top: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
     font-size: 0.85em;
     text-indent: 0;
   }

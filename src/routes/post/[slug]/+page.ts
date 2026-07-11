@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 
-import { getAdjacentPostListItemsBySlug, getPostBySlug } from '$lib/posts';
+import { getPostBySlug, getRelatedPostListItemsBySlug } from '$lib/posts';
 
 import type { PageLoad } from './$types';
 
@@ -10,11 +10,11 @@ export const load: PageLoad = async ({ params }) => {
   if (post === null) error(404);
   if (!post.metadata.published) error(404);
 
-  const adjacentPostListItems = await getAdjacentPostListItemsBySlug(params.slug);
+  const relatedPostListItems = await getRelatedPostListItemsBySlug(params.slug);
 
   return {
     post: post,
     slug: params.slug,
-    adjacentPostListItems: adjacentPostListItems
+    relatedPostListItems
   };
 };

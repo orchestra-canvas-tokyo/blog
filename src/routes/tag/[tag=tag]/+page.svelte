@@ -12,11 +12,13 @@
 
 <Meta title={`#${data.tag}の記事一覧`} canonical={`/tag/${data.tag}`} />
 
-<SearchablePostList
-  heading={`#${data.tag}の記事一覧`}
-  summary={`${data.totalNumberOfPosts}件`}
-  posts={data.posts}
-  tag={data.tag}
-  currentPageNumber={data.currentPageNumber}
-  totalNumberOfPages={data.totalNumberOfPages}
-/>
+<main>
+  <SearchablePostList
+    heading={`#${data.tag}の記事一覧`}
+    summary={`${data.totalNumberOfPosts}件`}
+    posts={data.posts}
+    tag={data.tag}
+    currentPageNumber={data.currentPageNumber}
+    totalNumberOfPages={data.totalNumberOfPages}
+  />
+</main>

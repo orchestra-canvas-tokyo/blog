@@ -2,13 +2,15 @@
   interface Props {
     /** 表示する画像 */
     src: string;
+    /** 画像の代替テキスト。装飾・譜例画像では空文字列のまま利用できる。 */
+    alt?: string;
     /** キャプション */
     caption?: string | string[];
     /** 全体の最大高さ(px単位、オプション) */
     maxHeightPx?: number | undefined;
   }
 
-  let { src, caption = undefined, maxHeightPx = undefined }: Props = $props();
+  let { src, alt = '', caption = undefined, maxHeightPx = undefined }: Props = $props();
 
   const maxHeightStyle = $derived(
     maxHeightPx !== undefined ? `--max-height-px: ${maxHeightPx}px;` : ''
@@ -28,7 +30,7 @@
 -->
 
 <figure style={maxHeightStyle}>
-  <img {src} alt="" class="image" />
+  <img {src} {alt} class="image" loading="lazy" decoding="async" />
   {#if caption}
     <figcaption>
       {#if typeof caption === 'string'}
@@ -57,7 +59,11 @@
     max-width: 100%;
   }
   figcaption {
+    color: var(--color-text-secondary);
+    font-family: var(--sans-serif) !important;
     font-size: 0.85em;
+    line-height: 1.6;
+    letter-spacing: 0;
     text-align: center;
   }
 </style>

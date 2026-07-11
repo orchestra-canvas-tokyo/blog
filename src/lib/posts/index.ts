@@ -28,6 +28,8 @@ export type PostListItem = PostMetadata & {
 /** ポストオブジェクトの型 */
 export type Post = PostListItem & {
   default: Component;
+  hasAuthorCredit: boolean;
+  hasTableOfContents: boolean;
 };
 
 export type SearchablePost = PostListItem & {
@@ -110,10 +112,16 @@ const toPostListItem = async (post: InternalPost): Promise<PostListItem> => ({
   description: await getPostDescription(post)
 });
 
-const toPost = async (post: InternalPost): Promise<Post> => ({
-  ...(await toPostListItem(post)),
-  default: post.default
-});
+const toPost = async (post: InternalPost): Promise<Post> => {
+  const rawPost = await getRawPost(post);
+
+  return {
+    ...(await toPostListItem(post)),
+    default: post.default,
+    hasAuthorCredit: /<Author(?:\s|>)/.test(rawPost),
+    hasTableOfContents: /<(?:h[34]|Reference)(?:\s|>)/.test(rawPost)
+  };
+};
 
 /**
  * ポストを取得する
@@ -201,6 +209,49 @@ export const getAdjacentPostListItemsBySlug = async (
     prev: index === sortedPosts.length - 1 ? null : await toPostListItem(sortedPosts[index + 1]),
     next: index === 0 ? null : await toPostListItem(sortedPosts[index - 1])
   };
+};
+
+export type RelatedPostListItems = {
+  sameConcert: PostListItem[];
+  sameComposer: PostListItem[];
+};
+
+/**
+ * 記事と同じ演奏会、または同じ作曲家の曲目解説を取得する。
+ * 同じ演奏会の記事を優先し、作曲家の記事との重複は除外する。
+ */
+export const getRelatedPostListItemsBySlug = async (
+  slug: string,
+  sameComposerLimit = 3
+): Promise<RelatedPostListItems> => {
+  const currentPost = posts[slug];
+  if (currentPost === undefined || !currentPost.metadata.published) {
+    return { sameConcert: [], sameComposer: [] };
+  }
+
+  const otherPublishedPosts = getSortedPublishedInternalPosts().filter(
+    (post) => post.slug !== slug
+  );
+  const sameConcertPosts = otherPublishedPosts.filter(
+    (post) => post.metadata.concertSlug === currentPost.metadata.concertSlug
+  );
+  const sameComposerPosts =
+    currentPost.metadata.composerSlug === undefined
+      ? []
+      : otherPublishedPosts
+          .filter(
+            (post) =>
+              post.metadata.composerSlug === currentPost.metadata.composerSlug &&
+              post.metadata.concertSlug !== currentPost.metadata.concertSlug
+          )
+          .slice(0, sameComposerLimit);
+
+  const [sameConcert, sameComposer] = await Promise.all([
+    Promise.all(sameConcertPosts.map((post) => toPostListItem(post))),
+    Promise.all(sameComposerPosts.map((post) => toPostListItem(post)))
+  ]);
+
+  return { sameConcert, sameComposer };
 };
 
 /**

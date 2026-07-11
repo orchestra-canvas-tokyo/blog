@@ -3,8 +3,15 @@
  * @param date 日付文字列
  * @returns e.g. 2222/2/2
  */
-export const formatDate2JpStyle = (date: string) =>
-  `${new Date(date).getFullYear()}/${new Date(date).getMonth() + 1}/${new Date(date).getDate()}`;
+export const formatDate2JpStyle = (date: string) => {
+  const calendarDate = /^(\d{4})-(\d{2})-(\d{2})(?:T|$)/.exec(date);
+  if (calendarDate) {
+    return `${Number(calendarDate[1])}/${Number(calendarDate[2])}/${Number(calendarDate[3])}`;
+  }
+
+  const parsedDate = new Date(date);
+  return `${parsedDate.getFullYear()}/${parsedDate.getMonth() + 1}/${parsedDate.getDate()}`;
+};
 
 /**
  * ポストの生テキストから検索用のプレーンテキストを生成する。

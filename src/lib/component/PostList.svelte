@@ -1,6 +1,7 @@
 <script lang="ts">
   import { resolve } from '$app/paths';
   import { getFullTitle, type PostListItem } from '$lib/posts';
+  import { concerts } from '$lib/posts/concerts';
   import type { Tag } from '$lib/posts/tags';
   import { formatDate2JpStyle } from '$lib/util';
   import TagList from './TagList.svelte';
@@ -14,9 +15,17 @@
     currentPageNumber: number;
     /** 総ページ数 */
     totalNumberOfPages: number;
+    /** 記事タイトルの見出しレベル */
+    headingLevel?: 2 | 3;
   }
 
-  let { posts, tag = undefined, currentPageNumber, totalNumberOfPages }: Props = $props();
+  let {
+    posts,
+    tag = undefined,
+    currentPageNumber,
+    totalNumberOfPages,
+    headingLevel = 2
+  }: Props = $props();
 </script>
 
 <!--
@@ -36,204 +45,202 @@
 ```
 -->
 
-<main class="article-list">
+<div class="article-list">
   {#each posts as post (post.slug)}
-    <div class="article">
-      <div class="meta-container">
-        <TagList tags={post.metadata.tags} />
-        <div class="date for-large-screen">
+    <article class="article">
+      <header class="meta-container">
+        <span>{concerts[post.metadata.concertSlug].title}</span>
+        <time datetime={post.metadata.publicatedAt}>
           {formatDate2JpStyle(post.metadata.publicatedAt)}
-        </div>
-      </div>
+        </time>
+      </header>
 
       <a href={resolve('/post/[slug]', { slug: post.slug })} class="article-link">
-        <h2 class="title">{getFullTitle(post)}</h2>
+        {#if headingLevel === 3}
+          <h3 class="title">{getFullTitle(post)}</h3>
+        {:else}
+          <h2 class="title">{getFullTitle(post)}</h2>
+        {/if}
 
         <p class="description">
-          {post.description}……
+          {post.description}&hellip;
         </p>
       </a>
 
-      <div class="meta-container bottom-meta-container for-small-screen">
-        <div class="date">{formatDate2JpStyle(post.metadata.publicatedAt)}</div>
-      </div>
-    </div>
+      <footer><TagList tags={post.metadata.tags} /></footer>
+    </article>
   {/each}
 
-  <div class="page-control">
-    <div class="page-button">
-      {#if currentPageNumber === 2}
-        {#if tag}
-          <a href={resolve('/tag/[tag=tag]', { tag })} class="pointer"> &lt; prev </a>
-        {:else}
-          <a href={resolve('/')} class="pointer"> &lt; prev </a>
+  {#if totalNumberOfPages > 1}
+    <nav class="page-control" aria-label="記事一覧のページ">
+      <div class="page-button">
+        {#if currentPageNumber === 2}
+          {#if tag}
+            <a href={resolve('/tag/[tag=tag]', { tag })} rel="prev">&#8592; 前へ</a>
+          {:else}
+            <a href={resolve('/')} rel="prev">&#8592; 前へ</a>
+          {/if}
+        {:else if currentPageNumber > 2}
+          {#if tag}
+            <a
+              href={resolve(`/tag/${tag}?p=${currentPageNumber - 1}` as `/tag/${string}?${string}`)}
+              rel="prev"
+            >
+              &#8592; 前へ
+            </a>
+          {:else}
+            <a href={resolve(`/?p=${currentPageNumber - 1}` as `/?${string}`)} rel="prev">
+              &#8592; 前へ
+            </a>
+          {/if}
         {/if}
-      {:else if currentPageNumber > 2}
-        {#if tag}
-          <a
-            href={resolve(`/tag/${tag}?p=${currentPageNumber - 1}` as `/tag/${string}?${string}`)}
-            class="pointer"
-          >
-            &lt; prev
-          </a>
-        {:else}
-          <a href={resolve(`/?p=${currentPageNumber - 1}` as `/?${string}`)} class="pointer">
-            &lt; prev
-          </a>
+      </div>
+      <p class="page-number" aria-current="page">
+        <span class="sr-only">ページ</span>
+        {currentPageNumber} / {totalNumberOfPages}
+      </p>
+      <div class="page-button right">
+        {#if currentPageNumber < totalNumberOfPages}
+          {#if tag}
+            <a
+              href={resolve(`/tag/${tag}?p=${currentPageNumber + 1}` as `/tag/${string}?${string}`)}
+              rel="next"
+            >
+              次へ &#8594;
+            </a>
+          {:else}
+            <a href={resolve(`/?p=${currentPageNumber + 1}` as `/?${string}`)} rel="next">
+              次へ &#8594;
+            </a>
+          {/if}
         {/if}
-      {/if}
-    </div>
-    <div class="page-number">
-      {currentPageNumber} / {totalNumberOfPages}
-    </div>
-    <div class="page-button right">
-      {#if currentPageNumber < totalNumberOfPages}
-        {#if tag}
-          <a
-            href={resolve(`/tag/${tag}?p=${currentPageNumber + 1}` as `/tag/${string}?${string}`)}
-            class="pointer"
-          >
-            next &gt;
-          </a>
-        {:else}
-          <a href={resolve(`/?p=${currentPageNumber + 1}` as `/?${string}`)} class="pointer">
-            next &gt;
-          </a>
-        {/if}
-      {/if}
-    </div>
-  </div>
-</main>
+      </div>
+    </nav>
+  {/if}
+</div>
 
 <style>
-  @media (max-width: 576px) {
-    .for-large-screen {
-      display: none !important;
-    }
-  }
-  @media (min-width: 577px) {
-    .for-small-screen {
-      height: 0;
-      display: none !important;
-    }
-  }
-
   .article-list {
-    margin: calc(var(--spacing-unit) * 10) 0;
+    border-top: 1px solid var(--color-border);
   }
 
   .article {
-    display: flex;
-    flex-direction: column;
-    margin: calc(var(--spacing-unit) * 6) 0;
-  }
-  .article:not(.article:first-of-type)::before {
-    display: block;
-    box-sizing: content-box;
-    width: 80%;
-    height: calc(
-      var(--spacing-unit) * 6 + 1em
-    ); /* .article:bottom-margin + p:margin-block-end - .article:gap */
-    content: '';
-    margin: 0 auto;
-    border-top: solid 1px var(--color-text-primary);
+    border-bottom: 1px solid var(--color-border);
+    padding: calc(var(--spacing-unit) * 8) 0;
   }
 
   .article-link {
     display: block;
     font-family: var(--serif);
-    transition: background-color 0.3s;
+    padding: calc(var(--spacing-unit) * 5) 0;
   }
-  .article-link:hover {
-    background-color: var(--color-background-secondary);
+
+  .article-link:hover,
+  .article-link:focus-visible {
     text-decoration: none;
   }
-  .article-link h2 {
-    margin: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 4);
+
+  .article-link:hover .title,
+  .article-link:focus-visible .title {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
   }
+
+  .title {
+    margin: 0;
+    font-size: 1.65rem;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
   .description {
-    margin: calc(var(--spacing-unit) * 4);
-    margin-top: 0;
+    margin: calc(var(--spacing-unit) * 4) 0 0;
     -webkit-box-orient: vertical;
-
-    font-size: 0.95em;
-    text-align: justify;
-    line-height: 1.75;
-    letter-spacing: 0.04em;
-
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    text-align: left;
+    line-height: 1.8;
+    letter-spacing: 0;
     line-clamp: 3;
     -webkit-line-clamp: 3;
     display: -webkit-box;
     overflow: hidden;
   }
 
-  @media (max-width: 576px) {
-    h2 {
-      font-size: 1.5rem;
-    }
-  }
-
   .meta-container {
     display: flex;
     justify-content: space-between;
-    padding: 0 calc(var(--spacing-unit) * 4);
-    font-size: 0.85em;
+    flex-wrap: wrap;
+    gap: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 5);
+    font-family: var(--display-font);
+    font-size: 0.72rem;
     color: var(--color-text-secondary);
   }
-  .bottom-meta-container {
-    flex-direction: row-reverse;
-  }
 
-  @media (max-width: 576px) {
-    .meta-container {
-      padding: 0;
-    }
-    .article-link h2 {
-      margin: calc(var(--spacing-unit) * 2) 0;
-    }
-    .description {
-      margin-left: 0;
-      line-clamp: 5;
-      -webkit-line-clamp: 5;
-    }
+  footer {
+    color: var(--color-text-secondary);
+    font-size: 0.76rem;
   }
 
   .page-control {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    width: 100%;
-    margin: 0 auto;
-    margin-top: calc(var(--spacing-unit) * 4);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: calc(var(--spacing-unit) * 5);
+    margin-top: calc(var(--spacing-unit) * 12);
+    font-family: var(--display-font);
+    font-size: 0.8rem;
   }
+
   .page-number {
-    margin: 0 calc(var(--spacing-unit) * 4);
-    font-size: 110%;
+    margin: 0;
+    color: var(--color-text-secondary);
   }
-  @media (max-width: 576px) {
-    .page-control {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      width: 100%;
-      margin: 0 auto;
-    }
-    .page-number {
-      margin: 0;
-    }
-  }
+
   .page-button {
-    flex-basis: 4rem;
-    font-size: 110%;
-    color: var(--color-text-primary);
+    min-width: 0;
   }
+
+  .page-button a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    border-bottom: 1px solid currentColor;
+  }
+
   .right {
     text-align: right;
   }
-  .pointer {
-    cursor: pointer;
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
-  .pointer:hover {
-    text-decoration: underline;
+
+  @media (max-width: 576px) {
+    .article {
+      padding: calc(var(--spacing-unit) * 7) 0;
+    }
+
+    .title {
+      font-size: 1.35rem;
+    }
+
+    .description {
+      line-clamp: 4;
+      -webkit-line-clamp: 4;
+    }
+
+    .page-control {
+      gap: calc(var(--spacing-unit) * 2);
+    }
   }
 </style>

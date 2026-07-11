@@ -2,34 +2,51 @@
   import { page } from '$app/stores';
 </script>
 
-<div>
+<main>
   {#if $page.status === 404}
-    <h2>404: Not Found</h2>
+    <p class="section-label">ERROR</p>
+    <h1>404: Not Found</h1>
     {#if $page.error?.message}
       <p>{$page.error.message}</p>
     {:else}
       <p>お探しのページは見つかりませんでした。</p>
     {/if}
   {:else}
-    <h2>{$page.status}</h2>
+    <p class="section-label">ERROR</p>
+    <h1>{$page.status}</h1>
     {#if $page.error?.message}
       <p>{$page.error.message}</p>
     {/if}
   {/if}
-</div>
+</main>
 
 <style>
-  div {
+  main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: calc(var(--spacing-unit) * 28) 0;
+    justify-content: center;
+    min-height: 52vh;
+    padding: calc(var(--spacing-unit) * 16) 0;
+    text-align: center;
   }
-  h2 {
-    margin: calc(var(--spacing-unit) * 4) 0;
+
+  .section-label {
+    margin: 0 0 calc(var(--spacing-unit) * 4);
+    color: var(--color-text-secondary);
+    font-family: var(--display-font);
+    font-size: 0.72rem;
   }
+
+  h1 {
+    margin: 0 0 calc(var(--spacing-unit) * 5);
+    font-family: var(--display-font);
+    font-size: 2rem;
+    font-weight: 500;
+  }
+
   p {
     margin: 0;
-    text-indent: 0;
+    color: var(--color-text-secondary);
   }
 </style>

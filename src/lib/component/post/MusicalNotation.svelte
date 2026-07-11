@@ -39,8 +39,8 @@ Noto Musicフォントを使用。
 <style>
   span {
     display: inline-block;
-    margin: 0 5px;
-    transform: translateY(8px);
+    margin: 0 0.2em;
+    transform: translateY(0.22em);
 
     font-family: 'Noto Music', serif !important;
     font-weight: 400;
@@ -49,5 +49,6 @@ Noto Musicフォントを使用。
     font-size: 1.6em;
     line-height: 0;
     text-indent: 0;
+    vertical-align: baseline;
   }
 </style>

@@ -23,8 +23,9 @@
 </script>
 
 <section class="post-list-header">
+  <p class="section-label">PROGRAM NOTES</p>
   <div class="heading-group">
-    <h2>{heading}</h2>
+    <h1>{heading}</h1>
     {#if summary}
       <p class="summary">{summary}</p>
     {/if}
@@ -35,23 +36,31 @@
 
 <style>
   .post-list-header {
-    display: flex;
-    justify-content: space-between;
-    gap: calc(var(--spacing-unit) * 5);
-    align-items: flex-start;
+    padding: clamp(36px, 7vw, 88px) 0 clamp(32px, 6vw, 72px);
   }
 
   .heading-group {
     min-width: 0;
     display: flex;
-    flex-direction: column;
-    gap: calc(var(--spacing-unit) * 1);
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: calc(var(--spacing-unit) * 3) calc(var(--spacing-unit) * 8);
+    align-items: baseline;
   }
 
-  h2 {
+  .section-label {
+    margin: 0 0 calc(var(--spacing-unit) * 5);
+    color: var(--color-text-secondary);
+    font-family: var(--display-font);
+    font-size: 0.72rem;
+  }
+
+  h1 {
     margin: 0;
     font-family: var(--serif);
-    font-size: 2rem;
+    font-size: 2.4rem;
+    font-weight: 500;
+    line-height: 1.35;
   }
 
   .summary {
@@ -59,13 +68,9 @@
     color: var(--color-text-secondary);
   }
 
-  @media (max-width: 576px) {
-    .post-list-header {
-      gap: calc(var(--spacing-unit) * 3);
-    }
-
-    h2 {
-      font-size: 1.7rem;
+  @media (max-width: 600px) {
+    h1 {
+      font-size: 1.8rem;
     }
   }
 </style>
