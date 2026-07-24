@@ -279,6 +279,10 @@
       line-height: 1.75;
     }
 
+    :global(hr) {
+      margin: calc(var(--spacing-unit) * 12) 0;
+    }
+
     :global(blockquote) {
       margin-top: calc(var(--spacing-unit) * 12);
       margin-bottom: calc(var(--spacing-unit) * 12);
