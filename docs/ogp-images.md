@@ -4,9 +4,9 @@ Every published article receives a 1200 × 630 PNG at `/ogp/<article-slug>.png`.
 
 ## Design
 
-The reference is Orchestra Canvas Tokyo's YouTube thumbnail hierarchy: the existing logo above centered serif composer and work-title text. The blog version uses black ink on white, matching its inverted relationship to the main website. No video stills, composer portraits, or generated artwork are required.
+The reference is Orchestra Canvas Tokyo's YouTube thumbnail hierarchy: the blog masthead logo above centered, bold serif composer and work-title text. The card has no horizontal rules or footer copy. The blog version uses black ink on white, matching its inverted relationship to the main website. No video stills, composer portraits, or generated artwork are required.
 
-The composer uses the existing short name. Work titles omit keys and opus/catalogue numbers, but retain symphony numbers, nicknames, and editions. This transformation applies only to sharing-card copy. Article content, metadata, visible titles, and page titles stay unchanged. Articles without a composer use the label 「音楽コラム」.
+The composer uses the existing short name. Both text blocks use the real Noto Serif JP Bold face, OpenType kerning and proportional Japanese spacing (`kern`/`palt`), and -0.018em tracking. Text grows to fill its safe area: composer up to 112px and work-title lines up to 220px, fitted against actual rendered width and height with 40px side margins. Work titles omit keys and opus/catalogue numbers, but retain symphony numbers, nicknames, and editions. This transformation applies only to sharing-card copy. Article content, metadata, visible titles, and page titles stay unchanged. Articles without a composer use the label 「音楽コラム」.
 
 Long works can have explicit line breaks in `scripts/ogp/content.mjs`. The renderer fits text inside safe bounds and fails with an actionable error if a new title cannot fit legibly. Update card-only line breaks in that case, rather than shortening the article's title.
 
@@ -25,9 +25,9 @@ Sharing-image URLs use the current page origin, allowing draft preview images to
 
 ## Font and reproducibility
 
-The build bundles **Noto Serif JP Regular** (6 MB) under `scripts/ogp/fonts/`, licensed under the SIL Open Font License 1.1. The license is included as `OFL.txt`. The font is a build asset, not a browser download. Generation requires no network access, local system Japanese fonts, API keys, or browser installation.
+The build bundles **Noto Serif JP Bold** (6 MB) under `scripts/ogp/fonts/`, licensed under the SIL Open Font License 1.1. The license is included as `OFL.txt`. The font is a build asset, not a browser download. Generation requires no network access, local system Japanese fonts, API keys, or browser installation.
 
-Source: [Noto CJK — Japanese subset OTF](https://github.com/notofonts/noto-cjk/tree/main/Serif/SubsetOTF/JP), file `NotoSerifJP-Regular.otf`, downloaded 2026-09-05. [Upstream license](https://github.com/notofonts/noto-cjk/blob/main/Serif/LICENSE).
+Source: [Noto CJK — Japanese subset OTF](https://github.com/notofonts/noto-cjk/tree/main/Serif/SubsetOTF/JP), file `NotoSerifJP-Bold.otf`, downloaded 2026-09-05. [Upstream license](https://github.com/notofonts/noto-cjk/blob/main/Serif/LICENSE).
 
 ## Verification
 
