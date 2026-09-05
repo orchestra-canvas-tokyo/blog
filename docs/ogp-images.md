@@ -28,7 +28,8 @@ Sharing-image URLs use the current page origin, allowing draft preview images to
 `scripts/ogp/oct-symbol.svg` preserves the icon path from
 `orchestra-canvas-tokyo/homepage/src/routes/logo.svg` at commit
 `8e7babd933b93dc6db7938616242e4cceb8748ba`. Only the wrapper/viewBox and fill
-are adapted to display the standalone icon in pale blue. The blog masthead
+are adapted to display the standalone icon in pale blue, anchored 14px from the
+right edge and 18px from the bottom edge. The blog masthead
 continues to use `src/routes/header-large.svg`.
 
 ## Font and reproducibility

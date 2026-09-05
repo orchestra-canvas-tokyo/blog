@@ -81,14 +81,21 @@ export async function renderCard({ composer, lines }) {
   });
 
   // Exact OCT symbol outlines from the homepage logo, used as a faint watermark.
-  const symbol = await sharp(symbolFile).resize({ width: 392 }).png().toBuffer();
+  const symbol = await sharp(symbolFile)
+    .resize({ width: 392 })
+    .png()
+    .toBuffer({ resolveWithObject: true });
   const decoration = Buffer.from(
     `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}"><path d="M34 38V592" stroke="#456982" stroke-width="3"/></svg>`
   );
   return sharp({ create: { width: WIDTH, height: HEIGHT, channels: 3, background: '#f8fafc' } })
     .composite([
       { input: decoration, left: 0, top: 0 },
-      { input: symbol, left: 798, top: 42 },
+      {
+        input: symbol.data,
+        left: WIDTH - symbol.info.width - 14,
+        top: HEIGHT - symbol.info.height - 18
+      },
       ...overlays
     ])
     .png({ compressionLevel: 9 })
