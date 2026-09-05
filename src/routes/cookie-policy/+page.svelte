@@ -4,9 +4,9 @@
 
 <Meta title="Cookieポリシー" canonical="/cookie-policy" />
 
-<h2>Cookieポリシー</h2>
+<h1>Cookieポリシー</h1>
 
-<main>
+<div class="policy">
   <p>
     Orchestra Canvas
     Tokyo（以下、「当団」といいます。）は、お客様のウェブサイト利用状況を分析し、または個々のお客様に対してカスタマイズされたサービスを提供する等の目的のため、クッキーを使用して一定の情報を収集します。
@@ -120,20 +120,20 @@
   </div>
 
   <p class="align-right">以上</p>
-</main>
+</div>
 
 <style>
-  h2 {
+  h1 {
     margin: 0;
     font-size: 2.2rem;
   }
   @media (max-width: 576px) {
-    h2 {
+    h1 {
       font-size: 2rem;
     }
   }
 
-  main {
+  .policy {
     * {
       letter-spacing: 0.04em;
     }

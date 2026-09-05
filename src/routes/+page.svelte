@@ -10,10 +10,14 @@
   let { data }: Props = $props();
 </script>
 
-<Meta title="" canonical="/" />
+<Meta
+  title={data.currentPageNumber > 1 ? `記事一覧 · ${data.currentPageNumber}ページ` : ''}
+  canonical={data.currentPageNumber > 1 ? `/?p=${data.currentPageNumber}` : '/'}
+/>
 
 <SearchablePostList
-  heading="記事一覧"
+  heading="音楽を、もっと深く。"
+  summary={`曲目解説・プログラムノート 全${data.totalNumberOfPosts}件`}
   posts={data.posts}
   currentPageNumber={data.currentPageNumber}
   totalNumberOfPages={data.totalNumberOfPages}

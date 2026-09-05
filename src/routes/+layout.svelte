@@ -7,7 +7,7 @@
   import facebook from './sns-facebook.svg';
   import x from './sns-x.svg';
   import youtube from './sns-youtube.svg';
-  import { onMount } from 'svelte';
+  import '$lib/styles/design-system.css';
   import BlogSearch from '$lib/component/BlogSearch.svelte';
   import CookieConcent from '$lib/component/CookieConcent.svelte';
   interface Props {
@@ -15,35 +15,6 @@
   }
 
   let { children }: Props = $props();
-
-  onMount(() => {
-    // viewportが375px未満のとき、全体を縮小して表示する
-    const adjustViewport = () => {
-      const triggerWidth = 375;
-      const viewport = document.querySelector('meta[name="viewport"]');
-      if (viewport === null) return;
-      const value =
-        window.outerWidth < triggerWidth
-          ? `width=${triggerWidth}`
-          : 'width=device-width, initial-scale=1';
-      viewport.setAttribute('content', value);
-    };
-
-    /**
-     * 頻繁に呼び出されうる関数を、300msごとの実行に制限する
-     * @param func 呼び出される関数
-     */
-    const debounce = (func: () => void) => {
-      let timer: number;
-      return () => {
-        clearTimeout(timer);
-        timer = setTimeout(func, 300);
-      };
-    };
-
-    const debouncedFunction = debounce(adjustViewport);
-    window.addEventListener('resize', debouncedFunction, false);
-  });
 </script>
 
 <svelte:head>
@@ -60,26 +31,27 @@
   />
 </svelte:head>
 
-<header>
-  <!-- header -->
-  <a href={resolve('/')} id="page_top">
-    <h1>
-      <div class="logo-container">
-        <picture>
-          <source srcset={headerSmall} media="(max-width: 576px)" />
-          <img class="logo-image" src={headerLarge} alt="Orchestra Canvas Tokyo Blog" />
-        </picture>
-      </div>
-    </h1>
+<a class="skip-link" href="#main-content">本文へスキップ</a>
+<header id="page_top">
+  <a href={resolve('/')} class="brand" aria-label="Orchestra Canvas Tokyo Blog ホーム">
+    <picture>
+      <source srcset={headerSmall} media="(max-width: 576px)" />
+      <img src={headerLarge} alt="Orchestra Canvas Tokyo Blog" width="460" height="90" />
+    </picture>
   </a>
-  <div class="header-search">
+  <nav aria-label="メインナビゲーション">
+    <a href={resolve('/')}>記事一覧</a>
+    <a href="https://www.orch-canvas.tokyo/">公式サイト <span aria-hidden="true">↗</span></a>
     <BlogSearch />
-  </div>
+  </nav>
 </header>
 
-{@render children?.()}
+<main id="main-content" tabindex="-1">
+  {@render children?.()}
+</main>
 
 <footer>
+  <a class="back-to-top" href="#page_top">ページの先頭へ ↑</a>
   <div class="inline-logo-container">
     <a href="https://www.orch-canvas.tokyo/">
       &copy; <img
@@ -110,138 +82,86 @@
 </footer>
 
 <style>
-  :global(:root) {
-    --spacing-unit: 4px;
-    --color-background: #fff;
-    --color-background-secondary: #eee;
-    --color-text-primary: #000;
-    --color-text-secondary: #5a5a5a;
-    --sans-serif: sans-serif;
-    --serif: YakuHanMPs, 'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', YuMincho, serif;
-  }
-
-  :global(html) {
-    background-color: var(--color-background-secondary);
-  }
-
-  :global(body) {
-    margin: 0 auto;
-    max-width: 1000px;
-    padding: calc(var(--spacing-unit) * 8);
-    font-family: var(--sans-serif);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-
-    background-color: var(--color-background);
-    color: var(--color-text-primary);
-    line-height: 1.51;
-    font-size: 18px;
-
-    overflow-wrap: anywhere; /* 収まらない場合に折りかえす */
-    word-break: normal; /* 単語の分割はデフォルトに依存 */
-    line-break: strict; /* 禁則処理を厳格に適用 */
-  }
-
-  @media (max-width: 576px) {
-    :global(body) {
-      padding: calc(var(--spacing-unit) * 6);
-      font-size: 16px;
-    }
-  }
-
-  :global(a, a:visited, a:active) {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  :global(a:hover) {
-    text-decoration: underline;
-  }
-
-  @media (max-width: 576px) {
-    :global(ul),
-    :global(ol) {
-      padding-inline-start: calc(var(--spacing-unit) * 5);
-    }
-  }
-
   header {
-    position: relative;
-    /* header.margin-bottom = body.padding-top + h1.margin-top */
-    margin-bottom: calc(var(--spacing-unit) * 12 + 0.67em);
+    padding-block: 28px 24px;
+    border-bottom: 1px solid var(--color-border-strong);
+    margin-bottom: var(--space-section);
   }
-
-  .header-search {
-    position: absolute;
-    top: calc(var(--spacing-unit) * 2);
-    right: 0;
+  .brand {
+    width: 460px;
+    display: inline-block;
+    max-width: 100%;
   }
-
-  .logo-container > picture {
-    aspect-ratio: 459.8 / 90;
+  .brand img {
+    display: block;
+    width: min(460px, 100%);
+    height: auto;
   }
-  .logo-image {
-    margin-bottom: -12.36px;
-    margin-left: 13px;
-    height: 90px;
-  }
-  @media (max-width: 576px) {
-    header {
-      /* header.margin-bottom = body.padding-top */
-      margin-bottom: calc(var(--spacing-unit) * 8);
-    }
-    .header-search {
-      top: 0;
-    }
-    .logo-container {
-      display: grid;
-      place-items: center;
-    }
-    .logo-container > picture {
-      aspect-ratio: 200 / 119.2;
-    }
-    .logo-image {
-      margin-bottom: -12.37px;
-      margin-left: 0;
-      width: 200px;
-      height: unset;
-    }
-  }
-
-  footer {
-    margin-top: calc(var(--spacing-unit) * 16);
-    margin-bottom: calc(var(--spacing-unit) * 8);
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 24px;
+    margin-top: 24px;
     font-size: 14px;
+  }
+  nav > a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  footer {
+    border-top: 1px solid var(--color-border-strong);
+    margin-top: var(--space-section);
+    padding-block: 24px 40px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: calc(var(--spacing-unit) * 4);
+    gap: 24px;
+    font-size: 14px;
   }
-  .inline-logo-container {
-    display: flex;
-    align-items: center;
+  .back-to-top {
+    align-self: flex-end;
   }
   .inline-logo-container a {
     display: flex;
     align-items: center;
-    gap: 0.5em;
-  }
-  .inline-logo-container a:hover {
-    text-decoration: none;
+    gap: 8px;
   }
   .sns-icon-container {
     display: flex;
     align-items: center;
-    gap: calc(var(--spacing-unit) * 8);
+    gap: 24px;
+  }
+  .sns-icon-container a {
+    display: grid;
+    place-items: center;
+    min-width: 44px;
+    min-height: 44px;
   }
   .sns-icon {
-    margin-bottom: -5.13px;
-    width: 1.6rem;
+    width: 24px;
+    height: 28px;
+    object-fit: contain;
   }
-
-  @media (max-width: 300px) {
-    .inline-logo {
-      margin-left: 0;
+  @media (max-width: 576px) {
+    header {
+      padding-top: 24px;
+    }
+    .brand {
+      display: block;
+      width: 200px;
+      margin-inline: auto;
+    }
+    .brand img {
+      width: 200px;
+      height: auto;
+      aspect-ratio: 200 / 119.2;
+    }
+    nav {
+      justify-content: space-between;
+      gap: 12px;
     }
   }
 </style>

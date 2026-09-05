@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { PostListItem } from '$lib/posts';
   import type { Tag } from '$lib/posts/tags';
+  import { resolve } from '$app/paths';
+  import ArchiveBrowse from './ArchiveBrowse.svelte';
   import PostList from './PostList.svelte';
 
   interface Props {
@@ -22,18 +24,32 @@
   }: Props = $props();
 </script>
 
+{#if tag}<a class="archive-back" href={resolve('/')}>← すべての記事</a>{/if}
 <section class="post-list-header">
   <div class="heading-group">
-    <h2>{heading}</h2>
+    <p class="eyebrow">PROGRAM NOTES</p>
+    <h1>{heading}</h1>
     {#if summary}
       <p class="summary">{summary}</p>
     {/if}
   </div>
 </section>
 
+<ArchiveBrowse />
+
 <PostList {posts} {tag} {currentPageNumber} {totalNumberOfPages} />
 
 <style>
+  .archive-back {
+    display: inline-block;
+    margin-bottom: 24px;
+    font-size: 14px;
+  }
+  .eyebrow {
+    margin: 0 0 12px;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+  }
   .post-list-header {
     display: flex;
     justify-content: space-between;
@@ -48,7 +64,7 @@
     gap: calc(var(--spacing-unit) * 1);
   }
 
-  h2 {
+  h1 {
     margin: 0;
     font-family: var(--serif);
     font-size: 2rem;
@@ -64,7 +80,7 @@
       gap: calc(var(--spacing-unit) * 3);
     }
 
-    h2 {
+    h1 {
       font-size: 1.7rem;
     }
   }

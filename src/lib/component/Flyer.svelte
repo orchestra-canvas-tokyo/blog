@@ -30,15 +30,20 @@
   <img
     src={getCloudflareSrc(src, [...commonOptions, ['height', '400']])}
     srcset={`${getCloudflareSrc(src, [...commonOptions, ['height', '800']])} 2x`}
+    loading="lazy"
+    decoding="async"
     {alt}
   />
 {:else if useCloudflareImages === false}
-  <img {src} {alt} />
+  <img {src} {alt} loading="lazy" decoding="async" />
 {/if}
 
 <style>
   img {
     max-height: 400px;
-    width: 100%;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
   }
 </style>

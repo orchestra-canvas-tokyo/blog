@@ -6,9 +6,14 @@
     title: string;
     /** 正規URL。相対URLを指定。e.g. '/tag/example' */
     canonical: string;
+    description?: string;
   }
 
-  let { title, canonical }: Props = $props();
+  let {
+    title,
+    canonical,
+    description = 'Orchestra Canvas Tokyoの公式ブログ。演奏会の曲目解説・プログラムノートを、作曲家や演奏会から探せます。'
+  }: Props = $props();
 
   let fullTitle = $derived(
     title !== '' ? `${title} - Orchestra Canvas Tokyo Blog` : 'Orchestra Canvas Tokyo Blog'
@@ -18,6 +23,15 @@
 
 <MetaTags
   title={fullTitle}
+  {description}
+  openGraph={{
+    type: 'website',
+    title: fullTitle,
+    description,
+    url: fullCanonical,
+    locale: 'ja_JP',
+    siteName: 'Orchestra Canvas Tokyo Blog'
+  }}
   canonical={fullCanonical}
   twitter={{
     site: '@Orch_canvas',

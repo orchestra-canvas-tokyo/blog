@@ -36,10 +36,14 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    gap: 4px 12px;
   }
   .tag-item {
     display: block;
-    margin-right: 1em;
+  }
+  a {
+    display: inline-block;
+    padding-block: 5px;
   }
   .sharp {
     font-size: 95%;
