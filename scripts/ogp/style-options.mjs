@@ -1,4 +1,4 @@
-// Review-only proposals. These are not used by the live OGP generator.
+// Review previews: style 3 uses the active renderer; style 1 is an archived PNG.
 import sharp from 'sharp';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -14,7 +14,7 @@ const logoSource = await readFile(
 const sample = { composer: 'モーツァルト', lines: ['交響曲第35番', '『ハフナー』'] };
 
 const options = [
-  { id: '01-gallery', current: true },
+  { id: '01-gallery', archived: true },
   {
     id: '02-concert-programme',
     paper: '#f4efe3',
@@ -30,21 +30,7 @@ const options = [
       <path d="M14 24L24 14L34 24L24 34Z M1166 24L1176 14L1186 24L1176 34Z M14 606L24 596L34 606L24 616Z M1166 606L1176 596L1186 606L1176 616Z" fill="#f4efe3"/>
     </g>`
   },
-  {
-    id: '03-editorial',
-    paper: '#f8fafc',
-    ink: '#20384a',
-    align: 'left',
-    width: 970,
-    logoWidth: 480,
-    composerSize: 100,
-    titleSize: 180,
-    decoration: `<path d="M34 38V592" stroke="#456982" stroke-width="3"/>
-      <g fill="none" stroke="#dbe4eb" stroke-width="2">
-        <path d="M994 42L1190 382H798Z M1092 212H896 M1043 127L847 467 M945 127L1141 467"/>
-      </g>
-      <path d="M1158 546L1182 588H1134Z" fill="#456982"/>`
-  },
+  { id: '03-editorial', current: true },
   {
     id: '04-night-recital',
     paper: '#181d22',
@@ -106,6 +92,7 @@ async function fit(text, size, height, option) {
 }
 
 async function renderOption(option) {
+  if (option.archived) return readFile(new URL(`${option.id}.png`, output));
   if (option.current) return renderCard(sample);
   const logo = await sharp(Buffer.from(logoSource.replaceAll('#231815', option.ink)))
     .resize({ width: option.logoWidth })

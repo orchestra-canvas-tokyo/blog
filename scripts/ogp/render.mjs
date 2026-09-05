@@ -1,4 +1,5 @@
 import sharp from 'sharp';
+import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { escapeMarkup } from './content.mjs';
 
@@ -6,14 +7,16 @@ export const WIDTH = 1200;
 export const HEIGHT = 630;
 const fontfile = fileURLToPath(new URL('./fonts/NotoSerifJP-Regular.otf', import.meta.url));
 const logoFile = fileURLToPath(new URL('../../src/routes/header-large.svg', import.meta.url));
-const SAFE_WIDTH = WIDTH - 80;
+const SAFE_WIDTH = 970;
+const logoSource = await readFile(logoFile, 'utf8');
+const symbolFile = fileURLToPath(new URL('./oct-symbol.svg', import.meta.url));
 
 /** Use regular-weight outlines, proportional Japanese spacing, and restrained negative tracking. */
 async function textLayer(text, size) {
   const tracking = Math.round(-0.018 * size * 1024);
   return sharp({
     text: {
-      text: `<span foreground="#171717" font_features="kern=1,palt=1" letter_spacing="${tracking}">${escapeMarkup(text)}</span>`,
+      text: `<span foreground="#20384a" font_features="kern=1,palt=1" letter_spacing="${tracking}">${escapeMarkup(text)}</span>`,
       font: `Noto Serif JP ${size}`,
       fontfile,
       rgba: true,
@@ -49,15 +52,17 @@ export async function renderCard({ composer, lines }) {
   if (lines.length < 1 || lines.length > 2) {
     throw new Error('OGP titles must use one or two lines');
   }
-  const logo = await sharp(logoFile)
-    .resize({ width: 560 })
+  const logo = await sharp(Buffer.from(logoSource.replaceAll('#231815', '#20384a')))
+    .resize({ width: 480 })
     .trim()
     .png()
     .toBuffer({ resolveWithObject: true });
-  const composerLayer = await fittedText(composer || '音楽コラム', 112, 110);
+  const composerLayer = await fittedText(composer || '音楽コラム', 100, 104);
   const layers = [logo, composerLayer];
   for (const line of lines) {
-    layers.push(await fittedText(line, 220, lines.length === 1 ? 220 : 130));
+    layers.push(
+      await fittedText(line, lines.length === 1 ? 220 : 180, lines.length === 1 ? 220 : 130)
+    );
   }
 
   // Space actual visible glyph bounds evenly, including the top and bottom margins.
@@ -68,24 +73,24 @@ export async function renderCard({ composer, lines }) {
   const overlays = layers.map((layer) => {
     const overlay = {
       input: layer.data,
-      left: Math.round((WIDTH - layer.info.width) / 2),
+      left: 86,
       top: Math.round(top)
     };
     top += layer.info.height + gap;
     return overlay;
   });
 
-  // Small geometric corner ornaments echo the masthead's triangular mark.
-  // Kept outside the content area; no horizontal dividers or footer copy.
-  const decoration =
-    Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 1200 630">
-    <g fill="none" stroke="#c9c2ba" stroke-width="1.25" stroke-linejoin="round">
-      <path d="M18 50V18H50 M1150 18H1182V50 M18 580V612H50 M1150 612H1182V580"/>
-      <path d="M27 38L33 27L39 38Z M1161 38L1167 27L1173 38Z M27 603L33 592L39 603Z M1161 603L1167 592L1173 603Z"/>
-    </g>
-  </svg>`);
-  return sharp({ create: { width: WIDTH, height: HEIGHT, channels: 3, background: '#fff' } })
-    .composite([{ input: decoration, left: 0, top: 0 }, ...overlays])
+  // Exact OCT symbol outlines from the homepage logo, used as a faint watermark.
+  const symbol = await sharp(symbolFile).resize({ width: 392 }).png().toBuffer();
+  const decoration = Buffer.from(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}"><path d="M34 38V592" stroke="#456982" stroke-width="3"/></svg>`
+  );
+  return sharp({ create: { width: WIDTH, height: HEIGHT, channels: 3, background: '#f8fafc' } })
+    .composite([
+      { input: decoration, left: 0, top: 0 },
+      { input: symbol, left: 798, top: 42 },
+      ...overlays
+    ])
     .png({ compressionLevel: 9 })
     .toBuffer();
 }
