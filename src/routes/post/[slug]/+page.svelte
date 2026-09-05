@@ -29,6 +29,9 @@
   title={getFullTitle(data.post)}
   canonical={`/post/${data.slug}`}
   description={data.post.description.slice(0, 160)}
+  image={`/ogp/${data.slug}.png`}
+  imageAlt={getFullTitle(data.post)}
+  type="article"
 />
 
 <div class="reading-header">
