@@ -28,7 +28,7 @@
 -->
 
 <figure style={maxHeightStyle}>
-  <img {src} alt="" class="image" />
+  <img {src} alt="" class="image" loading="lazy" decoding="async" />
   {#if caption}
     <figcaption>
       {#if typeof caption === 'string'}

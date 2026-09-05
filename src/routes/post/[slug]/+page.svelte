@@ -25,33 +25,35 @@
   };
 </script>
 
-<Meta title={getFullTitle(data.post)} canonical={`/post/${data.slug}`} />
+<Meta
+  title={getFullTitle(data.post)}
+  canonical={`/post/${data.slug}`}
+  description={data.post.description.slice(0, 160)}
+  image={`/ogp/${data.slug}.png`}
+  imageAlt={getFullTitle(data.post)}
+  type="article"
+/>
 
-<div class="meta meta-container for-small-screen">
-  <div></div>
-  <div class="date">{formatDate2JpStyle(metadata.publicatedAt)}</div>
+<div class="reading-header">
+  <a class="archive-back" href={resolve('/')}>← 記事一覧</a>
+  <div class="meta meta-container">
+    <TagList tags={metadata.tags} />
+    <time datetime={metadata.publicatedAt}>{formatDate2JpStyle(metadata.publicatedAt)}</time>
+  </div>
+  <h1>{metadata.title}</h1>
+
+  {#if arranger && composer}
+    <p class="composer">
+      {composer.fullName} ({arranger.fullName} 編)
+    </p>
+  {:else if composer}
+    <p class="composer">
+      {composer.fullName} ({composer.yearOfBirth}&ndash;{#if hasYearOfDeath(composer)}{composer.yearOfDeath}{/if})
+    </p>
+  {/if}
 </div>
 
-<div class="meta meta-container">
-  <TagList tags={metadata.tags} />
-  <div class="date for-large-screen">{formatDate2JpStyle(metadata.publicatedAt)}</div>
-</div>
-
-<h2>
-  {metadata.title}
-</h2>
-
-{#if arranger && composer}
-  <p class="composer">
-    {composer.fullName} ({arranger.fullName} 編)
-  </p>
-{:else if composer}
-  <p class="composer">
-    {composer.fullName} ({composer.yearOfBirth}&ndash;{#if hasYearOfDeath(composer)}{composer.yearOfDeath}{/if})
-  </p>
-{/if}
-
-<main>
+<article class="prose">
   <data.post.default />
 
   {#if metadata.youTubeVideoIds}
@@ -62,15 +64,15 @@
           height="315"
           style="max-width: 100%;"
           src={`https://www.youtube-nocookie.com/embed/${id}`}
-          title="YouTube video player"
-          frameborder="0"
+          title={`${metadata.title}の参考演奏 ${metadata.youTubeVideoIds.indexOf(id) + 1}`}
+          loading="lazy"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen
         ></iframe>
       {/each}
     </div>
   {/if}
-</main>
+</article>
 
 <div class="fullwidth-gray-background">
   <section class="upcoming-concerts">
@@ -117,7 +119,7 @@
   </section>
 </div>
 
-<div class="adjacent-posts">
+<nav class="adjacent-posts" aria-label="前後の記事">
   {#if data.adjacentPostListItems.prev !== null}
     <a href={resolve('/post/[slug]', { slug: data.adjacentPostListItems.prev.slug })} class="prev">
       前の投稿<br />
@@ -130,7 +132,7 @@
       {getFullTitle(data.adjacentPostListItems.next)}
     </a>
   {/if}
-</div>
+</nav>
 
 <div class="concert">
   <a href={concert.url} rel="external">
@@ -140,14 +142,40 @@
 </div>
 
 <style>
-  @media (max-width: 576px) {
-    .for-large-screen {
-      display: none !important;
-    }
+  .reading-header {
+    max-width: var(--reading-width);
+    margin-inline: auto;
   }
-  @media (min-width: 577px) {
-    .for-small-screen {
-      display: none !important;
+  .archive-back {
+    display: inline-block;
+    font-size: 14px;
+    margin-bottom: 32px;
+  }
+  .meta-container {
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    margin-bottom: 20px;
+  }
+  time {
+    white-space: nowrap;
+  }
+  .prose :global(a) {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .prose :global(iframe) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    border: 0;
+  }
+  @media print {
+    .fullwidth-gray-background,
+    .adjacent-posts,
+    .concert,
+    .video,
+    .archive-back {
+      display: none;
     }
   }
 
@@ -163,13 +191,13 @@
     width: 100%;
   }
 
-  h2 {
+  h1 {
     margin: 0;
     font-family: var(--serif);
     font-size: 2.2rem;
   }
   @media (max-width: 576px) {
-    h2 {
+    h1 {
       font-size: 2rem;
     }
   }
@@ -252,12 +280,14 @@
     margin-bottom: calc(var(--spacing-unit) * 4);
   }
 
-  main {
-    margin: calc(var(--spacing-unit) * 12) 0;
+  .prose {
+    margin: calc(var(--spacing-unit) * 12) auto;
+    max-width: var(--reading-width);
+    font-size: clamp(16px, 1.8vw, 18px);
   }
 
   /* 本文に対するスタイル */
-  main {
+  .prose {
     :global(*) {
       font-family: var(--serif);
       letter-spacing: 0.04em;
@@ -276,7 +306,7 @@
     :global(p) {
       text-indent: 1rem;
       text-align: justify;
-      line-height: 1.75;
+      line-height: 1.95;
     }
 
     :global(hr) {
@@ -323,12 +353,12 @@
   .fullwidth-gray-background {
     display: flex;
     justify-content: center;
-    margin: calc(var(--spacing-unit) * 20) calc(-1 * var(--spacing-unit) * 8) 0;
+    margin: var(--space-section) 0 0;
     padding: calc(var(--spacing-unit) * 6) 0;
     background-color: var(--color-background-secondary);
 
     @media (max-width: 576px) {
-      margin: calc(var(--spacing-unit) * 20) calc(-1 * var(--spacing-unit) * 6) 0;
+      margin: var(--space-section) 0 0;
     }
   }
 
@@ -341,9 +371,9 @@
 
     position: relative;
 
-    border-radius: 10px;
+    border-radius: 0;
     padding: calc(var(--spacing-unit) * 6) calc(var(--spacing-unit) * 12);
-    width: min(300px, 50dvw);
+    width: min(100%, 420px);
 
     overflow: hidden;
 

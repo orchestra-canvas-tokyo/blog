@@ -10,7 +10,10 @@
   let { data }: Props = $props();
 </script>
 
-<Meta title={`#${data.tag}の記事一覧`} canonical={`/tag/${data.tag}`} />
+<Meta
+  title={`#${data.tag}の記事一覧`}
+  canonical={`/tag/${encodeURIComponent(data.tag)}${data.currentPageNumber > 1 ? `?p=${data.currentPageNumber}` : ''}`}
+/>
 
 <SearchablePostList
   heading={`#${data.tag}の記事一覧`}

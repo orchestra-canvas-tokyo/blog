@@ -34,6 +34,7 @@ export const load: PageLoad = async ({ url }) => {
       offset: PostCountInOnePage * (pageNumber - 1),
       limit: PostCountInOnePage
     }),
+    totalNumberOfPosts,
     currentPageNumber: pageNumber,
     totalNumberOfPages: totalNumberOfPages
   };

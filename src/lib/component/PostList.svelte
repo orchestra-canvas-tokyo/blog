@@ -4,236 +4,155 @@
   import type { Tag } from '$lib/posts/tags';
   import { formatDate2JpStyle } from '$lib/util';
   import TagList from './TagList.svelte';
-
   interface Props {
-    /** 表示するポストの配列 */
     posts: PostListItem[];
-    /** タグページの場合のタグ名 */
     tag?: Tag;
-    /** 現在のページ数（1始まり） */
     currentPageNumber: number;
-    /** 総ページ数 */
     totalNumberOfPages: number;
   }
-
-  let { posts, tag = undefined, currentPageNumber, totalNumberOfPages }: Props = $props();
+  let { posts, tag, currentPageNumber, totalNumberOfPages }: Props = $props();
+  const pageHref = (number: number): '/' | `/?${string}` | `/tag/${string}` => {
+    const base = tag ? (`/tag/${encodeURIComponent(tag)}` as const) : '/';
+    return number === 1 ? base : `${base}?p=${number}`;
+  };
 </script>
 
-<!--
-@component
-ポスト一覧を描画するコンポーネント
-- ページネーション機能をもつ
-
-ページネーションのURLは以下の仕様
-- 1ページ目：ベースURLそのまま
-- nページ目(n>1)：ベースURLに `?p={n}` を付与
-
-総ページ数の取得、範囲外URL指定時の挙動はこのコンポーネントの責務外とする
-
-@example
-```svelte
-<PostList {posts} tag="hoge" {currentPageNumber} {totalNumberOfPages}>
-```
--->
-
-<main class="article-list">
+<div class="article-list">
   {#each posts as post (post.slug)}
-    <div class="article">
-      <div class="meta-container">
+    <article>
+      <div class="meta">
         <TagList tags={post.metadata.tags} />
-        <div class="date for-large-screen">
-          {formatDate2JpStyle(post.metadata.publicatedAt)}
-        </div>
+        <time datetime={post.metadata.publicatedAt}
+          >{formatDate2JpStyle(post.metadata.publicatedAt)}</time
+        >
       </div>
-
       <a href={resolve('/post/[slug]', { slug: post.slug })} class="article-link">
-        <h2 class="title">{getFullTitle(post)}</h2>
-
-        <p class="description">
-          {post.description}……
-        </p>
+        <h2>{getFullTitle(post)}</h2>
+        <p class="description">{post.description}</p>
+        <span class="read-more">続きを読む <span aria-hidden="true">↗</span></span>
       </a>
-
-      <div class="meta-container bottom-meta-container for-small-screen">
-        <div class="date">{formatDate2JpStyle(post.metadata.publicatedAt)}</div>
-      </div>
-    </div>
+    </article>
   {/each}
+</div>
 
-  <div class="page-control">
-    <div class="page-button">
-      {#if currentPageNumber === 2}
-        {#if tag}
-          <a href={resolve('/tag/[tag=tag]', { tag })} class="pointer"> &lt; prev </a>
-        {:else}
-          <a href={resolve('/')} class="pointer"> &lt; prev </a>
-        {/if}
-      {:else if currentPageNumber > 2}
-        {#if tag}
-          <a
-            href={resolve(`/tag/${tag}?p=${currentPageNumber - 1}` as `/tag/${string}?${string}`)}
-            class="pointer"
-          >
-            &lt; prev
-          </a>
-        {:else}
-          <a href={resolve(`/?p=${currentPageNumber - 1}` as `/?${string}`)} class="pointer">
-            &lt; prev
-          </a>
-        {/if}
-      {/if}
+{#if totalNumberOfPages > 1}
+  <nav class="pagination" aria-label="記事一覧のページ切り替え">
+    <div>
+      {#if currentPageNumber > 1}<a href={resolve(pageHref(currentPageNumber - 1))} rel="prev"
+          >← 前へ</a
+        >{/if}
     </div>
-    <div class="page-number">
-      {currentPageNumber} / {totalNumberOfPages}
+    <div class="page-numbers">
+      {#each Array.from({ length: totalNumberOfPages }, (_, i) => i + 1) as number (number)}
+        <a
+          href={resolve(pageHref(number))}
+          aria-label={`${number}ページ`}
+          aria-current={number === currentPageNumber ? 'page' : undefined}>{number}</a
+        >
+      {/each}
     </div>
-    <div class="page-button right">
-      {#if currentPageNumber < totalNumberOfPages}
-        {#if tag}
-          <a
-            href={resolve(`/tag/${tag}?p=${currentPageNumber + 1}` as `/tag/${string}?${string}`)}
-            class="pointer"
-          >
-            next &gt;
-          </a>
-        {:else}
-          <a href={resolve(`/?p=${currentPageNumber + 1}` as `/?${string}`)} class="pointer">
-            next &gt;
-          </a>
-        {/if}
-      {/if}
+    <div>
+      {#if currentPageNumber < totalNumberOfPages}<a
+          href={resolve(pageHref(currentPageNumber + 1))}
+          rel="next">次へ →</a
+        >{/if}
     </div>
-  </div>
-</main>
+  </nav>
+{/if}
 
 <style>
-  @media (max-width: 576px) {
-    .for-large-screen {
-      display: none !important;
-    }
-  }
-  @media (min-width: 577px) {
-    .for-small-screen {
-      height: 0;
-      display: none !important;
-    }
-  }
-
   .article-list {
-    margin: calc(var(--spacing-unit) * 10) 0;
+    margin-top: 24px;
   }
-
-  .article {
-    display: flex;
-    flex-direction: column;
-    margin: calc(var(--spacing-unit) * 6) 0;
+  article {
+    padding: 32px 0;
+    border-bottom: 1px solid var(--color-border);
   }
-  .article:not(.article:first-of-type)::before {
-    display: block;
-    box-sizing: content-box;
-    width: 80%;
-    height: calc(
-      var(--spacing-unit) * 6 + 1em
-    ); /* .article:bottom-margin + p:margin-block-end - .article:gap */
-    content: '';
-    margin: 0 auto;
-    border-top: solid 1px var(--color-text-primary);
-  }
-
-  .article-link {
-    display: block;
-    font-family: var(--serif);
-    transition: background-color 0.3s;
-  }
-  .article-link:hover {
-    background-color: var(--color-background-secondary);
-    text-decoration: none;
-  }
-  .article-link h2 {
-    margin: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 4);
-  }
-  .description {
-    margin: calc(var(--spacing-unit) * 4);
-    margin-top: 0;
-    -webkit-box-orient: vertical;
-
-    font-size: 0.95em;
-    text-align: justify;
-    line-height: 1.75;
-    letter-spacing: 0.04em;
-
-    line-clamp: 3;
-    -webkit-line-clamp: 3;
-    display: -webkit-box;
-    overflow: hidden;
-  }
-
-  @media (max-width: 576px) {
-    h2 {
-      font-size: 1.5rem;
-    }
-  }
-
-  .meta-container {
+  .meta {
     display: flex;
     justify-content: space-between;
-    padding: 0 calc(var(--spacing-unit) * 4);
-    font-size: 0.85em;
+    align-items: baseline;
+    gap: 16px;
     color: var(--color-text-secondary);
+    font-size: 12px;
   }
-  .bottom-meta-container {
-    flex-direction: row-reverse;
+  time {
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
   }
-
-  @media (max-width: 576px) {
-    .meta-container {
-      padding: 0;
-    }
-    .article-link h2 {
-      margin: calc(var(--spacing-unit) * 2) 0;
-    }
-    .description {
-      margin-left: 0;
-      line-clamp: 5;
-      -webkit-line-clamp: 5;
-    }
+  .article-link {
+    display: block;
+    padding-block: 8px;
   }
-
-  .page-control {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    width: 100%;
-    margin: 0 auto;
-    margin-top: calc(var(--spacing-unit) * 4);
+  .article-link:hover {
+    text-decoration: none;
   }
-  .page-number {
-    margin: 0 calc(var(--spacing-unit) * 4);
-    font-size: 110%;
-  }
-  @media (max-width: 576px) {
-    .page-control {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      width: 100%;
-      margin: 0 auto;
-    }
-    .page-number {
-      margin: 0;
-    }
-  }
-  .page-button {
-    flex-basis: 4rem;
-    font-size: 110%;
-    color: var(--color-text-primary);
-  }
-  .right {
-    text-align: right;
-  }
-  .pointer {
-    cursor: pointer;
-  }
-  .pointer:hover {
+  .article-link:hover h2 {
     text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 6px;
+  }
+  h2 {
+    margin: 0 0 16px;
+    font-family: var(--serif);
+    font-size: clamp(21px, 2.4vw, 28px);
+    line-height: 1.65;
+  }
+  .description {
+    max-width: 850px;
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-family: var(--serif);
+    line-height: 1.9;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    overflow: hidden;
+  }
+  .read-more {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-top: 16px;
+    font-size: 12px;
+  }
+  .pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-top: 32px;
+    font-size: 14px;
+  }
+  .pagination a {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .page-numbers {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
+  }
+  [aria-current] {
+    background: var(--color-text-primary);
+    color: white;
+  }
+  @media (max-width: 576px) {
+    .meta {
+      flex-direction: column;
+      gap: 4px;
+    }
+    .pagination {
+      flex-wrap: wrap;
+    }
+    .page-numbers {
+      order: 3;
+      width: 100%;
+    }
   }
 </style>

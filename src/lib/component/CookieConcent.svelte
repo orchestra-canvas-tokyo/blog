@@ -138,7 +138,7 @@
   <!-- End Cloudflare Web Analytics -->
 </svelte:head>
 
-<div class="toast" class:show={showToast}>
+<div class="toast" class:show={showToast} role="region" aria-label="Cookieの設定">
   <p>
     このブログでは、サービスの品質向上と利用状況の把握のためにCookieを使用しています。<br />
     詳細は<a href={resolve('/cookie-policy')}>Cookieポリシー</a>をご確認ください。
@@ -185,7 +185,7 @@
   button {
     padding: 0;
     border: none;
-    outline: none;
+
     font: inherit;
     color: inherit;
     background: none;
@@ -199,17 +199,22 @@
 
   .toast {
     position: fixed;
-    bottom: calc(var(--spacing-unit) * 8);
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(640px, calc(100% - 32px));
+    max-height: calc(100dvh - 32px);
+    overflow-y: auto;
     z-index: 2;
 
-    margin: 0 calc(var(--spacing-unit) * 8);
+    margin: 0;
     border: 1px solid var(--color-text-primary);
     padding: calc(var(--spacing-unit) * 6);
 
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
     border-radius: var(--spacing-unit);
 
-    background-color: rgba(255, 255, 255, 0.75);
+    background-color: var(--color-background);
     backdrop-filter: blur(5px);
 
     animation: fadeOut 0.1s ease-in 0s forwards;
@@ -222,7 +227,8 @@
     }
 
     button {
-      padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 4);
+      padding: 8px 16px;
+      min-height: 44px;
       border: 1px solid var(--color-text-primary);
       border-radius: var(--spacing-unit);
     }
@@ -239,7 +245,6 @@
     0% {
       display: none;
       opacity: 0;
-      transform: scale(0.95);
     }
     1% {
       display: block;
@@ -248,7 +253,6 @@
     100% {
       display: block;
       opacity: 1;
-      transform: scale(1);
     }
   }
 
@@ -256,7 +260,6 @@
     0% {
       display: block;
       opacity: 1;
-      transform: scale(1);
     }
     99% {
       display: block;
@@ -265,14 +268,14 @@
     100% {
       display: none;
       opacity: 0;
-      transform: scale(0.95);
     }
   }
 
   .button-container {
     display: flex;
     justify-content: flex-end;
-    gap: calc(var(--spacing-unit) * 6);
+    gap: 12px;
+    flex-wrap: wrap;
   }
 
   a {

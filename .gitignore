@@ -10,3 +10,6 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .codex
 .serena
+
+# Sharing cards are regenerated before dev/build.
+/static/ogp/

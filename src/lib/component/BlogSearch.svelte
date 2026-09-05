@@ -1,6 +1,6 @@
 <script lang="ts">
   import { browser } from '$app/environment';
-  import { pushState } from '$app/navigation';
+  import { pushState, replaceState } from '$app/navigation';
   import { resolve } from '$app/paths';
   import { page } from '$app/state';
   import { onMount, tick } from 'svelte';
@@ -20,6 +20,7 @@
   let searchDialog = $state<HTMLDivElement | null>(null);
   let searchBlogFn = $state<typeof import('$lib/posts/search').searchBlog | null>(null);
   let isSearchLoading = $state(false);
+  let searchLoadFailed = $state(false);
   let focusRestoreTarget: HTMLElement | null = null;
   let searchLoadPromise: Promise<void> | null = null;
   let hasSearchHistoryEntry = false;
@@ -46,13 +47,15 @@
       searchResults.concerts.length
   );
   const resultStatusText = $derived(
-    isSearchLoading && searchBlogFn === null
-      ? '検索を読み込んでいます。'
-      : trimmedSearchQuery.length === 0
-        ? ''
-        : hasAnyResults
-          ? `${resultCount}件の候補があります。`
-          : `「${searchQuery}」に一致する結果は見つかりませんでした。`
+    searchLoadFailed
+      ? '検索を読み込めませんでした。ページを再読み込みしてください。'
+      : isSearchLoading && searchBlogFn === null
+        ? '検索を読み込んでいます。'
+        : trimmedSearchQuery.length === 0
+          ? ''
+          : hasAnyResults
+            ? `${resultCount}件の候補があります。`
+            : `「${searchQuery}」に一致する結果は見つかりませんでした。`
   );
 
   const loadSearch = () => {
@@ -60,10 +63,14 @@
     if (searchLoadPromise !== null) return searchLoadPromise;
 
     isSearchLoading = true;
+    searchLoadFailed = false;
     searchLoadPromise = import('$lib/posts/search')
       .then(async ({ loadBlogSearchIndex, searchBlog }) => {
         await loadBlogSearchIndex();
         searchBlogFn = searchBlog;
+      })
+      .catch(() => {
+        searchLoadFailed = true;
       })
       .finally(() => {
         isSearchLoading = false;
@@ -71,6 +78,12 @@
       });
 
     return searchLoadPromise;
+  };
+
+  const reloadSearch = () => {
+    // A reload must not leave a stale open-dialog entry behind in history.
+    replaceState('', { ...page.state, blogSearchOpen: false });
+    window.location.reload();
   };
 
   const pushSearchHistoryEntry = () => {
@@ -213,6 +226,7 @@
       d="M10.8 5.2a5.6 5.6 0 1 0 0 11.2 5.6 5.6 0 0 0 0-11.2Zm-7.2 5.6a7.2 7.2 0 1 1 12.7 4.6l4 4a.8.8 0 0 1-1.1 1.1l-4-4A7.2 7.2 0 0 1 3.6 10.8Z"
     />
   </svg>
+  <span>記事を検索</span>
 </button>
 
 {#if isSearchOpen}
@@ -298,7 +312,17 @@
       </div>
       <p class="sr-only" role="status" aria-live="polite">{resultStatusText}</p>
 
-      {#if trimmedSearchQuery.length > 0}
+      {#if searchLoadFailed}
+        <div class="search-empty-state">
+          <p>検索を読み込めませんでした。接続を確認してページを再読み込みしてください。</p>
+          <button type="button" onclick={reloadSearch}>ページを再読み込み</button>
+        </div>
+      {:else if trimmedSearchQuery.length === 0}
+        <div class="search-empty-state">
+          <p>気になる曲名や作曲家名を入力してください。</p>
+          <p>例：ベートーヴェン、交響曲、第17回定期</p>
+        </div>
+      {:else if trimmedSearchQuery.length > 0}
         <div class="search-results">
           {#if isSearchLoading && searchBlogFn === null}
             <div class="search-empty-state">
@@ -415,11 +439,12 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    width: calc(var(--spacing-unit) * 11);
+    gap: 8px;
+    padding-inline: 12px;
+    font-size: 13px;
     height: calc(var(--spacing-unit) * 11);
     border: 1px solid rgba(0, 0, 0, 0.16);
     border-radius: calc(var(--spacing-unit) * 2);
-    padding: 0;
     background-color: transparent;
     color: var(--color-text-secondary);
     cursor: pointer;
@@ -443,7 +468,8 @@
   }
 
   .search-trigger:focus-visible {
-    outline: none;
+    outline: 2px solid var(--color-text-primary);
+    outline-offset: 4px;
     background-color: rgba(0, 0, 0, 0.08);
     border-color: rgba(0, 0, 0, 0.32);
     color: var(--color-text-primary);
@@ -699,8 +725,8 @@
     }
 
     .search-dialog {
-      min-height: calc(100vh - var(--spacing-unit) * 8);
-      max-height: calc(100vh - var(--spacing-unit) * 8);
+      min-height: calc(100dvh - var(--spacing-unit) * 8);
+      max-height: calc(100dvh - var(--spacing-unit) * 8);
       padding: calc(var(--spacing-unit) * 5);
     }
 
@@ -713,10 +739,10 @@
     }
 
     .search-input {
-      padding-right: calc(var(--spacing-unit) * 20);
+      padding: 12px;
     }
 
-    .input-shortcut-hint .mac-shortcut {
+    .input-shortcut-hint {
       display: none;
     }
 

@@ -14,7 +14,11 @@
     "precommit": "npm-run-all --parallel check lint:*",
     "format": "prettier --write .",
     "add:program-note": "npx hygen program-note new",
-    "prepare": "husky"
+    "prepare": "husky",
+    "predev": "npm run generate:ogp",
+    "prebuild": "npm run generate:ogp && npm run test:ogp",
+    "generate:ogp": "node scripts/generate-ogp.mjs",
+    "test:ogp": "node --test scripts/ogp/*.test.mjs"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",
@@ -34,6 +38,7 @@
     "postcss": "^8.5.15",
     "prettier": "^3.8.4",
     "prettier-plugin-svelte": "^4.1.0",
+    "sharp": "^0.34.5",
     "svelte": "^5.56.3",
     "svelte-check": "^4.6.0",
     "svelte-eslint-parser": "^1.8.0",
