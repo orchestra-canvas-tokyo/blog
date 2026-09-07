@@ -110,8 +110,6 @@
       <img class="sns-icon" width="25.59" height="22.75" src={youtube} alt="YouTube" />
     </a>
   </div>
-
-  <a href={resolve('/cookie-policy')}>Cookieポリシー</a>
 </footer>
 
 <style>
