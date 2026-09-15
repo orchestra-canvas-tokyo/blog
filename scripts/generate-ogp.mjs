@@ -8,7 +8,7 @@ import { renderCard } from './ogp/render.mjs';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const output = join(root, 'static/ogp');
 const files = await readdir(join(root, 'src/lib/posts'), { recursive: true });
-const cards = [{ slug: 'default', composer: 'PROGRAM NOTES', lines: ['音楽を、もっと深く。'] }];
+const cards = [{ slug: 'default', kind: 'default', lines: ['曲目解説'] }];
 const slugs = new Set(['default']);
 for (const file of files.filter((file) => file.endsWith('/post.svelte')).sort()) {
   const metadata = readMetadata(await readFile(join(root, 'src/lib/posts', file), 'utf8'));
@@ -55,7 +55,9 @@ if (process.argv.includes('--review')) {
     markdown.push(
       `## ${index + 1}. ${card.slug}`,
       '',
-      `Composer: ${card.composer || '音楽コラム'}`,
+      card.kind === 'default'
+        ? 'Default card: blog logo + 曲目解説 only.'
+        : `Composer: ${card.composer || '音楽コラム'}`,
       '',
       `Card title: ${card.lines.join(' / ')}`,
       '',

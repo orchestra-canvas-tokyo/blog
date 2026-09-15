@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { readMetadata, simplifyTitle, getTitleLines, escapeMarkup } from './content.mjs';
-import { renderCard, WIDTH, HEIGHT } from './render.mjs';
+import { renderCard, createCardLayers, MAX_FONT_SIZE, WIDTH, HEIGHT } from './render.mjs';
 
 test('card copy removes keys and catalogues while retaining work numbers and nicknames', () => {
   assert.equal(
@@ -70,4 +70,23 @@ test('every published article has a generated card; no unpublished article has o
     assert.equal(metadata.width, WIDTH, file);
     assert.equal(metadata.height, HEIGHT, file);
   }
+});
+
+test('supporting text never exceeds the fitted main title size', async () => {
+  const layers = await createCardLayers({
+    composer: 'リスト',
+    lines: ['メフィスト・ワルツ第1番「村の居酒屋での踊り」', '短い副題']
+  });
+  const [, composer, title, subtitle] = layers;
+  assert.ok(title.fontSize < 100, 'Exercise a title that shrinks below the composer cap');
+  assert.ok(title.fontSize <= MAX_FONT_SIZE);
+  assert.ok(composer.fontSize <= title.fontSize);
+  assert.ok(subtitle.fontSize <= title.fontSize);
+});
+
+test('default card contains only the masthead and 曲目解説', async () => {
+  const layers = await createCardLayers({ kind: 'default' });
+  assert.equal(layers.length, 2);
+  assert.equal(layers[1].text, '曲目解説');
+  assert.ok(layers[1].fontSize <= MAX_FONT_SIZE);
 });

@@ -10,9 +10,9 @@ Regenerate with `npm run review:ogp`. Commit this index and its PNGs together.
 
 ## 1. default
 
-Composer: PROGRAM NOTES
+Default card: blog logo + 曲目解説 only.
 
-Card title: 音楽を、もっと深く。
+Card title: 曲目解説
 
 ![OGP preview 1: default](default.png)
 
