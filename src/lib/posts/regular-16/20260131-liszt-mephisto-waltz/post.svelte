@@ -8,6 +8,7 @@
     published: true,
     publicatedAt: '2026-01-31T20:00:03+0900',
     title: 'メフィスト・ワルツ第1番「村の居酒屋での踊り」',
+    ogpTitleLines: ['メフィスト・ワルツ第1番', '「村の居酒屋での踊り」'],
     composerSlug: 'liszt',
     concertSlug: 'regular-16',
     // youTubeVideoIds: ['●'],

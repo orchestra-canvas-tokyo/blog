@@ -50,7 +50,7 @@ async function fittedText(text, initialSize, maxHeight) {
 }
 
 /** Fit the main title first so supporting text can never exceed its font size. */
-export async function createCardLayers({ composer, lines, kind = 'article' }) {
+export async function createCardLayers({ composer, lines, kind = 'article', mainTitleLine = 0 }) {
   if (kind !== 'default' && (lines.length < 1 || lines.length > 2)) {
     throw new Error('OGP titles must use one or two lines');
   }
@@ -62,15 +62,22 @@ export async function createCardLayers({ composer, lines, kind = 'article' }) {
   if (kind === 'default') {
     return [logo, await fittedText('曲目解説', MAX_FONT_SIZE, 220)];
   }
-  const title = await fittedText(lines[0], MAX_FONT_SIZE, lines.length === 1 ? 220 : 130);
+  if (!Number.isInteger(mainTitleLine) || mainTitleLine < 0 || mainTitleLine >= lines.length) {
+    throw new Error('Invalid main title line index');
+  }
+  const title = await fittedText(
+    lines[mainTitleLine],
+    MAX_FONT_SIZE,
+    lines.length === 1 ? 220 : 130
+  );
   const composerLayer = await fittedText(
     composer || '音楽コラム',
     Math.min(100, title.fontSize),
     104
   );
-  const layers = [logo, composerLayer, title];
-  for (const line of lines.slice(1)) {
-    layers.push(await fittedText(line, title.fontSize, 130));
+  const layers = [logo, composerLayer];
+  for (const [index, line] of lines.entries()) {
+    layers.push(index === mainTitleLine ? title : await fittedText(line, title.fontSize, 130));
   }
   return layers;
 }

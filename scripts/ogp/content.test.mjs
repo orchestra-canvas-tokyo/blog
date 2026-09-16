@@ -21,12 +21,34 @@ test('card copy removes keys and catalogues while retaining work numbers and nic
   );
 });
 
-test('long-title line breaks preserve identifying subtitles', () => {
-  assert.deepEqual(getTitleLines('20260724-mozart-haffner-symphony', ''), [
-    '交響曲第35番',
-    '『ハフナー』'
-  ]);
-  assert.match(getTitleLines('20251111-stravinsky-the-firebird-suite', '').join(''), /1945年版/);
+test('post metadata supplies exact line breaks with a simplified fallback', () => {
+  const metadata = readMetadata(`<script module>export const metadata = {
+    title: '元の記事タイトル', published: true,
+    ogpTitleLines: ['バレエ音楽『火の鳥』組曲', '（1945年版）'], ogpMainTitleLine: 0
+  };</script>`);
+  assert.deepEqual(getTitleLines(metadata), ['バレエ音楽『火の鳥』組曲', '（1945年版）']);
+  assert.equal(metadata.title, '元の記事タイトル');
+  assert.deepEqual(getTitleLines({ title: '交響曲第35番 ニ長調 K. 385' }), ['交響曲第35番']);
+});
+
+test('invalid or executable OGP metadata is rejected', () => {
+  const parse = (fields) =>
+    readMetadata(`<script module>export const metadata = {
+    title: '曲名', published: true, ${fields}
+  };</script>`);
+  for (const fields of [
+    'ogpTitleLines: []',
+    "ogpTitleLines: [' ']",
+    "ogpTitleLines: ['a', 'b', 'c']",
+    "ogpTitleLines: ['a\\nb']",
+    'ogpTitleLines: [42]',
+    'ogpTitleLines: makeLines()',
+    "ogpTitleLines: ['a', ...extra]",
+    'ogpMainTitleLine: 1',
+    "ogpTitleLines: ['a', 'b'], ogpMainTitleLine: 2",
+    "ogpTitleLines: ['a', 'b'], ogpMainTitleLine: 0.5"
+  ])
+    assert.throws(() => parse(fields), /ogpTitleLines|ogpMainTitleLine/);
 });
 
 test('metadata reader uses the module script, ignores comments, and never executes imports', () => {
@@ -89,4 +111,17 @@ test('default card contains only the masthead and 曲目解説', async () => {
   assert.equal(layers.length, 2);
   assert.equal(layers[1].text, '曲目解説');
   assert.ok(layers[1].fontSize <= MAX_FONT_SIZE);
+});
+
+test('second-row main title controls hierarchy without changing display order', async () => {
+  const lines = ['「ウェストサイドストーリー」より', 'シンフォニックダンス'];
+  const [, composer, intro, main] = await createCardLayers({
+    composer: 'バーンスタイン',
+    lines,
+    mainTitleLine: 1
+  });
+  assert.equal(intro.text, lines[0]);
+  assert.equal(main.text, lines[1]);
+  assert.ok(intro.fontSize <= main.fontSize);
+  assert.ok(composer.fontSize <= main.fontSize);
 });

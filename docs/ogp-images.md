@@ -6,9 +6,9 @@ Every published article receives a 1200 × 630 PNG at `/ogp/<article-slug>.png`.
 
 The selected direction is **OGP style 3 — Editorial**: a left-aligned blog masthead, regular-weight serif composer and title, blue ink on a cool white canvas, and a slim vertical accent. The faint symbol on the right uses the exact OCT icon outlines from the homepage repository. There is no bottom-right triangle, horizontal divider, or footer copy.
 
-The composer uses the existing short name. Both text blocks use the real Noto Serif JP Regular face, OpenType kerning and proportional Japanese spacing (`kern`/`palt`), and -0.018em tracking. Text grows to fill its safe area: a global maximum of 220px. The main title is fitted first; the composer is capped at the smaller of 100px and the fitted main-title size, and secondary title lines cannot exceed that main-title size. All text is fitted against actual rendered width and height in a 970px-wide area starting 86px from the left. The masthead, composer, and each title line are trimmed to their visible bounds, then distributed with equal vertical gaps—including the top and bottom margins (within one pixel of rounding). Work titles omit keys and opus/catalogue numbers, but retain symphony numbers, nicknames, and editions. This transformation applies only to sharing-card copy. Article content, metadata, visible titles, and page titles stay unchanged. Articles without a composer use the label 「音楽コラム」.
+The composer uses the existing short name. Both text blocks use the real Noto Serif JP Regular face, OpenType kerning and proportional Japanese spacing (`kern`/`palt`), and -0.018em tracking. Text grows to fill its safe area: a global maximum of 220px. The main title is fitted first; the composer is capped at the smaller of 100px and the fitted main-title size, and secondary title lines cannot exceed that main-title size. All text is fitted against actual rendered width and height in a 970px-wide area starting 86px from the left. The masthead, composer, and each title line are trimmed to their visible bounds, then distributed with equal vertical gaps—including the top and bottom margins (within one pixel of rounding). Work titles omit keys and opus/catalogue numbers, but retain symphony numbers, nicknames, and editions. This transformation applies only to sharing-card copy. Article prose, existing metadata values, visible titles, and page titles stay unchanged; only optional OGP metadata fields are added. Articles without a composer use the label 「音楽コラム」.
 
-Long works can have explicit line breaks in `scripts/ogp/content.mjs`. The renderer fits text inside safe bounds and fails with an actionable error if a new title cannot fit legibly. Update card-only line breaks in that case, rather than shortening the article's title.
+Long works can have explicit line breaks in their own `post.svelte` metadata. The renderer fits text inside safe bounds and fails with an actionable error if a new title cannot fit legibly. Update card-only line breaks in that case, rather than shortening the article's title.
 
 ## Generation
 
@@ -57,3 +57,23 @@ snapshots. Review snapshots are documentation only; deployed images come from
 
 The default card has a separate centered composition: a larger blog masthead and
 `曲目解説`, with equal vertical gaps. It has no composer row or Japanese tagline.
+
+## Per-post OGP metadata
+
+Keep OGP-only line breaks next to the article title in `metadata`:
+
+```ts
+ogpTitleLines: ['「ウェストサイドストーリー」より', 'シンフォニックダンス'],
+ogpMainTitleLine: 1,
+```
+
+`ogpTitleLines` is optional and contains one or two nonempty literal strings,
+used exactly as written. Without it, the generator simplifies `title` into one line.
+Do not put newline characters inside an entry. `ogpMainTitleLine` is a zero-based
+index: 0 (default) selects the first row, 1 selects the second. Display order stays
+unchanged; the selected row sets the font-size ceiling for the composer and other
+rows. Invalid arrays or indexes fail generation. Metadata is parsed without
+executing post code. These fields do not alter the visible article title or prose.
+
+After editing these fields, run `npm run review:ogp` and commit the refreshed
+all-in-one gallery. Its numbered entries also identify each card's main title row.

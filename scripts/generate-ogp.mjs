@@ -21,7 +21,8 @@ for (const file of files.filter((file) => file.endsWith('/post.svelte')).sort())
   cards.push({
     slug,
     composer: composers[metadata.composerSlug]?.shortName,
-    lines: getTitleLines(slug, metadata.title)
+    lines: getTitleLines(metadata),
+    mainTitleLine: metadata.ogpMainTitleLine ?? 0
   });
 }
 await mkdir(output, { recursive: true });
@@ -60,6 +61,8 @@ if (process.argv.includes('--review')) {
         : `Composer: ${card.composer || '音楽コラム'}`,
       '',
       `Card title: ${card.lines.join(' / ')}`,
+      '',
+      `Main title row: ${(card.mainTitleLine ?? 0) + 1}`,
       '',
       `![OGP preview ${index + 1}: ${card.slug}](${card.slug}.png)`,
       '',

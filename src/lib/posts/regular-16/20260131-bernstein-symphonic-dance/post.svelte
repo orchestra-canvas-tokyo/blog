@@ -14,6 +14,8 @@
     published: true,
     publicatedAt: '2026-01-31T20:00:05+0900',
     title: '「ウェストサイドストーリー」よりシンフォニックダンス',
+    ogpTitleLines: ['「ウェストサイドストーリー」より', 'シンフォニックダンス'],
+    ogpMainTitleLine: 1,
     composerSlug: 'bernstein',
     concertSlug: 'regular-16',
     // youTubeVideoIds: [''],

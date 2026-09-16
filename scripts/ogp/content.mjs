@@ -20,13 +20,21 @@ export function readMetadata(source) {
     throw new Error('Article metadata must be an object literal');
   }
   const result = {};
-  for (const key of ['published', 'title', 'composerSlug']) {
+  for (const key of ['published', 'title', 'composerSlug', 'ogpTitleLines', 'ogpMainTitleLine']) {
     const property = declaration.initializer.properties.find(
       (entry) => ts.isPropertyAssignment(entry) && entry.name.getText(script) === key
     );
     if (!property) continue;
     const value = property.initializer;
-    if (ts.isStringLiteral(value)) result[key] = value.text;
+    if (key === 'ogpTitleLines') {
+      if (!ts.isArrayLiteralExpression(value) || !value.elements.every(ts.isStringLiteral))
+        throw new Error('ogpTitleLines must be an array of string literals');
+      result[key] = value.elements.map((element) => element.text);
+    } else if (key === 'ogpMainTitleLine') {
+      if (!ts.isNumericLiteral(value))
+        throw new Error('ogpMainTitleLine must be a numeric literal');
+      result[key] = Number(value.text);
+    } else if (ts.isStringLiteral(value)) result[key] = value.text;
     else if (value.kind === ts.SyntaxKind.TrueKeyword) result[key] = true;
     else if (value.kind === ts.SyntaxKind.FalseKeyword) result[key] = false;
     else throw new Error(`OGP metadata ${key} must be a literal`);
@@ -34,6 +42,7 @@ export function readMetadata(source) {
   if (typeof result.published !== 'boolean' || typeof result.title !== 'string') {
     throw new Error('Article must declare a title and published flag');
   }
+  getTitleLines(result);
   return result;
 }
 
@@ -47,28 +56,22 @@ export function simplifyTitle(title) {
     .trim();
 }
 
-// Editorial line breaks for long names, without changing article metadata.
-const titleLines = {
-  '20260724-mozart-haffner-symphony': ['交響曲第35番', '『ハフナー』'],
-  '20250118-wagner-tristan-and-iseult': ['楽劇『トリスタンとイゾルデ』より', '前奏曲と愛の死'],
-  '20251111-tchaikovsky-waltz-from-eugene-onegin': [
-    '歌劇《エフゲニー・オネーギン》より',
-    '〈ワルツ〉'
-  ],
-  '20251111-stravinsky-the-firebird-suite': ['バレエ音楽『火の鳥』組曲', '（1945年版）'],
-  '20260131-bernstein-symphonic-dance': [
-    '「ウェストサイドストーリー」より',
-    'シンフォニックダンス'
-  ],
-  '20240909-symphonic-variations-merry-go-around': [
-    'シンフォニック・バリエーション',
-    '『メリーゴーランド』'
-  ],
-  '20260131-liszt-mephisto-waltz': ['メフィスト・ワルツ第1番', '「村の居酒屋での踊り」']
-};
-
-export function getTitleLines(slug, title) {
-  return titleLines[slug] ?? [simplifyTitle(title)];
+/** Explicit card-only copy belongs to each post; otherwise retain one simplified line. */
+export function getTitleLines(metadata) {
+  const lines = metadata.ogpTitleLines ?? [simplifyTitle(metadata.title)];
+  if (
+    !Array.isArray(lines) ||
+    lines.length < 1 ||
+    lines.length > 2 ||
+    lines.some((line) => typeof line !== 'string' || !line.trim() || /[\r\n]/.test(line))
+  ) {
+    throw new Error('ogpTitleLines must contain one or two nonempty single-line strings');
+  }
+  const main = metadata.ogpMainTitleLine ?? 0;
+  if (!Number.isInteger(main) || main < 0 || main >= lines.length) {
+    throw new Error('ogpMainTitleLine must be a valid zero-based title-line index');
+  }
+  return lines;
 }
 
 export function escapeMarkup(text) {
