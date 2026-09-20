@@ -10,11 +10,11 @@ Regenerate with `npm run review:ogp`. Commit this index and its PNGs together.
 
 ## 1. default
 
-Default card: blog logo + 曲目解説 only.
+Default card: centered blog logo only.
 
-Card title: 曲目解説
+No title or tagline.
 
-Main title row: 1
+Logo centered horizontally and vertically.
 
 ![OGP preview 1: default](default.png)
 

@@ -8,7 +8,7 @@ import { renderCard } from './ogp/render.mjs';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const output = join(root, 'static/ogp');
 const files = await readdir(join(root, 'src/lib/posts'), { recursive: true });
-const cards = [{ slug: 'default', kind: 'default', lines: ['曲目解説'] }];
+const cards = [{ slug: 'default', kind: 'default', lines: [] }];
 const slugs = new Set(['default']);
 for (const file of files.filter((file) => file.endsWith('/post.svelte')).sort()) {
   const metadata = readMetadata(await readFile(join(root, 'src/lib/posts', file), 'utf8'));
@@ -57,12 +57,14 @@ if (process.argv.includes('--review')) {
       `## ${index + 1}. ${card.slug}`,
       '',
       card.kind === 'default'
-        ? 'Default card: blog logo + 曲目解説 only.'
+        ? 'Default card: centered blog logo only.'
         : `Composer: ${card.composer || '音楽コラム'}`,
       '',
-      `Card title: ${card.lines.join(' / ')}`,
+      card.kind === 'default' ? 'No title or tagline.' : `Card title: ${card.lines.join(' / ')}`,
       '',
-      `Main title row: ${(card.mainTitleLine ?? 0) + 1}`,
+      card.kind === 'default'
+        ? 'Logo centered horizontally and vertically.'
+        : `Main title row: ${(card.mainTitleLine ?? 0) + 1}`,
       '',
       `![OGP preview ${index + 1}: ${card.slug}](${card.slug}.png)`,
       '',

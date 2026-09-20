@@ -106,11 +106,10 @@ test('supporting text never exceeds the fitted main title size', async () => {
   assert.ok(subtitle.fontSize <= title.fontSize);
 });
 
-test('default card contains only the masthead and 曲目解説', async () => {
+test('default card contains only the masthead', async () => {
   const layers = await createCardLayers({ kind: 'default' });
-  assert.equal(layers.length, 2);
-  assert.equal(layers[1].text, '曲目解説');
-  assert.ok(layers[1].fontSize <= MAX_FONT_SIZE);
+  assert.equal(layers.length, 1);
+  assert.equal(layers[0].text, undefined);
 });
 
 test('second-row main title controls hierarchy without changing display order', async () => {
@@ -124,4 +123,13 @@ test('second-row main title controls hierarchy without changing display order', 
   assert.equal(main.text, lines[1]);
   assert.ok(intro.fontSize <= main.fontSize);
   assert.ok(composer.fontSize <= main.fontSize);
+});
+
+test('article heading uses exactly the fitted composer font size', async () => {
+  for (const composer of ['リスト', 'ヨハン・シュトラウス2世']) {
+    const [heading, name, title] = await createCardLayers({ composer, lines: ['交響曲第1番'] });
+    assert.equal(heading.text, '曲目解説');
+    assert.equal(heading.fontSize, name.fontSize);
+    assert.ok(heading.fontSize <= title.fontSize);
+  }
 });

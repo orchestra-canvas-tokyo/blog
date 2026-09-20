@@ -54,13 +54,13 @@ export async function createCardLayers({ composer, lines, kind = 'article', main
   if (kind !== 'default' && (lines.length < 1 || lines.length > 2)) {
     throw new Error('OGP titles must use one or two lines');
   }
-  const logo = await sharp(Buffer.from(logoSource.replaceAll('#231815', '#20384a')))
-    .resize({ width: kind === 'default' ? 760 : 480 })
-    .trim()
-    .png()
-    .toBuffer({ resolveWithObject: true });
   if (kind === 'default') {
-    return [logo, await fittedText('曲目解説', MAX_FONT_SIZE, 220)];
+    const logo = await sharp(Buffer.from(logoSource.replaceAll('#231815', '#20384a')))
+      .resize({ width: 760 })
+      .trim()
+      .png()
+      .toBuffer({ resolveWithObject: true });
+    return [logo];
   }
   if (!Number.isInteger(mainTitleLine) || mainTitleLine < 0 || mainTitleLine >= lines.length) {
     throw new Error('Invalid main title line index');
@@ -75,7 +75,11 @@ export async function createCardLayers({ composer, lines, kind = 'article', main
     Math.min(100, title.fontSize),
     104
   );
-  const layers = [logo, composerLayer];
+  const heading = await textLayer('曲目解説', composerLayer.fontSize);
+  const layers = [
+    { ...heading, text: '曲目解説', fontSize: composerLayer.fontSize },
+    composerLayer
+  ];
   for (const [index, line] of lines.entries()) {
     layers.push(index === mainTitleLine ? title : await fittedText(line, title.fontSize, 130));
   }
