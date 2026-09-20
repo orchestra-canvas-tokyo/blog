@@ -55,8 +55,10 @@ export async function createCardLayers({ composer, lines, kind = 'article', main
     throw new Error('OGP titles must use one or two lines');
   }
   if (kind === 'default') {
-    const logo = await sharp(Buffer.from(logoSource.replaceAll('#231815', '#20384a')))
-      .resize({ width: 760 })
+    const logo = await sharp(Buffer.from(logoSource.replaceAll('#231815', '#20384a')), {
+      density: 144
+    })
+      .resize({ width: 1120 })
       .trim()
       .png()
       .toBuffer({ resolveWithObject: true });

@@ -55,8 +55,8 @@ numbered Markdown index. Ordinary dev/build generation does not modify the revie
 snapshots. Review snapshots are documentation only; deployed images come from
 `static/ogp/`.
 
-The default card contains only the larger blog masthead, centered horizontally
-and vertically. It has no 「曲目解説」 title, composer row, or tagline.
+The default card contains only the blog masthead, enlarged to 1120px wide on the
+1200px canvas (approximately 40px side margins), centered horizontally and vertically. It has no 「曲目解説」 title, composer row, or tagline.
 
 ## Per-post OGP metadata
 
