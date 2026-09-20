@@ -6,6 +6,8 @@ import { escapeMarkup } from './content.mjs';
 export const WIDTH = 1200;
 export const HEIGHT = 630;
 export const MAX_FONT_SIZE = 220;
+// Match each outer gutter to the name-to-BLOG gap (34.5 units in the 636.16-wide SVG).
+const DEFAULT_LOGO_WIDTH = Math.round(WIDTH / (1 + (2 * 34.5) / 636.16) / 2) * 2;
 const fontfile = fileURLToPath(new URL('./fonts/NotoSerifJP-Regular.otf', import.meta.url));
 const logoFile = fileURLToPath(new URL('../../src/routes/header-large.svg', import.meta.url));
 const SAFE_WIDTH = 970;
@@ -58,7 +60,7 @@ export async function createCardLayers({ composer, lines, kind = 'article', main
     const logo = await sharp(Buffer.from(logoSource.replaceAll('#231815', '#20384a')), {
       density: 144
     })
-      .resize({ width: 1120 })
+      .resize({ width: DEFAULT_LOGO_WIDTH })
       .trim()
       .png()
       .toBuffer({ resolveWithObject: true });

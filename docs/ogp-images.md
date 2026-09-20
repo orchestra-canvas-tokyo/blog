@@ -55,8 +55,11 @@ numbered Markdown index. Ordinary dev/build generation does not modify the revie
 snapshots. Review snapshots are documentation only; deployed images come from
 `static/ogp/`.
 
-The default card contains only the blog masthead, enlarged to 1120px wide on the
-1200px canvas (approximately 40px side margins), centered horizontally and vertically. It has no 「曲目解説」 title, composer row, or tagline.
+The default card contains only the blog masthead, scaled to approximately 1082px wide on the
+1200px canvas, centered horizontally and vertically. The approximately 59px side
+margins match the larger internal gap between the orchestra name and BLOG
+(34.5 units in the 636.16-wide source SVG). The original logo proportions and
+internal spacing are preserved; top and bottom margins follow its aspect ratio. It has no 「曲目解説」 title, composer row, or tagline.
 
 ## Per-post OGP metadata
 
