@@ -9,7 +9,6 @@
   import youtube from './sns-youtube.svg';
   import { onMount } from 'svelte';
   import BlogSearch from '$lib/component/BlogSearch.svelte';
-  import CookieConcent from '$lib/component/CookieConcent.svelte';
   interface Props {
     children?: import('svelte').Snippet;
   }
@@ -58,6 +57,12 @@
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/yakuhanjp@4.1.1/dist/css/yakuhanmp_s.css"
   />
+  <!-- Cloudflare Web Analytics -->
+  <script
+    defer
+    src="https://static.cloudflareinsights.com/beacon.min.js"
+    data-cf-beacon={'{"token": "8044631ab8984a1c90d8d1f3f8fb4d33"}'}
+  ></script>
 </svelte:head>
 
 <header>
@@ -105,8 +110,6 @@
       <img class="sns-icon" width="25.59" height="22.75" src={youtube} alt="YouTube" />
     </a>
   </div>
-
-  <CookieConcent />
 </footer>
 
 <style>
