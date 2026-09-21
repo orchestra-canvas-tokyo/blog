@@ -141,7 +141,7 @@ test('article heading uses exactly the fitted composer font size', async () => {
   }
 });
 
-test('adopted header aligns the label with wordmark text ink and stays inside safe bounds', async () => {
+test('mixed-script header shares a roman baseline and gives Japanese optical emphasis', async () => {
   for (const composer of ['モーツァルト', 'ヨハン・シュトラウス2世']) {
     const [heading] = await createCardLayers({ composer, lines: ['交響曲第1番'] });
     const header = await createArticleHeader(heading);
@@ -162,11 +162,27 @@ test('adopted header aligns the label with wordmark text ink and stays inside sa
           }
         }
       }
-      return { height: bottom - top + 1, center: (top + bottom) / 2 };
+      return { top, bottom, height: bottom - top + 1 };
     };
     const wordmark = bounds(Math.ceil((448 / 2438.71) * logoWidth), logoWidth);
     const label = bounds(logoWidth + 96, info.width);
-    assert.ok(Math.abs(wordmark.height - label.height) <= 2);
-    assert.ok(Math.abs(wordmark.center - label.center) <= 1.5);
+    const romanBaseline = (logoWidth * 236.67) / 2438.71;
+    assert.ok(Math.abs(label.top + heading.baseline - romanBaseline) <= 1.5);
+    assert.ok(
+      label.height > wordmark.height,
+      'Japanese should have more visual height than the wordmark'
+    );
+    assert.ok(
+      heading.baseline < heading.info.height,
+      'Japanese ink extends below the roman baseline'
+    );
+    for (let y = 0; y < info.height; y++)
+      for (let x = logoWidth + 96; x < info.width; x++) {
+        const offset = (y * info.width + x) * 4;
+        assert.ok(
+          !(data[offset + 3] > 0 && data[offset] > 200 && data[offset + 1] < 40),
+          'Baseline probe must not appear in output'
+        );
+      }
   }
 });

@@ -14,9 +14,14 @@ const logoFile = fileURLToPath(new URL('./oct-wordmark.svg', import.meta.url));
 const SAFE_WIDTH = 970;
 const HEADER_WIDTH = WIDTH - 172;
 const HEADER_SEPARATION = 96;
-// Wordmark text bounds, excluding the icon, in the 2438.71 × 325.29 SVG.
-const WORDMARK_INK_HEIGHT = 193;
-const WORDMARK_CENTER_Y = 186.5;
+// Flat T in the outlined wordmark: cap top 102.52, roman baseline 236.67.
+const WORDMARK_BASELINE = 236.67;
+const WORDMARK_CAP_HEIGHT = 134.15;
+// Bundled Noto Serif JP OS/2 capHeight=729, unitsPerEm=1000.
+// Optical choice: Japanese is 120% of the equivalent Latin em size.
+const LATIN_CAP_PER_JAPANESE_EM = 0.729 / 1.2;
+const wordmarkWidth = (fontSize) =>
+  Math.round((fontSize * LATIN_CAP_PER_JAPANESE_EM * 2438.71) / WORDMARK_CAP_HEIGHT);
 const logoSource = await readFile(logoFile, 'utf8');
 const defaultLogoSource = await readFile(
   new URL('../../src/routes/header-large.svg', import.meta.url),
@@ -90,17 +95,13 @@ export async function createCardLayers({ composer, lines, kind = 'article', main
     104
   );
   let heading = await textLayer('曲目解説', composerLayer.fontSize);
-  // Preserve equal heading/composer type size while allowing the larger logo
-  // needed to match the name itself, rather than the full logo's height.
+  // Fit the optical mixed-script sizing while keeping heading/composer sizes equal.
   while (
-    Math.round((heading.info.height * 2438.71) / WORDMARK_INK_HEIGHT) +
-      HEADER_SEPARATION +
-      heading.info.width >
+    wordmarkWidth(composerLayer.fontSize) + HEADER_SEPARATION + heading.info.width >
     HEADER_WIDTH
   ) {
     if (composerLayer.fontSize <= 36) throw new Error('Article header cannot fit');
-    const contentWidth =
-      Math.round((heading.info.height * 2438.71) / WORDMARK_INK_HEIGHT) + heading.info.width;
+    const contentWidth = wordmarkWidth(composerLayer.fontSize) + heading.info.width;
     const nextSize = Math.max(
       36,
       Math.min(
@@ -113,26 +114,65 @@ export async function createCardLayers({ composer, lines, kind = 'article', main
     composerLayer = await fittedText(composer || '音楽コラム', nextSize, 104);
     heading = await textLayer('曲目解説', composerLayer.fontSize);
   }
-  const layers = [
-    { ...heading, text: '曲目解説', fontSize: composerLayer.fontSize },
-    composerLayer
-  ];
+  const measuredHeading = await baselineHeading(composerLayer.fontSize);
+  const layers = [measuredHeading, composerLayer];
   for (const [index, line] of lines.entries()) {
     layers.push(index === mainTitleLine ? title : await fittedText(line, title.fontSize, 130));
   }
   return layers;
 }
 
+// Render a temporary Latin H on the same Pango line to recover its roman baseline
+// after trimming. The red probe is excluded from the returned image.
+async function baselineHeading(size) {
+  const { data, info } = await sharp({
+    text: {
+      text: `<span foreground="#20384a" font_features="kern=1,palt=1" letter_spacing="${Math.round(-0.018 * size * 1024)}">曲目解説</span><span foreground="#ff0000">H</span>`,
+      font: `Noto Serif JP ${size}`,
+      fontfile,
+      rgba: true,
+      dpi: 72
+    }
+  })
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  let left = info.width,
+    right = -1,
+    top = info.height,
+    bottom = -1,
+    baseline = -1;
+  for (let y = 0; y < info.height; y++)
+    for (let x = 0; x < info.width; x++) {
+      const offset = (y * info.width + x) * 4;
+      if (data[offset + 3] === 0) continue;
+      if (data[offset] > 200 && data[offset + 1] < 40) {
+        if (data[offset + 3] > 128) baseline = Math.max(baseline, y + 1);
+      } else {
+        left = Math.min(left, x);
+        right = Math.max(right, x);
+        top = Math.min(top, y);
+        bottom = Math.max(bottom, y);
+      }
+    }
+  if (baseline < 0 || right < left) throw new Error('Cannot measure header baseline');
+  const layer = await sharp(data, { raw: info })
+    .extract({ left, top, width: right - left + 1, height: bottom - top + 1 })
+    .png()
+    .toBuffer({ resolveWithObject: true });
+  return { ...layer, text: '曲目解説', fontSize: size, baseline: baseline - top };
+}
+
 export async function createArticleHeader(heading) {
   const logo = await sharp(Buffer.from(logoSource.replaceAll('#fff', '#20384a')), {
     density: 144
   })
-    .resize({ width: Math.round((heading.info.height * 2438.71) / WORDMARK_INK_HEIGHT) })
+    .resize({ width: wordmarkWidth(heading.fontSize) })
     .png()
     .toBuffer({ resolveWithObject: true });
-  const headingTop = Math.round(
-    (logo.info.height * WORDMARK_CENTER_Y) / 325.29 - heading.info.height / 2
-  );
+  const romanBaseline = (logo.info.width * WORDMARK_BASELINE) / 2438.71;
+  const headingTop = Math.round(romanBaseline - heading.baseline);
+  if (headingTop < 0 || headingTop + heading.info.height > logo.info.height)
+    throw new Error('Header label exceeds logo row');
   const width = logo.info.width + HEADER_SEPARATION + heading.info.width;
   if (width > HEADER_WIDTH) throw new Error('Article header exceeds safe width');
   const separator = Buffer.from(

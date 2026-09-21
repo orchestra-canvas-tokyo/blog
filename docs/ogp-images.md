@@ -84,16 +84,32 @@ all-in-one gallery. Its numbered entries also identify each card's main title ro
 
 ## Adopted article header
 
-The first row combines the horizontal OCT logo, a middle dot, and 「曲目解説」. The
-logo-to-label separation is 96px, with the dot centered in that gap. The Japanese
-label matches the visible height and vertical center of **Orchestra Canvas Tokyo lettering inside the logo**,
-not the full logo height. The logo retains its aspect ratio. Heading and composer
-font sizes are reduced together when needed to keep the combined row within its
-safe width; they remain equal and never exceed the main title size.
+The first row combines the horizontal OCT logo, a middle dot, and 「曲目解説」.
+The logo-to-label separation is 96px. The default retains the original blog logo,
+centered at 1058px wide with 71px side margins.
 
-The horizontal OCT wordmark is used only for article headers. The default uses
-the original blog logo from `src/routes/header-large.svg`.
-Header fitting measures the name lettering independently of the taller symbol.
-The 96px separator gap is retained; the label and composer are scaled down together
-as necessary to accommodate this longer wordmark. The default keeps its centered
-1058px-wide logo and 71px side margins.
+## Mixed Japanese/Latin typography
+
+The header aligns **roman baselines**, rather than matching ink bounding-box centers.
+Japanese ideographic and Latin roman baselines are distinct; this does not mean
+forcing the visible bottoms of the characters to coincide.
+
+Sources consulted:
+
+- [Adobe: composite-font size and baseline adjustment](https://www.adobe.com/jp/creativecloud/roc/blog/design/quiz-challenge/composite-font.html): adjust size and baseline for the particular font pairing; inspect the result visually.
+- [OpenType BASE specification](https://learn.microsoft.com/en-us/typography/opentype/spec/base): different scripts have distinct baseline coordinates and alignment depends on the selected baseline system.
+
+Implementation for this specific logo/font pairing:
+
+- The outlined logo has no font metrics. Its flat T provides the roman baseline
+  at SVG y=236.67 and cap height 134.15 (cap top y=102.52).
+- The bundled Noto Serif JP font has 1000 units/em and OS/2 cap height 729.
+  We optically size Japanese to 120% of the equivalent Latin em. This is a
+  design choice for this header, **not a universal rule or a ratio mandated by the sources**.
+- A temporary Latin H is rendered on the same Pango line as 「曲目解説」 to recover
+  the roman baseline after trimming. The probe is excluded from the output.
+  Japanese extends naturally below that shared baseline.
+- Heading and composer remain the same font size and never exceed the main title.
+  Fitting accounts for the complete header and the fixed 96px gap.
+- Pixel tests check baseline alignment within 1.5px, a visibly larger Japanese
+  label, absence of the probe, and safe-width bounds. The default image is unchanged.
