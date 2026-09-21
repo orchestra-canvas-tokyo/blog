@@ -7,6 +7,7 @@
     published: true,
     publicatedAt: '2025-11-11T20:00:02+0900',
     title: 'バレエ音楽 『火の鳥』組曲（1945年版）',
+    ogpTitleLines: ['バレエ音楽『火の鳥』組曲', '（1945年版）'],
     composerSlug: 'stravinsky',
     concertSlug: 'regular-15',
     youTubeVideoIds: ['25eVPkMWyjY'],

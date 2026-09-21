@@ -25,7 +25,14 @@
   };
 </script>
 
-<Meta title={getFullTitle(data.post)} canonical={`/post/${data.slug}`} />
+<Meta
+  title={getFullTitle(data.post)}
+  canonical={`/post/${data.slug}`}
+  description={data.post.description.slice(0, 160)}
+  image={`/ogp/${data.slug}.png`}
+  imageAlt={getFullTitle(data.post)}
+  type="article"
+/>
 
 <div class="meta meta-container for-small-screen">
   <div></div>

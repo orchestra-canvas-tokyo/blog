@@ -15,6 +15,8 @@
     published: true,
     publicatedAt: '2025-01-18T20:00:00+0900',
     title: '楽劇『トリスタンとイゾルデ』 より前奏曲と愛の死',
+    ogpTitleLines: ['楽劇『トリスタンとイゾルデ』より', '前奏曲と愛の死'],
+    ogpMainTitleLine: 1,
     composerSlug: 'wagner',
     concertSlug: 'regular-13',
     tags: ['曲目解説', '第13回定期', 'ワーグナー'],

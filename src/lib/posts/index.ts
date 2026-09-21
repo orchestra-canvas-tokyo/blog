@@ -9,6 +9,10 @@ export type Metadata = {
   published: boolean;
   publicatedAt: string;
   title: string;
+  /** OGP専用の改行位置。記事タイトル・本文には影響しない */
+  ogpTitleLines?: [string] | [string, string];
+  /** 文字サイズの基準にする行。0: 1行目（既定）、1: 2行目 */
+  ogpMainTitleLine?: 0 | 1;
   composerSlug?: composerSlug;
   arrangerSlug?: composerSlug;
   concertSlug: concertSlug;
