@@ -3,7 +3,7 @@
 54 images: 53 published articles and the default sharing card.
 Each preview is the exact 1200 × 630 PNG generated for deployment.
 
-Article headers use the horizontal OCT logo, a middle dot in a 120px gap, and 曲目解説 aligned to the visible height and center of the Orchestra Canvas Tokyo lettering.
+Article headers use the horizontal OCT logo, a middle dot in a 96px gap, and 曲目解説 aligned to the visible height and center of the Orchestra Canvas Tokyo lettering.
 
 Review composer/title legibility, line breaks, equal vertical spacing, and the pale OCT logo at the bottom-right edge.
 Keys and catalogue numbers are omitted only from sharing cards; article content is unchanged.
@@ -12,7 +12,7 @@ Regenerate with `npm run review:ogp`. Commit this index and its PNGs together.
 
 ## 1. default
 
-Default card: centered horizontal OCT logo only.
+Default card: centered blog logo only.
 
 No title or tagline.
 

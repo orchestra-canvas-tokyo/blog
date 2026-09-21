@@ -146,7 +146,7 @@ test('adopted header aligns the label with wordmark text ink and stays inside sa
     const [heading] = await createCardLayers({ composer, lines: ['交響曲第1番'] });
     const header = await createArticleHeader(heading);
     assert.ok(header.info.width <= WIDTH - 172);
-    const logoWidth = header.info.width - 120 - heading.info.width;
+    const logoWidth = header.info.width - 96 - heading.info.width;
     const { data, info } = await sharp(header.data)
       .ensureAlpha()
       .raw()
@@ -165,7 +165,7 @@ test('adopted header aligns the label with wordmark text ink and stays inside sa
       return { height: bottom - top + 1, center: (top + bottom) / 2 };
     };
     const wordmark = bounds(Math.ceil((448 / 2438.71) * logoWidth), logoWidth);
-    const label = bounds(logoWidth + 120, info.width);
+    const label = bounds(logoWidth + 96, info.width);
     assert.ok(Math.abs(wordmark.height - label.height) <= 2);
     assert.ok(Math.abs(wordmark.center - label.center) <= 1.5);
   }

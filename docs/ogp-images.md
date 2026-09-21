@@ -56,7 +56,7 @@ numbered Markdown index. Ordinary dev/build generation does not modify the revie
 snapshots. Review snapshots are documentation only; deployed images come from
 `static/ogp/`.
 
-The default card contains only the horizontal OCT wordmark, scaled to 1058px wide on the
+The default card contains only the original blog masthead, scaled to 1058px wide on the
 1200px canvas, centered horizontally and vertically. Its 71px side margins are
 approximately 20% larger than the previous 59px gutters, which were based on the
 internal gap between the orchestra name and BLOG. Original logo proportions and
@@ -85,14 +85,15 @@ all-in-one gallery. Its numbered entries also identify each card's main title ro
 ## Adopted article header
 
 The first row combines the horizontal OCT logo, a middle dot, and 「曲目解説」. The
-logo-to-label separation is 120px, with the dot centered in that gap. The Japanese
+logo-to-label separation is 96px, with the dot centered in that gap. The Japanese
 label matches the visible height and vertical center of **Orchestra Canvas Tokyo lettering inside the logo**,
 not the full logo height. The logo retains its aspect ratio. Heading and composer
 font sizes are reduced together when needed to keep the combined row within its
 safe width; they remain equal and never exceed the main title size.
 
-The horizontal OCT wordmark is used for both the default card and article headers.
+The horizontal OCT wordmark is used only for article headers. The default uses
+the original blog logo from `src/routes/header-large.svg`.
 Header fitting measures the name lettering independently of the taller symbol.
-The 120px separator gap is retained; the label and composer are scaled down together
+The 96px separator gap is retained; the label and composer are scaled down together
 as necessary to accommodate this longer wordmark. The default keeps its centered
 1058px-wide logo and 71px side margins.

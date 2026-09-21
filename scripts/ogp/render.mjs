@@ -13,11 +13,15 @@ const fontfile = fileURLToPath(new URL('./fonts/NotoSerifJP-Regular.otf', import
 const logoFile = fileURLToPath(new URL('./oct-wordmark.svg', import.meta.url));
 const SAFE_WIDTH = 970;
 const HEADER_WIDTH = WIDTH - 172;
-const HEADER_SEPARATION = 120;
+const HEADER_SEPARATION = 96;
 // Wordmark text bounds, excluding the icon, in the 2438.71 × 325.29 SVG.
 const WORDMARK_INK_HEIGHT = 193;
 const WORDMARK_CENTER_Y = 186.5;
 const logoSource = await readFile(logoFile, 'utf8');
+const defaultLogoSource = await readFile(
+  new URL('../../src/routes/header-large.svg', import.meta.url),
+  'utf8'
+);
 const symbolFile = fileURLToPath(new URL('./oct-symbol.svg', import.meta.url));
 
 /** Use regular-weight outlines, proportional Japanese spacing, and restrained negative tracking. */
@@ -63,7 +67,7 @@ export async function createCardLayers({ composer, lines, kind = 'article', main
     throw new Error('OGP titles must use one or two lines');
   }
   if (kind === 'default') {
-    const logo = await sharp(Buffer.from(logoSource.replaceAll('#fff', '#20384a')), {
+    const logo = await sharp(Buffer.from(defaultLogoSource.replaceAll('#231815', '#20384a')), {
       density: 144
     })
       .resize({ width: DEFAULT_LOGO_WIDTH })
