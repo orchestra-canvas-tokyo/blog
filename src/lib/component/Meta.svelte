@@ -17,7 +17,7 @@
     title,
     canonical,
     image = '/ogp/default.png',
-    imageAlt = 'Orchestra Canvas Tokyo Blogのロゴ',
+    imageAlt = 'Orchestra Canvas Tokyoのロゴ',
     type = 'website',
     description = 'Orchestra Canvas Tokyoの公式ブログ。演奏会の曲目解説・プログラムノートをお届けします。'
   }: Props = $props();

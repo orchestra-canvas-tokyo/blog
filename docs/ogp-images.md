@@ -4,7 +4,7 @@ Every published article receives a 1200 × 630 PNG at `/ogp/<article-slug>.png`.
 
 ## Design
 
-The selected direction is **OGP style 3 — Editorial**: a left-aligned blog logo, middle dot, and 「曲目解説」 heading, regular-weight serif composer and title, blue ink on a cool white canvas, and a slim vertical accent. The faint symbol on the right uses the exact OCT icon outlines from the homepage repository. There is no bottom-right triangle, horizontal divider, or footer copy.
+The selected direction is **OGP style 3 — Editorial**: a left-aligned horizontal OCT logo, middle dot, and 「曲目解説」 heading, regular-weight serif composer and title, blue ink on a cool white canvas, and a slim vertical accent. The faint symbol on the right uses the exact OCT icon outlines from the homepage repository. There is no bottom-right triangle, horizontal divider, or footer copy.
 
 The composer uses the existing short name. Both text blocks use the real Noto Serif JP Regular face, OpenType kerning and proportional Japanese spacing (`kern`/`palt`), and -0.018em tracking. Text grows to fill its safe area: a global maximum of 220px. The main title is fitted first; the composer is capped at the smaller of 100px and the fitted main-title size, and secondary title lines cannot exceed that main-title size. All text is fitted against actual rendered width and height in a 970px-wide area starting 86px from the left. The heading (at exactly the composer’s fitted font size), composer, and each title line are trimmed to their visible bounds, then distributed with equal vertical gaps—including the top and bottom margins (within one pixel of rounding). Work titles omit keys and opus/catalogue numbers, but retain symphony numbers, nicknames, and editions. This transformation applies only to sharing-card copy. Article prose, existing metadata values, visible titles, and page titles stay unchanged; only optional OGP metadata fields are added. Articles without a composer use the label 「音楽コラム」.
 
@@ -29,8 +29,9 @@ Sharing-image URLs use the current page origin, allowing draft preview images to
 `orchestra-canvas-tokyo/homepage/src/routes/logo.svg` at commit
 `8e7babd933b93dc6db7938616242e4cceb8748ba`. Only the wrapper/viewBox and fill
 are adapted to display the standalone icon in pale blue, anchored flush to the
-right and bottom edges. The blog masthead
-continues to use `src/routes/header-large.svg`.
+right and bottom edges. The horizontal OCT wordmark
+uses `scripts/ogp/oct-wordmark.svg`, copied from the homepage’s
+`src/routes/logo.svg` (also used for the comparison proposals).
 
 ## Font and reproducibility
 
@@ -55,7 +56,7 @@ numbered Markdown index. Ordinary dev/build generation does not modify the revie
 snapshots. Review snapshots are documentation only; deployed images come from
 `static/ogp/`.
 
-The default card contains only the blog masthead, scaled to 1058px wide on the
+The default card contains only the horizontal OCT wordmark, scaled to 1058px wide on the
 1200px canvas, centered horizontally and vertically. Its 71px side margins are
 approximately 20% larger than the previous 59px gutters, which were based on the
 internal gap between the orchestra name and BLOG. Original logo proportions and
@@ -83,9 +84,15 @@ all-in-one gallery. Its numbered entries also identify each card's main title ro
 
 ## Adopted article header
 
-The first row combines the blog logo, a middle dot, and 「曲目解説」. The
+The first row combines the horizontal OCT logo, a middle dot, and 「曲目解説」. The
 logo-to-label separation is 120px, with the dot centered in that gap. The Japanese
-label matches the visible height and vertical center of **BLOG inside the logo**,
+label matches the visible height and vertical center of **Orchestra Canvas Tokyo lettering inside the logo**,
 not the full logo height. The logo retains its aspect ratio. Heading and composer
 font sizes are reduced together when needed to keep the combined row within its
 safe width; they remain equal and never exceed the main title size.
+
+The horizontal OCT wordmark is used for both the default card and article headers.
+Header fitting measures the name lettering independently of the taller symbol.
+The 120px separator gap is retained; the label and composer are scaled down together
+as necessary to accommodate this longer wordmark. The default keeps its centered
+1058px-wide logo and 71px side margins.

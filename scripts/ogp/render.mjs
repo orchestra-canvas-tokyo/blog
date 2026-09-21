@@ -10,13 +10,13 @@ export const MAX_FONT_SIZE = 220;
 const DEFAULT_LOGO_MARGIN = Math.round(59 * 1.2);
 const DEFAULT_LOGO_WIDTH = WIDTH - DEFAULT_LOGO_MARGIN * 2;
 const fontfile = fileURLToPath(new URL('./fonts/NotoSerifJP-Regular.otf', import.meta.url));
-const logoFile = fileURLToPath(new URL('../../src/routes/header-large.svg', import.meta.url));
+const logoFile = fileURLToPath(new URL('./oct-wordmark.svg', import.meta.url));
 const SAFE_WIDTH = 970;
 const HEADER_WIDTH = WIDTH - 172;
 const HEADER_SEPARATION = 120;
-// BLOG ink bounds measured in the original 636.16 × 124.52 SVG.
-const BLOG_INK_HEIGHT = 82.5;
-const BLOG_CENTER_Y = 66.75;
+// Wordmark text bounds, excluding the icon, in the 2438.71 × 325.29 SVG.
+const WORDMARK_INK_HEIGHT = 193;
+const WORDMARK_CENTER_Y = 186.5;
 const logoSource = await readFile(logoFile, 'utf8');
 const symbolFile = fileURLToPath(new URL('./oct-symbol.svg', import.meta.url));
 
@@ -63,7 +63,7 @@ export async function createCardLayers({ composer, lines, kind = 'article', main
     throw new Error('OGP titles must use one or two lines');
   }
   if (kind === 'default') {
-    const logo = await sharp(Buffer.from(logoSource.replaceAll('#231815', '#20384a')), {
+    const logo = await sharp(Buffer.from(logoSource.replaceAll('#fff', '#20384a')), {
       density: 144
     })
       .resize({ width: DEFAULT_LOGO_WIDTH })
@@ -87,15 +87,26 @@ export async function createCardLayers({ composer, lines, kind = 'article', main
   );
   let heading = await textLayer('曲目解説', composerLayer.fontSize);
   // Preserve equal heading/composer type size while allowing the larger logo
-  // needed to match BLOG itself, rather than the full logo's height.
+  // needed to match the name itself, rather than the full logo's height.
   while (
-    Math.round((heading.info.height * 636.16) / BLOG_INK_HEIGHT) +
+    Math.round((heading.info.height * 2438.71) / WORDMARK_INK_HEIGHT) +
       HEADER_SEPARATION +
       heading.info.width >
     HEADER_WIDTH
   ) {
     if (composerLayer.fontSize <= 36) throw new Error('Article header cannot fit');
-    composerLayer = await fittedText(composer || '音楽コラム', composerLayer.fontSize - 2, 104);
+    const contentWidth =
+      Math.round((heading.info.height * 2438.71) / WORDMARK_INK_HEIGHT) + heading.info.width;
+    const nextSize = Math.max(
+      36,
+      Math.min(
+        composerLayer.fontSize - 2,
+        Math.floor(
+          (composerLayer.fontSize * (HEADER_WIDTH - HEADER_SEPARATION)) / contentWidth / 2
+        ) * 2
+      )
+    );
+    composerLayer = await fittedText(composer || '音楽コラム', nextSize, 104);
     heading = await textLayer('曲目解説', composerLayer.fontSize);
   }
   const layers = [
@@ -109,14 +120,14 @@ export async function createCardLayers({ composer, lines, kind = 'article', main
 }
 
 export async function createArticleHeader(heading) {
-  const logo = await sharp(Buffer.from(logoSource.replaceAll('#231815', '#20384a')), {
+  const logo = await sharp(Buffer.from(logoSource.replaceAll('#fff', '#20384a')), {
     density: 144
   })
-    .resize({ width: Math.round((heading.info.height * 636.16) / BLOG_INK_HEIGHT) })
+    .resize({ width: Math.round((heading.info.height * 2438.71) / WORDMARK_INK_HEIGHT) })
     .png()
     .toBuffer({ resolveWithObject: true });
   const headingTop = Math.round(
-    (logo.info.height * BLOG_CENTER_Y) / 124.52 - heading.info.height / 2
+    (logo.info.height * WORDMARK_CENTER_Y) / 325.29 - heading.info.height / 2
   );
   const width = logo.info.width + HEADER_SEPARATION + heading.info.width;
   if (width > HEADER_WIDTH) throw new Error('Article header exceeds safe width');

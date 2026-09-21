@@ -42,7 +42,7 @@ if (process.argv.includes('--review')) {
     `${cards.length} images: ${cards.length - 1} published articles and the default sharing card.`,
     'Each preview is the exact 1200 × 630 PNG generated for deployment.',
     '',
-    'Article headers use the blog logo, a middle dot in a 120px gap, and 曲目解説 aligned to the visible height and center of BLOG.',
+    'Article headers use the horizontal OCT logo, a middle dot in a 120px gap, and 曲目解説 aligned to the visible height and center of the Orchestra Canvas Tokyo lettering.',
     '',
     'Review composer/title legibility, line breaks, equal vertical spacing, and the pale OCT logo at the bottom-right edge.',
     'Keys and catalogue numbers are omitted only from sharing cards; article content is unchanged.',
@@ -59,7 +59,7 @@ if (process.argv.includes('--review')) {
       `## ${index + 1}. ${card.slug}`,
       '',
       card.kind === 'default'
-        ? 'Default card: centered blog logo only.'
+        ? 'Default card: centered horizontal OCT logo only.'
         : `Composer: ${card.composer || '音楽コラム'}`,
       '',
       card.kind === 'default' ? 'No title or tagline.' : `Card title: ${card.lines.join(' / ')}`,

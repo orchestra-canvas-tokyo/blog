@@ -141,7 +141,7 @@ test('article heading uses exactly the fitted composer font size', async () => {
   }
 });
 
-test('adopted header aligns the label with BLOG ink and stays inside safe bounds', async () => {
+test('adopted header aligns the label with wordmark text ink and stays inside safe bounds', async () => {
   for (const composer of ['モーツァルト', 'ヨハン・シュトラウス2世']) {
     const [heading] = await createCardLayers({ composer, lines: ['交響曲第1番'] });
     const header = await createArticleHeader(heading);
@@ -164,9 +164,9 @@ test('adopted header aligns the label with BLOG ink and stays inside safe bounds
       }
       return { height: bottom - top + 1, center: (top + bottom) / 2 };
     };
-    const blog = bounds(Math.ceil((341.5 / 636.16) * logoWidth), logoWidth);
+    const wordmark = bounds(Math.ceil((448 / 2438.71) * logoWidth), logoWidth);
     const label = bounds(logoWidth + 120, info.width);
-    assert.ok(Math.abs(blog.height - label.height) <= 2);
-    assert.ok(Math.abs(blog.center - label.center) <= 1.5);
+    assert.ok(Math.abs(wordmark.height - label.height) <= 2);
+    assert.ok(Math.abs(wordmark.center - label.center) <= 1.5);
   }
 });
