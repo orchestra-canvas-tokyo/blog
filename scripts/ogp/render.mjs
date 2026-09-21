@@ -17,11 +17,10 @@ const HEADER_SEPARATION = 96;
 // Flat T in the outlined wordmark: cap top 102.52, roman baseline 236.67.
 const WORDMARK_BASELINE = 236.67;
 const WORDMARK_CAP_HEIGHT = 134.15;
-// Bundled Noto Serif JP OS/2 capHeight=729, unitsPerEm=1000.
-// Optical choice: Japanese is 120% of the equivalent Latin em size.
-const LATIN_CAP_PER_JAPANESE_EM = 0.729 / 1.2;
-const wordmarkWidth = (fontSize) =>
-  Math.round((fontSize * LATIN_CAP_PER_JAPANESE_EM * 2438.71) / WORDMARK_CAP_HEIGHT);
+// Match visible Japanese ink to Latin capitals, with 8% optical emphasis.
+const JAPANESE_TO_CAP_HEIGHT = 1.08;
+const wordmarkWidth = (heading) =>
+  Math.round(((heading.info.height / JAPANESE_TO_CAP_HEIGHT) * 2438.71) / WORDMARK_CAP_HEIGHT);
 const logoSource = await readFile(logoFile, 'utf8');
 const defaultLogoSource = await readFile(
   new URL('../../src/routes/header-large.svg', import.meta.url),
@@ -96,12 +95,9 @@ export async function createCardLayers({ composer, lines, kind = 'article', main
   );
   let heading = await textLayer('曲目解説', composerLayer.fontSize);
   // Fit the optical mixed-script sizing while keeping heading/composer sizes equal.
-  while (
-    wordmarkWidth(composerLayer.fontSize) + HEADER_SEPARATION + heading.info.width >
-    HEADER_WIDTH
-  ) {
+  while (wordmarkWidth(heading) + HEADER_SEPARATION + heading.info.width > HEADER_WIDTH) {
     if (composerLayer.fontSize <= 36) throw new Error('Article header cannot fit');
-    const contentWidth = wordmarkWidth(composerLayer.fontSize) + heading.info.width;
+    const contentWidth = wordmarkWidth(heading) + heading.info.width;
     const nextSize = Math.max(
       36,
       Math.min(
@@ -166,7 +162,7 @@ export async function createArticleHeader(heading) {
   const logo = await sharp(Buffer.from(logoSource.replaceAll('#fff', '#20384a')), {
     density: 144
   })
-    .resize({ width: wordmarkWidth(heading.fontSize) })
+    .resize({ width: wordmarkWidth(heading) })
     .png()
     .toBuffer({ resolveWithObject: true });
   const romanBaseline = (logo.info.width * WORDMARK_BASELINE) / 2438.71;

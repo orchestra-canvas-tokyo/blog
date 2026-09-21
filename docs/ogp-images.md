@@ -103,13 +103,13 @@ Implementation for this specific logo/font pairing:
 
 - The outlined logo has no font metrics. Its flat T provides the roman baseline
   at SVG y=236.67 and cap height 134.15 (cap top y=102.52).
-- The bundled Noto Serif JP font has 1000 units/em and OS/2 cap height 729.
-  We optically size Japanese to 120% of the equivalent Latin em. This is a
-  design choice for this header, **not a universal rule or a ratio mandated by the sources**.
+- Japanese visible ink is sized to **108% of the wordmark's Latin cap height**.
+  This replaces the earlier em-based 120% setting: the target is now near-equal
+  visible size with a small optical allowance for Japanese stroke density.
+  The 8% allowance is a design choice for this pairing, not a universal rule.
 - A temporary Latin H is rendered on the same Pango line as 「曲目解説」 to recover
   the roman baseline after trimming. The probe is excluded from the output.
   Japanese extends naturally below that shared baseline.
 - Heading and composer remain the same font size and never exceed the main title.
   Fitting accounts for the complete header and the fixed 96px gap.
-- Pixel tests check baseline alignment within 1.5px, a visibly larger Japanese
-  label, absence of the probe, and safe-width bounds. The default image is unchanged.
+- Pixel tests check baseline alignment within 1.5px, Japanese ink approximately 8% taller than Latin capitals, absence of the probe, and safe-width bounds. The default image is unchanged.

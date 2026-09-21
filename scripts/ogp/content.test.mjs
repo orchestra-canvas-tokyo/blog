@@ -141,7 +141,7 @@ test('article heading uses exactly the fitted composer font size', async () => {
   }
 });
 
-test('mixed-script header shares a roman baseline and gives Japanese optical emphasis', async () => {
+test('mixed-script header shares a roman baseline with Japanese near Latin cap height', async () => {
   for (const composer of ['モーツァルト', 'ヨハン・シュトラウス2世']) {
     const [heading] = await createCardLayers({ composer, lines: ['交響曲第1番'] });
     const header = await createArticleHeader(heading);
@@ -164,13 +164,13 @@ test('mixed-script header shares a roman baseline and gives Japanese optical emp
       }
       return { top, bottom, height: bottom - top + 1 };
     };
-    const wordmark = bounds(Math.ceil((448 / 2438.71) * logoWidth), logoWidth);
     const label = bounds(logoWidth + 96, info.width);
     const romanBaseline = (logoWidth * 236.67) / 2438.71;
     assert.ok(Math.abs(label.top + heading.baseline - romanBaseline) <= 1.5);
+    const capHeight = (logoWidth * 134.15) / 2438.71;
     assert.ok(
-      label.height > wordmark.height,
-      'Japanese should have more visual height than the wordmark'
+      Math.abs(label.height / capHeight - 1.08) < 0.05,
+      'Japanese ink is approximately 8% taller than capitals'
     );
     assert.ok(
       heading.baseline < heading.info.height,
