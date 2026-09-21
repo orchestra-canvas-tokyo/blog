@@ -10,6 +10,7 @@ import {
   createCardLayers,
   createArticleHeader,
   MAX_FONT_SIZE,
+  HEADING_FONT_SIZE,
   WIDTH,
   HEIGHT
 } from './render.mjs';
@@ -132,16 +133,24 @@ test('second-row main title controls hierarchy without changing display order', 
   assert.ok(composer.fontSize <= main.fontSize);
 });
 
-test('article heading uses exactly the fitted composer font size', async () => {
-  for (const composer of ['リスト', 'ヨハン・シュトラウス2世']) {
-    const [heading, name, title] = await createCardLayers({ composer, lines: ['交響曲第1番'] });
+test('article heading stays fixed independently of composer and title fitting', async () => {
+  const short = await createCardLayers({ composer: 'リスト', lines: ['交響曲第1番'] });
+  const long = await createCardLayers({
+    composer: 'ヨハン・シュトラウス2世',
+    lines: ['メフィスト・ワルツ第1番「村の居酒屋での踊り」']
+  });
+  for (const [heading] of [short, long]) {
     assert.equal(heading.text, '曲目解説');
-    assert.equal(heading.fontSize, name.fontSize);
-    assert.ok(heading.fontSize <= title.fontSize);
+    assert.equal(heading.fontSize, HEADING_FONT_SIZE);
+    assert.equal(heading.fontSize, 58);
   }
+  assert.notEqual(short[1].fontSize, long[1].fontSize);
+  assert.notEqual(short[2].fontSize, long[2].fontSize);
+  assert.deepEqual(short[0].data, long[0].data);
+  assert.ok(short[1].fontSize > short[0].fontSize);
 });
 
-test('mixed-script header shares a roman baseline with Japanese near Latin cap height', async () => {
+test('mixed-script header preserves original scale and shares a roman baseline', async () => {
   for (const composer of ['モーツァルト', 'ヨハン・シュトラウス2世']) {
     const [heading] = await createCardLayers({ composer, lines: ['交響曲第1番'] });
     const header = await createArticleHeader(heading);
@@ -167,11 +176,7 @@ test('mixed-script header shares a roman baseline with Japanese near Latin cap h
     const label = bounds(logoWidth + 96, info.width);
     const romanBaseline = (logoWidth * 236.67) / 2438.71;
     assert.ok(Math.abs(label.top + heading.baseline - romanBaseline) <= 1.5);
-    const capHeight = (logoWidth * 134.15) / 2438.71;
-    assert.ok(
-      Math.abs(label.height / capHeight - 1.08) < 0.05,
-      'Japanese ink is approximately 8% taller than capitals'
-    );
+    assert.equal(logoWidth, Math.round((heading.info.height * 2438.71) / 193));
     assert.ok(
       heading.baseline < heading.info.height,
       'Japanese ink extends below the roman baseline'

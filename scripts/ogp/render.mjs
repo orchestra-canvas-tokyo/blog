@@ -6,6 +6,7 @@ import { escapeMarkup } from './content.mjs';
 export const WIDTH = 1200;
 export const HEIGHT = 630;
 export const MAX_FONT_SIZE = 220;
+export const HEADING_FONT_SIZE = 58;
 // Increase the previous 59px outer gutters by 20%, rounded to whole pixels.
 const DEFAULT_LOGO_MARGIN = Math.round(59 * 1.2);
 const DEFAULT_LOGO_WIDTH = WIDTH - DEFAULT_LOGO_MARGIN * 2;
@@ -16,11 +17,8 @@ const HEADER_WIDTH = WIDTH - 172;
 const HEADER_SEPARATION = 96;
 // Flat T in the outlined wordmark: cap top 102.52, roman baseline 236.67.
 const WORDMARK_BASELINE = 236.67;
-const WORDMARK_CAP_HEIGHT = 134.15;
-// Match visible Japanese ink to Latin capitals, with 8% optical emphasis.
-const JAPANESE_TO_CAP_HEIGHT = 1.08;
-const wordmarkWidth = (heading) =>
-  Math.round(((heading.info.height / JAPANESE_TO_CAP_HEIGHT) * 2438.71) / WORDMARK_CAP_HEIGHT);
+// Preserve the original header scale; only its label's vertical position is adjusted.
+const wordmarkWidth = (heading) => Math.round((heading.info.height * 2438.71) / 193);
 const logoSource = await readFile(logoFile, 'utf8');
 const defaultLogoSource = await readFile(
   new URL('../../src/routes/header-large.svg', import.meta.url),
@@ -88,29 +86,13 @@ export async function createCardLayers({ composer, lines, kind = 'article', main
     MAX_FONT_SIZE,
     lines.length === 1 ? 220 : 130
   );
-  let composerLayer = await fittedText(
+  const composerLayer = await fittedText(
     composer || '音楽コラム',
     Math.min(100, title.fontSize),
     104
   );
-  let heading = await textLayer('曲目解説', composerLayer.fontSize);
-  // Fit the optical mixed-script sizing while keeping heading/composer sizes equal.
-  while (wordmarkWidth(heading) + HEADER_SEPARATION + heading.info.width > HEADER_WIDTH) {
-    if (composerLayer.fontSize <= 36) throw new Error('Article header cannot fit');
-    const contentWidth = wordmarkWidth(heading) + heading.info.width;
-    const nextSize = Math.max(
-      36,
-      Math.min(
-        composerLayer.fontSize - 2,
-        Math.floor(
-          (composerLayer.fontSize * (HEADER_WIDTH - HEADER_SEPARATION)) / contentWidth / 2
-        ) * 2
-      )
-    );
-    composerLayer = await fittedText(composer || '音楽コラム', nextSize, 104);
-    heading = await textLayer('曲目解説', composerLayer.fontSize);
-  }
-  const measuredHeading = await baselineHeading(composerLayer.fontSize);
+  // Branding size is independent of composer/title fitting, including long titles.
+  const measuredHeading = await baselineHeading(HEADING_FONT_SIZE);
   const layers = [measuredHeading, composerLayer];
   for (const [index, line] of lines.entries()) {
     layers.push(index === mainTitleLine ? title : await fittedText(line, title.fontSize, 130));
@@ -135,7 +117,6 @@ async function baselineHeading(size) {
   let left = info.width,
     right = -1,
     top = info.height,
-    bottom = -1,
     baseline = -1;
   for (let y = 0; y < info.height; y++)
     for (let x = 0; x < info.width; x++) {
@@ -147,14 +128,10 @@ async function baselineHeading(size) {
         left = Math.min(left, x);
         right = Math.max(right, x);
         top = Math.min(top, y);
-        bottom = Math.max(bottom, y);
       }
     }
   if (baseline < 0 || right < left) throw new Error('Cannot measure header baseline');
-  const layer = await sharp(data, { raw: info })
-    .extract({ left, top, width: right - left + 1, height: bottom - top + 1 })
-    .png()
-    .toBuffer({ resolveWithObject: true });
+  const layer = await textLayer('曲目解説', size);
   return { ...layer, text: '曲目解説', fontSize: size, baseline: baseline - top };
 }
 
@@ -172,7 +149,7 @@ export async function createArticleHeader(heading) {
   const width = logo.info.width + HEADER_SEPARATION + heading.info.width;
   if (width > HEADER_WIDTH) throw new Error('Article header exceeds safe width');
   const separator = Buffer.from(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${logo.info.height}"><circle cx="${logo.info.width + HEADER_SEPARATION / 2}" cy="${headingTop + heading.info.height / 2}" r="4" fill="#456982"/></svg>`
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${logo.info.height}"><circle cx="${logo.info.width + HEADER_SEPARATION / 2}" cy="${Math.round((logo.info.height * 186.5) / 325.29 - heading.info.height / 2) + heading.info.height / 2}" r="4" fill="#456982"/></svg>`
   );
   return sharp({
     create: { width, height: logo.info.height, channels: 4, background: '#00000000' }

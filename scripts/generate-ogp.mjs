@@ -42,7 +42,7 @@ if (process.argv.includes('--review')) {
     `${cards.length} images: ${cards.length - 1} published articles and the default sharing card.`,
     'Each preview is the exact 1200 × 630 PNG generated for deployment.',
     '',
-    'Article headers use the horizontal OCT logo, a middle dot in a 96px gap, and 曲目解説 aligned to the wordmark’s roman baseline, with Japanese ink approximately 8% taller than Latin capitals.',
+    'Article headers preserve the original logo scale and 96px middle-dot gap. 曲目解説 is fixed at 58px and aligned to the wordmark’s roman baseline. Composer and program sizes fit independently of this heading.',
     '',
     'Review composer/title legibility, line breaks, equal vertical spacing, and the pale OCT logo at the bottom-right edge.',
     'Keys and catalogue numbers are omitted only from sharing cards; article content is unchanged.',

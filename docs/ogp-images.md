@@ -6,7 +6,7 @@ Every published article receives a 1200 × 630 PNG at `/ogp/<article-slug>.png`.
 
 The selected direction is **OGP style 3 — Editorial**: a left-aligned horizontal OCT logo, middle dot, and 「曲目解説」 heading, regular-weight serif composer and title, blue ink on a cool white canvas, and a slim vertical accent. The faint symbol on the right uses the exact OCT icon outlines from the homepage repository. There is no bottom-right triangle, horizontal divider, or footer copy.
 
-The composer uses the existing short name. Both text blocks use the real Noto Serif JP Regular face, OpenType kerning and proportional Japanese spacing (`kern`/`palt`), and -0.018em tracking. Text grows to fill its safe area: a global maximum of 220px. The main title is fitted first; the composer is capped at the smaller of 100px and the fitted main-title size, and secondary title lines cannot exceed that main-title size. All text is fitted against actual rendered width and height in a 970px-wide area starting 86px from the left. The heading (at exactly the composer’s fitted font size), composer, and each title line are trimmed to their visible bounds, then distributed with equal vertical gaps—including the top and bottom margins (within one pixel of rounding). Work titles omit keys and opus/catalogue numbers, but retain symphony numbers, nicknames, and editions. This transformation applies only to sharing-card copy. Article prose, existing metadata values, visible titles, and page titles stay unchanged; only optional OGP metadata fields are added. Articles without a composer use the label 「音楽コラム」.
+The composer uses the existing short name. Both text blocks use the real Noto Serif JP Regular face, OpenType kerning and proportional Japanese spacing (`kern`/`palt`), and -0.018em tracking. Text grows to fill its safe area: a global maximum of 220px. The main title is fitted first; the composer is capped at the smaller of 100px and the fitted main-title size, and secondary title lines cannot exceed that main-title size. All text is fitted against actual rendered width and height in a 970px-wide area starting 86px from the left. The header row, composer, and each title line are trimmed to their visible bounds, then distributed with equal vertical gaps—including the top and bottom margins (within one pixel of rounding). Work titles omit keys and opus/catalogue numbers, but retain symphony numbers, nicknames, and editions. This transformation applies only to sharing-card copy. Article prose, existing metadata values, visible titles, and page titles stay unchanged; only optional OGP metadata fields are added. Articles without a composer use the label 「音楽コラム」.
 
 Long works can have explicit line breaks in their own `post.svelte` metadata. The renderer fits text inside safe bounds and fails with an actionable error if a new title cannot fit legibly. Update card-only line breaks in that case, rather than shortening the article's title.
 
@@ -103,13 +103,17 @@ Implementation for this specific logo/font pairing:
 
 - The outlined logo has no font metrics. Its flat T provides the roman baseline
   at SVG y=236.67 and cap height 134.15 (cap top y=102.52).
-- Japanese visible ink is sized to **108% of the wordmark's Latin cap height**.
-  This replaces the earlier em-based 120% setting: the target is now near-equal
-  visible size with a small optical allowance for Japanese stroke density.
-  The 8% allowance is a design choice for this pairing, not a universal rule.
+- 「曲目解説」 is fixed at **58px**, preserving the original proposal's size.
+  The logo retains that proposal's scale (Japanese ink height matched to the
+  logo name's full 193-unit ink height), with only label positioning adjusted.
+  The middle dot retains its original position.
 - A temporary Latin H is rendered on the same Pango line as 「曲目解説」 to recover
   the roman baseline after trimming. The probe is excluded from the output.
   Japanese extends naturally below that shared baseline.
-- Heading and composer remain the same font size and never exceed the main title.
-  Fitting accounts for the complete header and the fixed 96px gap.
-- Pixel tests check baseline alignment within 1.5px, Japanese ink approximately 8% taller than Latin capitals, absence of the probe, and safe-width bounds. The default image is unchanged.
+- Heading size is independent of composer and title sizes. The composer and
+  program lines fit their own available space; no equality rule couples them to
+  the heading. The main-title hierarchy and 220px maximum still apply.
+- Pixel tests check baseline alignment within 1.5px, preserved logo scale,
+  absence of the probe, and safe-width bounds. Regression tests verify that
+  changing composer/title lengths cannot change the 58px heading. The default
+  image is unchanged.
