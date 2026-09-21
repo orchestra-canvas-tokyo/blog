@@ -13,6 +13,8 @@
     published: true,
     publicatedAt: '2025-11-11T20:00:00+0900',
     title: '歌劇《エフゲニー・オネーギン》より〈ワルツ〉 作品24 ',
+    ogpTitleLines: ['歌劇《エフゲニー・オネーギン》より', '〈ワルツ〉'],
+    ogpMainTitleLine: 1,
     composerSlug: 'tchaikovsky',
     concertSlug: 'regular-15',
     youTubeVideoIds: ['OyG6i7XK63c'],

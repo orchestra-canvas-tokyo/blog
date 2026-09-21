@@ -13,6 +13,7 @@
     published: true,
     publicatedAt: '2024-09-09T20:00:03+0900',
     title: 'シンフォニック・バリエーション『メリーゴーランド』',
+    ogpTitleLines: ['シンフォニック・バリエーション', '『メリーゴーランド』'],
     composerSlug: 'hisaishi',
     concertSlug: 'regular-11',
     youTubeVideoIds: ['22XqFmJml_o'],

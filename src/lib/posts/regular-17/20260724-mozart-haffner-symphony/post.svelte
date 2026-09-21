@@ -6,6 +6,7 @@
     published: true,
     publicatedAt: '2026-07-24T20:00:01+0900',
     title: '交響曲第35番 ニ長調 K. 385 『ハフナー』',
+    ogpTitleLines: ['交響曲第35番', '『ハフナー』'],
     composerSlug: 'mozart',
     concertSlug: 'regular-17',
     tags: ['曲目解説', '第17回定期', 'モーツァルト']
