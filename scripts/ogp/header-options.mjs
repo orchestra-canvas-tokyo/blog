@@ -25,7 +25,6 @@ if (logo.info.width + separation + heading.info.width > WIDTH - 172) {
 const gap =
   (HEIGHT - layers.reduce((sum, layer) => sum + layer.info.height, 0)) / (layers.length + 1);
 const logoLeft = 86;
-const headingLeft = logoLeft + logo.info.width + separation;
 const separatorX = logoLeft + logo.info.width + separation / 2;
 const centerY = gap + heading.info.height / 2;
 const symbol = await sharp(fileURLToPath(new URL('./oct-symbol.svg', import.meta.url)))
@@ -45,7 +44,21 @@ const variants = [
     separator: `<circle cx="${separatorX}" cy="${centerY}" r="4" fill="#456982"/>`
   }
 ];
+for (const spacing of [96, 120, 144]) {
+  const x = logoLeft + logo.info.width + spacing / 2;
+  variants.push({
+    name: `dot-spacing-${spacing}`,
+    title: `中黒・要素間${spacing}px`,
+    separation: spacing,
+    separator: `<circle cx="${x}" cy="${centerY}" r="4" fill="#456982"/>`
+  });
+}
 for (const variant of variants) {
+  const spacing = variant.separation ?? separation;
+  const headingLeft = logoLeft + logo.info.width + spacing;
+  if (headingLeft + heading.info.width > WIDTH - 86) {
+    throw new Error(`Header exceeds safe width: ${variant.name}`);
+  }
   const decoration = Buffer.from(
     `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}"><path d="M34 38V592" stroke="#456982" stroke-width="3"/>${variant.separator}</svg>`
   );
@@ -67,7 +80,7 @@ for (const variant of variants) {
 }
 await writeFile(
   new URL('README.md', output),
-  `# ブログロゴ＋曲目解説：区切りの比較\n\n同じ曲名、文字サイズ、配置で区切りだけを比較する3案です。現行OGPには未適用です。\n\nロゴと「曲目解説」の実際の描画高さを${heading.info.height}pxに揃え、上下中心も合わせています。文字サイズは作曲家名と同じ${heading.fontSize}px、要素間は${separation}pxです。\n\n${variants.map((variant, index) => `## ${index + 1}. ${variant.title}\n\n![${variant.title}](${variant.name}.png)\n`).join('\n')}\n再生成：\`node scripts/ogp/header-options.mjs\`。ブログの既存SVGロゴを使用しています。\n`
+  `# ブログロゴ＋曲目解説：区切りの比較\n\n同じ曲名・文字サイズで、区切りと要素間の余白を比較する案です。現行OGPには未適用です。\n\nロゴと「曲目解説」の実際の描画高さを${heading.info.height}pxに揃え、上下中心も合わせています。文字サイズは作曲家名と同じ${heading.fontSize}px、元の3案の要素間は${separation}pxです。追加の中黒案は96・120・144pxで、ロゴと文字のサイズは変えていません。要素間の距離には直径8pxの中黒を含み、点の左右の空白はそれぞれ44・56・68pxです。\n\n${variants.map((variant, index) => `## ${index + 1}. ${variant.title}\n\n![${variant.title}](${variant.name}.png)\n`).join('\n')}\n再生成：\`node scripts/ogp/header-options.mjs\`。ブログの既存SVGロゴを使用しています。\n`
 );
 console.log({
   logoWidth: logo.info.width,
