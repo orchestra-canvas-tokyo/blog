@@ -5,7 +5,14 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { readMetadata, simplifyTitle, getTitleLines, escapeMarkup } from './content.mjs';
-import { renderCard, createCardLayers, MAX_FONT_SIZE, WIDTH, HEIGHT } from './render.mjs';
+import {
+  renderCard,
+  createCardLayers,
+  createArticleHeader,
+  MAX_FONT_SIZE,
+  WIDTH,
+  HEIGHT
+} from './render.mjs';
 
 test('card copy removes keys and catalogues while retaining work numbers and nicknames', () => {
   assert.equal(
@@ -131,5 +138,35 @@ test('article heading uses exactly the fitted composer font size', async () => {
     assert.equal(heading.text, '曲目解説');
     assert.equal(heading.fontSize, name.fontSize);
     assert.ok(heading.fontSize <= title.fontSize);
+  }
+});
+
+test('adopted header aligns the label with BLOG ink and stays inside safe bounds', async () => {
+  for (const composer of ['モーツァルト', 'ヨハン・シュトラウス2世']) {
+    const [heading] = await createCardLayers({ composer, lines: ['交響曲第1番'] });
+    const header = await createArticleHeader(heading);
+    assert.ok(header.info.width <= WIDTH - 172);
+    const logoWidth = header.info.width - 120 - heading.info.width;
+    const { data, info } = await sharp(header.data)
+      .ensureAlpha()
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+    const bounds = (left, right) => {
+      let top = info.height,
+        bottom = -1;
+      for (let y = 0; y < info.height; y++) {
+        for (let x = left; x < right; x++) {
+          if (data[(y * info.width + x) * 4 + 3] > 128) {
+            top = Math.min(top, y);
+            bottom = Math.max(bottom, y);
+          }
+        }
+      }
+      return { height: bottom - top + 1, center: (top + bottom) / 2 };
+    };
+    const blog = bounds(Math.ceil((341.5 / 636.16) * logoWidth), logoWidth);
+    const label = bounds(logoWidth + 120, info.width);
+    assert.ok(Math.abs(blog.height - label.height) <= 2);
+    assert.ok(Math.abs(blog.center - label.center) <= 1.5);
   }
 });

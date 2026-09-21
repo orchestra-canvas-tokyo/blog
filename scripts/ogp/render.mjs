@@ -12,6 +12,11 @@ const DEFAULT_LOGO_WIDTH = WIDTH - DEFAULT_LOGO_MARGIN * 2;
 const fontfile = fileURLToPath(new URL('./fonts/NotoSerifJP-Regular.otf', import.meta.url));
 const logoFile = fileURLToPath(new URL('../../src/routes/header-large.svg', import.meta.url));
 const SAFE_WIDTH = 970;
+const HEADER_WIDTH = WIDTH - 172;
+const HEADER_SEPARATION = 120;
+// BLOG ink bounds measured in the original 636.16 × 124.52 SVG.
+const BLOG_INK_HEIGHT = 82.5;
+const BLOG_CENTER_Y = 66.75;
 const logoSource = await readFile(logoFile, 'utf8');
 const symbolFile = fileURLToPath(new URL('./oct-symbol.svg', import.meta.url));
 
@@ -75,12 +80,24 @@ export async function createCardLayers({ composer, lines, kind = 'article', main
     MAX_FONT_SIZE,
     lines.length === 1 ? 220 : 130
   );
-  const composerLayer = await fittedText(
+  let composerLayer = await fittedText(
     composer || '音楽コラム',
     Math.min(100, title.fontSize),
     104
   );
-  const heading = await textLayer('曲目解説', composerLayer.fontSize);
+  let heading = await textLayer('曲目解説', composerLayer.fontSize);
+  // Preserve equal heading/composer type size while allowing the larger logo
+  // needed to match BLOG itself, rather than the full logo's height.
+  while (
+    Math.round((heading.info.height * 636.16) / BLOG_INK_HEIGHT) +
+      HEADER_SEPARATION +
+      heading.info.width >
+    HEADER_WIDTH
+  ) {
+    if (composerLayer.fontSize <= 36) throw new Error('Article header cannot fit');
+    composerLayer = await fittedText(composer || '音楽コラム', composerLayer.fontSize - 2, 104);
+    heading = await textLayer('曲目解説', composerLayer.fontSize);
+  }
   const layers = [
     { ...heading, text: '曲目解説', fontSize: composerLayer.fontSize },
     composerLayer
@@ -91,8 +108,36 @@ export async function createCardLayers({ composer, lines, kind = 'article', main
   return layers;
 }
 
+export async function createArticleHeader(heading) {
+  const logo = await sharp(Buffer.from(logoSource.replaceAll('#231815', '#20384a')), {
+    density: 144
+  })
+    .resize({ width: Math.round((heading.info.height * 636.16) / BLOG_INK_HEIGHT) })
+    .png()
+    .toBuffer({ resolveWithObject: true });
+  const headingTop = Math.round(
+    (logo.info.height * BLOG_CENTER_Y) / 124.52 - heading.info.height / 2
+  );
+  const width = logo.info.width + HEADER_SEPARATION + heading.info.width;
+  if (width > HEADER_WIDTH) throw new Error('Article header exceeds safe width');
+  const separator = Buffer.from(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${logo.info.height}"><circle cx="${logo.info.width + HEADER_SEPARATION / 2}" cy="${headingTop + heading.info.height / 2}" r="4" fill="#456982"/></svg>`
+  );
+  return sharp({
+    create: { width, height: logo.info.height, channels: 4, background: '#00000000' }
+  })
+    .composite([
+      { input: logo.data, left: 0, top: 0 },
+      { input: separator, left: 0, top: 0 },
+      { input: heading.data, left: logo.info.width + HEADER_SEPARATION, top: headingTop }
+    ])
+    .png()
+    .toBuffer({ resolveWithObject: true });
+}
+
 export async function renderCard(card) {
   const layers = await createCardLayers(card);
+  if (card.kind !== 'default') layers[0] = await createArticleHeader(layers[0]);
 
   // Space actual visible glyph bounds evenly, including the top and bottom margins.
   const inkHeight = layers.reduce((height, layer) => height + layer.info.height, 0);
