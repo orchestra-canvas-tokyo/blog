@@ -53,6 +53,12 @@ for (const spacing of [96, 120, 144]) {
     separator: `<circle cx="${x}" cy="${centerY}" r="4" fill="#456982"/>`
   });
 }
+variants.push({
+  name: 'rule-spacing-120',
+  title: '細い縦線・要素間120px',
+  separation: 120,
+  separator: `<path d="M${logoLeft + logo.info.width + 60} ${centerY - heading.info.height * 0.35}v${heading.info.height * 0.7}" stroke="#82929e" stroke-width="1.5"/>`
+});
 for (const variant of variants) {
   const spacing = variant.separation ?? separation;
   const headingLeft = logoLeft + logo.info.width + spacing;
@@ -78,9 +84,17 @@ for (const variant of variants) {
     .png({ compressionLevel: 9 })
     .toFile(fileURLToPath(new URL(`${variant.name}.png`, output)));
 }
+// Full-size side-by-side comparison: left = rule, right = dot.
+await sharp({ create: { width: WIDTH * 2, height: HEIGHT, channels: 3, background: '#f8fafc' } })
+  .composite([
+    { input: fileURLToPath(new URL('rule-spacing-120.png', output)), left: 0, top: 0 },
+    { input: fileURLToPath(new URL('dot-spacing-120.png', output)), left: WIDTH, top: 0 }
+  ])
+  .png()
+  .toFile(fileURLToPath(new URL('rule-vs-dot-120.png', output)));
 await writeFile(
   new URL('README.md', output),
-  `# ブログロゴ＋曲目解説：区切りの比較\n\n同じ曲名・文字サイズで、区切りと要素間の余白を比較する案です。現行OGPには未適用です。\n\nロゴと「曲目解説」の実際の描画高さを${heading.info.height}pxに揃え、上下中心も合わせています。文字サイズは作曲家名と同じ${heading.fontSize}px、元の3案の要素間は${separation}pxです。追加の中黒案は96・120・144pxで、ロゴと文字のサイズは変えていません。要素間の距離には直径8pxの中黒を含み、点の左右の空白はそれぞれ44・56・68pxです。\n\n${variants.map((variant, index) => `## ${index + 1}. ${variant.title}\n\n![${variant.title}](${variant.name}.png)\n`).join('\n')}\n再生成：\`node scripts/ogp/header-options.mjs\`。ブログの既存SVGロゴを使用しています。\n`
+  `# ブログロゴ＋曲目解説：区切りの比較\n\n## 120pxの余白で比較：左が細い縦線、右が中黒\n\n![細い縦線と中黒の横並び比較](rule-vs-dot-120.png)\n\n同じ曲名・文字サイズで、区切りと要素間の余白を比較する案です。現行OGPには未適用です。\n\nロゴと「曲目解説」の実際の描画高さを${heading.info.height}pxに揃え、上下中心も合わせています。文字サイズは作曲家名と同じ${heading.fontSize}px、元の3案の要素間は${separation}pxです。追加の中黒案は96・120・144pxで、ロゴと文字のサイズは変えていません。要素間の距離には直径8pxの中黒を含み、点の左右の空白はそれぞれ44・56・68pxです。\n\n${variants.map((variant, index) => `## ${index + 1}. ${variant.title}\n\n![${variant.title}](${variant.name}.png)\n`).join('\n')}\n再生成：\`node scripts/ogp/header-options.mjs\`。ブログの既存SVGロゴを使用しています。\n`
 );
 console.log({
   logoWidth: logo.info.width,
