@@ -45,7 +45,7 @@
       </direction>
       <direction placement="above">
         <direction-type>
-          <words>Sehr lebhaft und energisch</words>
+          <words font-style="normal" font-weight="bold">Sehr lebhaft und energisch</words>
         </direction-type>
       </direction>
       <note>

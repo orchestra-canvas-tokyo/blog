@@ -111,6 +111,23 @@ test('rendering keeps cropped ties/slurs, produces vector glyphs, and is determi
         [0, 16, 16, 21, 28][index]
       );
       assert.doesNotMatch(mobile, /Voice/);
+      const words = [
+        ['Lento', 'marcato'],
+        ['Sehr lebhaft und energisch'],
+        ['Ziemlich breit'],
+        ['Moderato espressivo']
+      ][index - 1];
+      for (const output of [document, mobileDocument]) {
+        for (const word of words) {
+          const styled = [...output.getElementsByTagName('tspan')].find(
+            (element) =>
+              element.getAttribute('class') === 'rend' && element.textContent.trim() === word
+          );
+          assert.ok(styled, `Missing indication: ${word}`);
+          assert.equal(styled.getAttribute('font-style'), 'normal');
+          assert.equal(styled.getAttribute('font-weight'), 'bold');
+        }
+      }
       // Spans crossing system boundaries are drawn in multiple segments.
       for (const name of ['tie', 'slur']) {
         assert.ok(groups.filter((g) => g.getAttribute('class') === name).length >= count(name));

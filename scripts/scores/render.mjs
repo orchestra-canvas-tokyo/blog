@@ -50,6 +50,7 @@ export async function renderScore(toolkit, source, layout = 'desktop') {
     svgViewBox: true,
     xmlIdSeed: 68,
     scale: 40,
+    unit: 9,
     pageMarginTop: 30,
     pageMarginBottom: 30,
     pageMarginLeft: 30,

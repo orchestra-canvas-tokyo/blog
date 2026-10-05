@@ -49,12 +49,12 @@
       </direction>
       <direction placement="above">
         <direction-type>
-          <words>Lento</words>
+          <words font-style="normal" font-weight="bold">Lento</words>
         </direction-type>
       </direction>
       <direction placement="below">
         <direction-type>
-          <words>marcato</words>
+          <words font-style="normal" font-weight="bold">marcato</words>
         </direction-type>
         <offset>4</offset>
       </direction>

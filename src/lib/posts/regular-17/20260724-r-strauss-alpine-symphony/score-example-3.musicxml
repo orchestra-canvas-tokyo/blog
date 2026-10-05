@@ -46,7 +46,7 @@
       </direction>
       <direction placement="above">
         <direction-type>
-          <words>Ziemlich breit</words>
+          <words font-style="normal" font-weight="bold">Ziemlich breit</words>
         </direction-type>
       </direction>
       <note>

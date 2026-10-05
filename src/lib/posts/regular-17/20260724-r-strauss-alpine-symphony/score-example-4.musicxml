@@ -49,7 +49,7 @@
       </direction>
       <direction placement="above">
         <direction-type>
-          <words>Moderato espressivo</words>
+          <words font-style="normal" font-weight="bold">Moderato espressivo</words>
         </direction-type>
       </direction>
       <direction placement="below">
