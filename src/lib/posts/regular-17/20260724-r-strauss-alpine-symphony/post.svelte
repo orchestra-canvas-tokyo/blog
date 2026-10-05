@@ -12,12 +12,16 @@
   import photo4 from './photo-4.webp';
   import scoreExample1 from './score-example-1.svg';
   import scoreExample1Mobile from './score-example-1.mobile.svg';
+  import scoreExample1Layout from './score-example-1.layout.json';
   import scoreExample2 from './score-example-2.svg';
   import scoreExample2Mobile from './score-example-2.mobile.svg';
+  import scoreExample2Layout from './score-example-2.layout.json';
   import scoreExample3 from './score-example-3.svg';
   import scoreExample3Mobile from './score-example-3.mobile.svg';
+  import scoreExample3Layout from './score-example-3.layout.json';
   import scoreExample4 from './score-example-4.svg';
   import scoreExample4Mobile from './score-example-4.mobile.svg';
+  import scoreExample4Layout from './score-example-4.layout.json';
 
   export const metadata: Metadata = {
     published: true,
@@ -47,7 +51,12 @@
   光を得ぬ世界、大地の裏で沈黙する太陽を、冒頭の下降音階が提示する。続くトロンボーンによる山の動機（譜例1）は、重く湿っている。ランプの灯りを頼りに歩く少年の前で、山は黒々とそびえながら、いまだ全貌を見せない。不安に駆られながらも一歩一歩進むうちに、響きは次第に高音域へと開かれ、厚みを増してゆく。空が白みはじめ、稜線の彼方に隠されていた光が漏れ出してくる。そしてついに、音楽は長調に転じる。
 </p>
 
-<Score src={scoreExample1} mobileSrc={scoreExample1Mobile} caption="譜例1. 山の動機" />
+<Score
+  src={scoreExample1}
+  mobileSrc={scoreExample1Mobile}
+  layout={scoreExample1Layout}
+  caption="譜例1. 山の動機"
+/>
 
 <p>
   〈日の出〉では、冒頭の下降音階がイ長調の強奏へと姿を変え、太陽の輪郭を明快に描き出す。金管は朝の到来を高らかに告げ、弦楽器は山肌へ広がっていく光を力強く受け止める。闇に隠されていた峰々が姿を現し、世界が別の相貌を帯びる。
@@ -59,7 +68,12 @@
   〈登り道〉に入ると、変ホ長調の登山の動機（譜例2）によって、音楽は力強く前進し始める。弦楽器と木管の旋律は、斜面を力強く踏みしめるようであり、金管は狩りを思わせる響きで若々しい勢いを与える。行く手には山腹の岩壁が厳然と聳えているが、覇気に満ちた歩みは止まることを知らない。
 </p>
 
-<Score src={scoreExample2} mobileSrc={scoreExample2Mobile} caption="譜例2. 登山の動機" />
+<Score
+  src={scoreExample2}
+  mobileSrc={scoreExample2Mobile}
+  layout={scoreExample2Layout}
+  caption="譜例2. 登山の動機"
+/>
 
 <hr />
 
@@ -115,6 +129,7 @@
 <Score
   src={scoreExample3}
   mobileSrc={scoreExample3Mobile}
+  layout={scoreExample3Layout}
   caption="譜例3. 〈頂上にて〉より太陽の動機"
 />
 
@@ -140,7 +155,12 @@
   本作は勝利の大団円では終わらない。〈霧が立ちのぼる〉では、音楽は下山へと向かう後半部に入る。ヘッケルホン（※本演奏会ではバスオーボエ）による変ロ短調の旋律が、視界が徐々に閉ざされていく様を描写する。続く〈太陽がしだいに翳る〉と相まって、音楽は次第に不穏な陰りを帯びていく。〈エレジー〉では、弦楽器が憂いに満ちた旋律（譜例4）を歌い、山頂の歓喜はすでに過去のものとなる。和声は明確な解決を避けるように揺れ、少年は不安に包まれていく。
 </p>
 
-<Score src={scoreExample4} mobileSrc={scoreExample4Mobile} caption="譜例4. エレジー" />
+<Score
+  src={scoreExample4}
+  mobileSrc={scoreExample4Mobile}
+  layout={scoreExample4Layout}
+  caption="譜例4. エレジー"
+/>
 
 <p>
   〈嵐の前の静けさ〉では、オーボエの八分音符が、ぽつんと落ちる雨粒を思わせる。危険を察知したかのような鳥の囀りが挿入されると、やがてウィンドマシーンが風の強まりを伝える。弦のピッツィカートは次第に雨足を強め、激しい雷雨へと変わっていく。そして〈雷雨と嵐、下山〉が始まる。全奏による嵐の描写は凄まじい。オルガンが神の裁きかのごとく鳴り響く中、弦は半音階を激しく駆け下り、金管は雷のように割って入り、打楽器は大地を揺るがせる。少年が必死に下山する様は、オーボエによる登山の動機の反行形に重ねられる。ウィンドマシーンやサンダーマシーンまで用いた大がかりな音響は、自然の暴力を管弦楽にそのまま投影した。

@@ -6,13 +6,17 @@
     mobileSrc?: string;
     /** 原稿のキャプション。画像の代替テキストにも使用する。 */
     caption: string;
+    /** SVG から自動計測した、五線全高に対する譜面幅の比率 */
+    layout: { desktopWidthInStaffHeights: number; mobileWidthInStaffHeights: number };
   }
 
-  let { src, mobileSrc, caption }: Props = $props();
+  let { src, mobileSrc, caption, layout }: Props = $props();
 </script>
 
 <!-- @component 譜例を表示する。画面幅に合わせて譜面を表示し、リンクから原寸で開ける。 -->
-<figure>
+<figure
+  style={`--desktop-score-width: ${layout.desktopWidthInStaffHeights * 1.5}em; --mobile-score-width: ${layout.mobileWidthInStaffHeights * 1.125}em;`}
+>
   <!-- SVG URLs are emitted by Vite and are not SvelteKit route paths. -->
   <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
   <a href={src} target="_blank" rel="noopener" aria-label={`${caption}を拡大表示`}>
@@ -32,8 +36,17 @@
   }
   a {
     display: block;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: calc(var(--desktop-score-width) + 1rem);
+    margin-inline: auto;
     background: white;
     padding: 0.5rem;
+  }
+  @media (max-width: 600px) {
+    a {
+      max-width: calc(var(--mobile-score-width) + 1rem);
+    }
   }
   img {
     display: block;

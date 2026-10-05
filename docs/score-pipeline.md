@@ -59,6 +59,7 @@ score-example-1.webp       # 原画像
 score-example-1.musicxml   # 校正済みの正本
 score-example-1.svg        # デスクトップ用生成物
 score-example-1.mobile.svg # モバイル用生成物
+score-example-1.layout.json # 五線全高に対する譜面幅の比率（生成物）
 omr/score-example-1.mxl    # 未校正の認識結果（trial の証跡）
 ```
 
@@ -91,19 +92,23 @@ SVG の後加工や架空の終点音符の追加はしません。途中の小�
   import Score from '$lib/component/post/Score.svelte';
   import score from './score-example-1.svg';
   import mobileScore from './score-example-1.mobile.svg';
+  import layout from './score-example-1.layout.json';
 </script>
 
-<Score src={score} mobileSrc={mobileScore} caption="譜例1. 山の動機" />
+<Score src={score} mobileSrc={mobileScore} {layout} caption="譜例1. 山の動機" />
 ```
 
-譜面は画面幅に収めて表示します。600px 以下の画面では `<picture>` がモバイル用 SVG を選び、
-音符を一段のまま縮めすぎずに表示します。横スクロールは不要です。
+譜面は本文の文字サイズ（`em`）を基準に表示します。五線全体の高さを
+デスクトップで `1.5em`、600px 以下では `1.125em` とし、記事の幅を超える場合は縮小します。
+通常の本文サイズはデスクトップ18px、モバイル16pxなので、五線はそれぞれ約27px / 18pxです。
+SVG の五線と譜面幅から生成した `.layout.json` を参照するため、短い譜例でも文字や五線が過大に拡大されません。
+600px 以下では `<picture>` がモバイル用 SVG を選び、横スクロールなしで表示します。
+
 改行は `pageWidth: 1000` / `breaks: 'auto'` を基準に Verovio が小節境界で決めます。
 音符・臨時記号・文字等に必要な幅によって、1段の小節数は変わります。
-`unit: 9`（五線の線間隔の半分）と `scale: 40` を固定していますが、
-`adjustPageWidth: true` と画面幅への拡縮により、実際の五線サイズは譜例と端末幅で変わります。
-375px の画面（譜面幅311px）では五線の全高は約20〜24px、線間隔は約5〜6pxです。
-五線の最小表示サイズを基準にした自動改行や、画面幅ごとのブラウザ上の再組版は行っていません。
+`unit: 9`（五線の線間隔の半分）と `scale: 40` を固定しています。
+改行位置の決定と、本文に合わせた表示サイズの調整は別に行います。
+端末幅ごとのブラウザ上の再組版は行っていません。
 譜面のリンクは一段の SVG を別タブで開きます。
 キャプションを画像の代替テキストとしても使用します。
 

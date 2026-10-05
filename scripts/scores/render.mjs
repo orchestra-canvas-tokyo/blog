@@ -75,6 +75,29 @@ export async function renderScore(toolkit, source, layout = 'desktop') {
   return `${toolkit.renderToSVG(1).trim()}\n`;
 }
 
+/** Describe the SVG width relative to the height of its five staff lines. */
+export function scoreWidthInStaffHeights(svg) {
+  const document = new DOMParser().parseFromString(svg, 'image/svg+xml');
+  const viewport = [...document.getElementsByTagName('svg')].find(
+    (element) => element.getAttribute('class') === 'definition-scale'
+  );
+  const width = Number(viewport?.getAttribute('viewBox').split(/\s+/)[2]);
+  const staff = [...document.getElementsByTagName('g')].find(
+    (element) => element.getAttribute('class') === 'staff'
+  );
+  const lines = [...(staff?.childNodes || [])]
+    .filter((element) => element.nodeName === 'path')
+    .slice(0, 5);
+  const heights = lines.map((element) =>
+    Number(element.getAttribute('d').match(/^M\s*[\d.-]+\s+([\d.-]+)/)?.[1])
+  );
+  const staffHeight = heights[4] - heights[0];
+  if (lines.length !== 5 || !Number.isFinite(width / staffHeight) || staffHeight <= 0) {
+    throw new Error('Cannot measure the five staff lines');
+  }
+  return Number((width / staffHeight).toFixed(6));
+}
+
 /** Keep Verovio/WASM in this Node process, outside the browser bundle. */
 export async function renderScores(sources, check = false) {
   const outputs = sources.map((source) => source.replace(/\.(musicxml|mxl)$/i, '.svg'));
@@ -84,8 +107,10 @@ export async function renderScores(sources, check = false) {
   const toolkit = new VerovioToolkit(await createVerovioModule());
   try {
     for (const source of sources) {
+      const layoutWidths = {};
       for (const layout of ['desktop', 'mobile']) {
         const svg = await renderScore(toolkit, source, layout);
+        layoutWidths[`${layout}WidthInStaffHeights`] = scoreWidthInStaffHeights(svg);
         const output = source.replace(
           /\.(musicxml|mxl)$/i,
           layout === 'mobile' ? '.mobile.svg' : '.svg'
@@ -98,6 +123,14 @@ export async function renderScores(sources, check = false) {
           await writeFile(output, svg);
         }
         console.log(`${check ? 'Verified' : 'Rendered'} ${output}`);
+      }
+      const metadata = source.replace(/\.(musicxml|mxl)$/i, '.layout.json');
+      const json = `${JSON.stringify(layoutWidths, null, 2)}\n`;
+      if (check) {
+        if ((await readFile(metadata, 'utf8')) !== json)
+          throw new Error(`Stale layout: ${metadata}`);
+      } else {
+        await writeFile(metadata, json);
       }
     }
   } finally {
