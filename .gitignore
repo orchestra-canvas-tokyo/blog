@@ -13,3 +13,6 @@ vite.config.ts.timestamp-*
 
 # Sharing cards are regenerated before dev/build.
 /static/ogp/
+
+# Local OMR inputs, projects and logs
+.score-work/

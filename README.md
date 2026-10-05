@@ -61,6 +61,13 @@ npm scriptとは、npmで設定できる開発時向けのエイリアス、ス�
 
 ## 日々のメンテナンス
 
+### 譜例の SVG 化
+
+画像を `npm run scores:omr -- <画像パス>` で Audiveris に渡し、MusicXML/MXL を校正します。
+校正済みデータから `npm run scores:render` で SVG を生成して、記事に `<Score>` で掲載します。
+環境準備・保存方針・再生成の手順は [譜例パイプライン](docs/score-pipeline.md)、
+初回の認識結果と校正内容は [アルプス交響曲 trial](docs/score-trial-alpine.md) を参照してください。
+
 ### 曲目解説の作成
 
 ```shell

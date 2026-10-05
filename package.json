@@ -16,10 +16,14 @@
     "add:program-note": "npx hygen program-note new",
     "prepare": "husky",
     "predev": "npm run generate:ogp",
-    "prebuild": "npm run generate:ogp && npm run test:ogp",
+    "prebuild": "npm run scores:check && npm run generate:ogp && npm run test:ogp",
     "generate:ogp": "node scripts/generate-ogp.mjs",
     "review:ogp": "node scripts/generate-ogp.mjs --review",
-    "test:ogp": "node --test scripts/ogp/*.test.mjs"
+    "test:ogp": "node --test scripts/ogp/*.test.mjs",
+    "scores:omr": "node scripts/scores.mjs omr",
+    "scores:render": "node scripts/scores.mjs render",
+    "scores:check": "node scripts/scores.mjs check",
+    "test:scores": "node --test scripts/scores/*.test.mjs"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",
@@ -47,7 +51,9 @@
     "tslib": "^2.8.1",
     "typescript": "^6.0.3",
     "vite": "^8.0.16",
-    "wrangler": "^4.100.0"
+    "wrangler": "^4.100.0",
+    "verovio": "6.2.0",
+    "@xmldom/xmldom": "0.9.12"
   },
   "type": "module",
   "dependencies": {
