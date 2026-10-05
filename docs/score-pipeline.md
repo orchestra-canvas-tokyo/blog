@@ -57,7 +57,8 @@ MXL を MuseScore 等で開き、音高、音価、付点、臨時記号、休�
 post.svelte
 score-example-1.webp       # 原画像
 score-example-1.musicxml   # 校正済みの正本
-score-example-1.svg        # 生成物
+score-example-1.svg        # デスクトップ用生成物
+score-example-1.mobile.svg # モバイル用生成物
 omr/score-example-1.mxl    # 未校正の認識結果（trial の証跡）
 ```
 
@@ -73,25 +74,28 @@ npm run test:scores
 引数なしの探索は `src/lib/posts/` 内が対象で、`omr/` は除外します。
 引数付きでは MusicXML と ZIP 圧縮 MXL の両方を読めます。
 レンダラーは Verovio 6.2.0 を固定し、XML ID の乱数 seed も固定します。
-譜例は一段で描画し、複数ページになった場合は黙って先頭だけを掲載せず失敗します。
+デスクトップ用は一段、モバイル用は小節単位で改行した複数段の SVG を生成します。
+どちらも複数ページになった場合は黙って先頭だけを掲載せず失敗します。
 
 MusicXML の末尾で終点のないタイ／スラーは、Verovio の取り込み警告が出ます。
 レンダラーは中間 MEI 上で最後の小節の右端に `tstamp2` を補い、切り抜きによる継続曲線を描きます。
 SVG の後加工や架空の終点音符の追加はしません。途中の小節に未完の曲線がある場合は校正エラーとします。
-この補助は単純拍子の短い抜粋を対象とし、複雑な拍子・多声部・複数段の譜例は別途検証してください。
+この補助は単純拍子の短い抜粋を対象とし、複雑な拍子・多声部の譜例は別途検証してください。
 元の MusicXML は変更しません。
 
 ```svelte
 <script lang="ts">
   import Score from '$lib/component/post/Score.svelte';
   import score from './score-example-1.svg';
+  import mobileScore from './score-example-1.mobile.svg';
 </script>
 
-<Score src={score} caption="譜例1. 山の動機" />
+<Score src={score} mobileSrc={mobileScore} caption="譜例1. 山の動機" />
 ```
 
-譜面は一定の高さで表示し、狭い画面では譜例の領域内で横スクロールできます。
-キーボードでもスクロールでき、譜面のリンクは SVG を別タブで開きます。
+譜面は画面幅に収めて表示します。600px 以下の画面では `<picture>` がモバイル用 SVG を選び、
+音符を一段のまま縮めすぎずに表示します。横スクロールは不要です。
+譜面のリンクは一段の SVG を別タブで開きます。
 キャプションを画像の代替テキストとしても使用します。
 
 ## ビルド・CI・Git 管理

@@ -101,6 +101,20 @@ test('rendering keeps cropped ties/slurs, produces vector glyphs, and is determi
           .length;
       assert.equal(count('tie'), [0, 5, 0, 0, 2][index]);
       assert.equal(count('slur'), [0, 0, 2, 7, 11][index]);
+      const mobile = await renderScore(toolkit, source, 'mobile');
+      assert.equal(mobile, await renderScore(toolkit, source, 'mobile'));
+      const mobileDocument = parse(mobile);
+      const groups = [...mobileDocument.getElementsByTagName('g')];
+      assert.ok(groups.filter((g) => g.getAttribute('class') === 'system').length > 1);
+      assert.equal(
+        groups.filter((g) => g.getAttribute('class') === 'note').length,
+        [0, 16, 16, 21, 28][index]
+      );
+      assert.doesNotMatch(mobile, /Voice/);
+      // Spans crossing system boundaries are drawn in multiple segments.
+      for (const name of ['tie', 'slur']) {
+        assert.ok(groups.filter((g) => g.getAttribute('class') === name).length >= count(name));
+      }
     }
     // Audiveris exports ZIP-compressed MXL; do not pass a Node Buffer as an ArrayBuffer.
     const raw = await renderScore(toolkit, `${directory}/omr/score-example-2.mxl`);

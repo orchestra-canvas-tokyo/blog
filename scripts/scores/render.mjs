@@ -36,12 +36,12 @@ export function completeOpenSpans(mei) {
 }
 
 /** Render one short excerpt; refuse to silently discard extra pages. */
-export async function renderScore(toolkit, source) {
+export async function renderScore(toolkit, source, layout = 'desktop') {
   toolkit.resetOptions();
   toolkit.setOptions({
     inputFrom: 'musicxml',
-    breaks: 'none',
-    pageWidth: 3200,
+    breaks: layout === 'mobile' ? 'auto' : 'none',
+    pageWidth: layout === 'mobile' ? 1000 : 3200,
     pageHeight: 2000,
     adjustPageHeight: true,
     adjustPageWidth: true,
@@ -83,16 +83,21 @@ export async function renderScores(sources, check = false) {
   const toolkit = new VerovioToolkit(await createVerovioModule());
   try {
     for (const source of sources) {
-      const svg = await renderScore(toolkit, source);
-      const output = source.replace(/\.(musicxml|mxl)$/i, '.svg');
-      if (check) {
-        if ((await readFile(output, 'utf8')) !== svg) {
-          throw new Error(`Stale SVG: ${output}; run npm run scores:render`);
+      for (const layout of ['desktop', 'mobile']) {
+        const svg = await renderScore(toolkit, source, layout);
+        const output = source.replace(
+          /\.(musicxml|mxl)$/i,
+          layout === 'mobile' ? '.mobile.svg' : '.svg'
+        );
+        if (check) {
+          if ((await readFile(output, 'utf8')) !== svg) {
+            throw new Error(`Stale SVG: ${output}; run npm run scores:render`);
+          }
+        } else {
+          await writeFile(output, svg);
         }
-      } else {
-        await writeFile(output, svg);
+        console.log(`${check ? 'Verified' : 'Rendered'} ${output}`);
       }
-      console.log(`${check ? 'Verified' : 'Rendered'} ${output}`);
     }
   } finally {
     toolkit.destroy();
