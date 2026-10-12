@@ -29,6 +29,8 @@
     "@sveltejs/kit": "^2.65.1",
     "@sveltejs/vite-plugin-svelte": "^7.1.2",
     "@types/eslint": "^9.6.1",
+    "@types/node": "^26.6.5",
+    "@types/turndown": "^5.0.6",
     "@typescript-eslint/eslint-plugin": "^8.61.0",
     "@typescript-eslint/parser": "^8.61.0",
     "eslint": "^10.5.0",
@@ -52,7 +54,10 @@
   },
   "type": "module",
   "dependencies": {
-    "dayjs": "^1.11.21"
+    "@mixmark-io/domino": "^2.2.0",
+    "dayjs": "^1.11.21",
+    "turndown": "^7.2.4",
+    "turndown-plugin-gfm": "^1.0.2"
   },
   "overrides": {
     "cookie": "1.1.1",
