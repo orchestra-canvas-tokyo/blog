@@ -1,0 +1,5 @@
+; Candidate only. Not applied. Review DNS-AID draft/provider support before use.
+; key65400 is an explicitly local private-use endpoint key, NOT an IANA allocation.
+; The SVCB target is the actual public HTTP catalog host, not an A2A/MCP agent.
+_index._agents.blog.orch-canvas.tokyo. 3600 IN SVCB 1 blog.orch-canvas.tokyo. alpn="h2" port=443 key65400="/.well-known/ai-catalog.json"
+_catalog._agents.blog.orch-canvas.tokyo. 3600 IN TXT "url=https://blog.orch-canvas.tokyo/.well-known/ai-catalog.json"
