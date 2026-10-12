@@ -1,0 +1,49 @@
+name: Register requested Agent Readiness issue and PR relationships
+
+on:
+  push:
+    branches: [codex/agent-ready/operations]
+    paths: [.github/workflows/agent-readiness-register.yaml]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  register:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: orchestra-canvas-tokyo/blog
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Attach the four requested sub-issues
+        shell: bash
+        run: |
+          existing=$(gh api repos/orchestra-canvas-tokyo/blog/issues/70/sub_issues --jq '.[].id')
+          for issue_id in 5807108235 5807108345 5807108420 5807108544; do
+            if ! printf '%s\n' "$existing" | grep -qx "$issue_id"; then
+              gh api repos/orchestra-canvas-tokyo/blog/issues/70/sub_issues --method POST -F sub_issue_id="$issue_id" --silent
+            fi
+          done
+          gh api repos/orchestra-canvas-tokyo/blog/issues/70/sub_issues --jq '.[].number'
+      - name: Register the four existing PRs with official gh stack
+        shell: bash
+        run: |
+          gh extension install github/gh-stack --pin v0.2.1
+          gh auth setup-git
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git config remote.pushDefault origin
+          git switch main
+          for branch in codex/agent-ready/crawl codex/agent-ready/markdown codex/agent-ready/discovery; do
+            git branch "$branch" "origin/$branch"
+          done
+          gh stack init --base main codex/agent-ready/crawl codex/agent-ready/markdown codex/agent-ready/discovery codex/agent-ready/operations
+          gh stack submit --auto --remote origin
+          gh stack view --json
