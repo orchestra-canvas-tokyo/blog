@@ -54,6 +54,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@mixmark-io/domino": "^2.2.0",
     "dayjs": "^1.11.21",
     "turndown": "^7.2.4",
     "turndown-plugin-gfm": "^1.0.2"

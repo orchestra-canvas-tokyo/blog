@@ -1,6 +1,7 @@
 import { error } from '@sveltejs/kit';
 import { render } from 'svelte/server';
 import TurndownService from 'turndown';
+import { createDocument } from '@mixmark-io/domino';
 import { tables } from 'turndown-plugin-gfm';
 import { getFullTitle, getPostBySlug, getPostListItems, getUrl } from '$lib/posts';
 import { canonicalUrl } from '$lib/site';
@@ -63,7 +64,9 @@ export const htmlToMarkdown = (html: string, base: string): string => {
       return href ? `[${content}](<${href}>)` : content;
     }
   });
-  return service.turndown(html);
+  // Workers have no document/DOMParser. Passing a parsed server DOM also avoids
+  // Turndown's browser-field bundle trying to access the ambient document.
+  return service.turndown(createDocument(html).body);
 };
 
 export const getPostMarkdown = async (slug: string): Promise<string> => {
