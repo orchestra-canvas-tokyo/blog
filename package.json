@@ -20,7 +20,8 @@
     "generate:ogp": "node scripts/generate-ogp.mjs",
     "review:ogp": "node scripts/generate-ogp.mjs --review",
     "test:ogp": "node --test scripts/ogp/*.test.mjs",
-    "test:agents": "node --test --test-force-exit scripts/agent-readiness.test.mjs"
+    "test:agents": "node --test --test-force-exit scripts/agent-readiness.test.mjs",
+    "test:worker": "node --test --test-force-exit scripts/worker-smoke.test.mjs"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",
@@ -33,11 +34,13 @@
     "@types/turndown": "^5.0.6",
     "@typescript-eslint/eslint-plugin": "^8.61.0",
     "@typescript-eslint/parser": "^8.61.0",
+    "esbuild": "^0.28.1",
     "eslint": "^10.5.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-svelte": "^3.19.0",
     "globals": "^17.6.0",
     "husky": "^9.1.7",
+    "miniflare": "^4.20260611.0",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.5.15",
     "prettier": "^3.8.4",

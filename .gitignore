@@ -13,3 +13,4 @@ vite.config.ts.timestamp-*
 
 # Sharing cards are regenerated before dev/build.
 /static/ogp/
+.wrangler/

@@ -15,3 +15,5 @@ jobs:
       - run: npm ci
       - run: npm run precommit
       - run: npm run test:agents
+      - run: npm run build
+      - run: npm run test:worker
