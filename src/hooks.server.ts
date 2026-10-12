@@ -1,5 +1,6 @@
 import type { Handle } from '@sveltejs/kit';
 import type { Tag } from '$lib/posts/tags';
+import { discoveryLinks } from '$lib/server/discovery';
 import {
   getListingMarkdown,
   getPostMarkdown,
@@ -13,6 +14,10 @@ export const handle: Handle = async ({ event, resolve }) => {
   if (!isPage || event.isDataRequest || !['GET', 'HEAD'].includes(event.request.method))
     return response;
   const headers = new Headers(response.headers);
+  if (response.status === 200 && event.route.id === '/') {
+    const existing = headers.get('Link');
+    headers.set('Link', existing ? `${existing}, ${discoveryLinks}` : discoveryLinks);
+  }
   const vary = new Set(
     (headers.get('Vary') ?? '')
       .split(',')
