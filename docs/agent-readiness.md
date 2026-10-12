@@ -40,38 +40,27 @@ robotsとContent Signalsはクローラーが従う利用方針であり、ア�
 5. CloudflareのゾーンDNSSECを有効にし、その実際のDS情報をレジストラへ登録する。既存DSを推測値で置換しない。`dig +dnssec`と検証resolverでDS/DNSKEY/RRSIGチェーン、AD=trueを確認する。
 6. DNSSECとDNS-AID対応が確認できるまでissue #74をDNS作業待ちとして保持する。
 
-## PRの依存関係と認証上の制約
+## PRの依存関係
 
 `main` → `codex/agent-ready/crawl` → `codex/agent-ready/markdown` → `codex/agent-ready/discovery` → `codex/agent-ready/operations`。
-公式github/gh-stack v0.2.1で各ローカル層を作成した。CLI未認証のため`gh stack submit`によるGitHubネイティブStack登録は未完了。
-接続済みGitHub APIでは依存base付きPRを作成できる。ネイティブsub-issue追加APIがconnectorにないため、#70には子issueへのタスクリスト、各子には親リンクを記載する。
-認証済み開発環境で既存ブランチを取得してネイティブ登録を完成できる:
+
+親issue #70のネイティブsub-issuesとして#71–#74を関連付けた。
+公式github/gh-stack v0.2.1の`gh stack submit --auto --remote origin`で、既存のDraft PR #75–#78をGitHub Stack #79へ登録済み。
+登録はリポジトリのGitHub Actions認証で実行し、一度限りの登録workflowは完了後に削除した。
+登録ジョブ: https://github.com/orchestra-canvas-tokyo/blog/actions/runs/38194104352
+
+認証済み開発環境で既存Stackを操作する場合:
 
 ```sh
 gh auth status
 gh extension install github/gh-stack
-git fetch origin
-git switch main
-git branch codex/agent-ready/crawl origin/codex/agent-ready/crawl
-git branch codex/agent-ready/markdown origin/codex/agent-ready/markdown
-git branch codex/agent-ready/discovery origin/codex/agent-ready/discovery
-git branch codex/agent-ready/operations origin/codex/agent-ready/operations
-gh stack init --base main codex/agent-ready/crawl codex/agent-ready/markdown codex/agent-ready/discovery codex/agent-ready/operations
-gh stack submit --auto --remote origin
+git config remote.pushDefault origin
+gh stack checkout 79
 gh stack view --json
 ```
 
-既存local branchがある場合は`git branch`を省略し、remoteとの差を確認する。既存Stackがある場合は新規initせずそのStackを確認する。
-既存PRのhead/baseを保持し、作成済みPRを重複作成しないことを確認する。
-
-ネイティブsub-issue関係は次のAPIで追加可能（既に追加済みなら省略）:
-
-```sh
-gh api repos/orchestra-canvas-tokyo/blog/issues/70/sub_issues --method POST -F sub_issue_id=5807108235
-gh api repos/orchestra-canvas-tokyo/blog/issues/70/sub_issues --method POST -F sub_issue_id=5807108345
-gh api repos/orchestra-canvas-tokyo/blog/issues/70/sub_issues --method POST -F sub_issue_id=5807108420
-gh api repos/orchestra-canvas-tokyo/blog/issues/70/sub_issues --method POST -F sub_issue_id=5807108544
-```
+レビュー・mergeは下から順に行う。Stack全体をmergeする場合は承認後に`gh stack merge 79 --yes`を使う。
+この作業ではmerge・本番deployは行っていない。
 
 ## 検証とリリース
 
