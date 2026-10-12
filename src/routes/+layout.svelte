@@ -33,7 +33,7 @@
      * @param func 呼び出される関数
      */
     const debounce = (func: () => void) => {
-      let timer: number;
+      let timer: ReturnType<typeof setTimeout>;
       return () => {
         clearTimeout(timer);
         timer = setTimeout(func, 300);
