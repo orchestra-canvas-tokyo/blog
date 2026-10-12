@@ -19,7 +19,8 @@
     "prebuild": "npm run generate:ogp && npm run test:ogp",
     "generate:ogp": "node scripts/generate-ogp.mjs",
     "review:ogp": "node scripts/generate-ogp.mjs --review",
-    "test:ogp": "node --test scripts/ogp/*.test.mjs"
+    "test:ogp": "node --test scripts/ogp/*.test.mjs",
+    "test:agents": "node --test --test-force-exit scripts/agent-readiness.test.mjs"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",
