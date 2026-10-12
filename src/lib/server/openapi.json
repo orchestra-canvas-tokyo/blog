@@ -1,0 +1,214 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OCT Blog Public Content API",
+    "version": "1.0.0",
+    "description": "Read-only published content. No authentication or agent registration. Search and answer retrieval allowed; model training disallowed."
+  },
+  "servers": [
+    {
+      "url": "https://blog.orch-canvas.tokyo"
+    }
+  ],
+  "security": [],
+  "paths": {
+    "/api/posts": {
+      "get": {
+        "operationId": "searchOctBlog",
+        "summary": "List or search published program notes",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 50
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0,
+              "maximum": 10000
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Search published articles; whitespace-only is treated as listing.",
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["posts", "total", "limit", "offset"],
+                  "properties": {
+                    "posts": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PostSummary"
+                      }
+                    },
+                    "total": {
+                      "type": "integer"
+                    },
+                    "limit": {
+                      "type": "integer"
+                    },
+                    "offset": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query or pagination parameters"
+          }
+        }
+      }
+    },
+    "/api/posts/{slug}": {
+      "get": {
+        "operationId": "readOctArticle",
+        "summary": "Read a published article as Markdown",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PostSummary"
+                    },
+                    {
+                      "type": "object",
+                      "required": ["markdown"],
+                      "properties": {
+                        "markdown": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Article missing or unpublished"
+          }
+        }
+      }
+    },
+    "/api/status": {
+      "get": {
+        "operationId": "getOctBlogStatus",
+        "summary": "Content API status",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["status", "publishedPosts"],
+                  "properties": {
+                    "status": {
+                      "const": "ok"
+                    },
+                    "publishedPosts": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PostSummary": {
+        "type": "object",
+        "required": ["slug", "title", "description", "publishedAt", "tags", "url", "markdownUrl"],
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "publishedAt": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "markdownUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

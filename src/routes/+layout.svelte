@@ -9,11 +9,14 @@
   import youtube from './sns-youtube.svg';
   import { onMount } from 'svelte';
   import BlogSearch from '$lib/component/BlogSearch.svelte';
+  import { registerBrowserBlogTools } from '$lib/webmcp';
   interface Props {
     children?: import('svelte').Snippet;
   }
 
   let { children }: Props = $props();
+
+  onMount(registerBrowserBlogTools);
 
   onMount(() => {
     // viewportが375px未満のとき、全体を縮小して表示する
