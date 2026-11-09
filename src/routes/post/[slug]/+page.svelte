@@ -117,7 +117,7 @@
     <hr />
 
     <p>
-      詳細は<a href={concerts['regular-18'].url}>当団ホームページ</a>にて
+      詳細は<a href={concerts['regular-18'].url} rel="external">当団ホームページ</a>にて
     </p>
 
     <a href={concerts['regular-18'].url} rel="external">
