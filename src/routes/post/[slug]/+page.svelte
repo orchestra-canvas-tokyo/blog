@@ -97,29 +97,31 @@
     </svg>
 
     <p>
-      Orchestra Canvas Tokyo<br />第17回定期演奏会
+      Orchestra Canvas Tokyo<br />第18回定期演奏会
     </p>
     <p>
-      2026年9月12日(土)<br />
-      横浜みなとみらいホール 大ホール
+      2027年1月30日(土)<br />
+      13:00開場 14:00開演<br />
+      武蔵野市民文化会館 大ホール
     </p>
-    <p>指揮：田代 俊文</p>
+    <p>指揮：岡本 陸</p>
 
     <hr />
 
     <p>
-      リヒャルト・シュトラウス<br />
-      アルプス交響曲 作品64
+      シベリウス<br />
+      交響曲第1番 ホ短調 作品39<br />
+      交響曲第2番 ニ長調 作品43
     </p>
 
     <hr />
 
     <p>
-      詳細は<a href="https://www.orch-canvas.tokyo/concerts/regular-17">当団ホームページ</a>にて
+      詳細は<a href={concerts['regular-18'].url}>当団ホームページ</a>にて
     </p>
 
-    <a href={concerts['regular-17'].url} rel="external">
-      <Flyer src={concerts['regular-17'].flyer} alt="第17回定期演奏会のフライヤー" />
+    <a href={concerts['regular-18'].url} rel="external">
+      <Flyer src={concerts['regular-18'].flyer} alt="第18回定期演奏会のフライヤー" />
     </a>
   </section>
 </div>
